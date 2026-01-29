@@ -1,30 +1,24 @@
-
-using Unity.Netcode;
+using System.Collections;
+using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
-using Vector3 = UnityEngine.Vector3;
-using Quaternion = UnityEngine.Quaternion;
+using Unity.Netcode;
 
-public class SpawnPrefab : NetworkBehaviour
+public class SpawnPlayerRoot : NetworkBehaviour
 {
-    public GameObject prefabToSpawn;
-    //private Transform parentObjectTrans;
-
-    public void Spawn() {
-        //Vector3 spawnPos = new Vector3(0f,-0.842f,0.757f);
+    public GameObject playerRoot;
+    public void SpawnPlayer()
+    {
         SpawnPlayerServerRPC(Vector3.zero, Quaternion.identity, NetworkManager.Singleton.LocalClientId);
-        
     }
 
     [ServerRpc(RequireOwnership = false)]
     void SpawnPlayerServerRPC(Vector3 position, Quaternion rotation, ulong callerID)
     { 
-        Debug.Log("Hello there");
         //Instantiate prefab
         //GameObject prefab = Instantiate(prefabToSpawn, Vector3.zero, Quaternion.identity);
-        GameObject prefab = Instantiate(prefabToSpawn, position, rotation);
+        GameObject prefab = Instantiate(playerRoot, position, rotation);
         NetworkObject characterNetworkObject = prefab.GetComponent<NetworkObject>();
         characterNetworkObject.SpawnWithOwnership(callerID);
-        
-        //prefab.transform.SetParent(parentObjectTrans, true);
     }
 }
