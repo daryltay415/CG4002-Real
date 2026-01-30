@@ -24,7 +24,15 @@ public class SpawnPrefab : NetworkBehaviour
         GameObject prefab = Instantiate(prefabToSpawn, position, rotation);
         NetworkObject characterNetworkObject = prefab.GetComponent<NetworkObject>();
         characterNetworkObject.SpawnWithOwnership(callerID);
-        
+        PlayerDataManager.Instance.AddPlacedPlayer(callerID);
         //prefab.transform.SetParent(parentObjectTrans, true);
+    }
+
+    void Update()
+    {
+        //if (PlayerDataManager.Instance.GetHasPlayerPlaced(NetworkManager.Singleton.LocalClientId))
+        //{
+        //    return;
+        //}
     }
 }

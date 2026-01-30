@@ -1,9 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
+using Unity.Netcode.Components;
 using UnityEngine;
 using UnityEngine.InputSystem;
-public class PlayerStateMachine : MonoBehaviour
+public class PlayerStateMachineMultiplayer : NetworkBehaviour
 {
 
     // Camera variables
@@ -15,6 +16,7 @@ public class PlayerStateMachine : MonoBehaviour
     PlayerInput playerInput;
     CharacterController characterController;
     Animator animator;
+    NetworkAnimator networkAnimator;
     bool isMoving;
 
     int isWalkingHash;
@@ -24,11 +26,11 @@ public class PlayerStateMachine : MonoBehaviour
     // Attack variables
 
     bool isAttackPressed = false;
-    PlayerBaseState _currentState;
-    PlayerStateFactory states;
+    PlayerBaseStateMultiplayer _currentState;
+    PlayerStateFactoryMultiplayer states;
 
     //getter and setter
-    public PlayerBaseState currentState { get { return _currentState; } set { _currentState = value; } }
+    public PlayerBaseStateMultiplayer currentState { get { return _currentState; } set { _currentState = value; } }
     public Animator _animator{get{ return animator; }}
     public CharacterController _characterController {get{ return characterController; }}
     public bool _isMovingPressed {get{ return isMoving; }}
@@ -38,23 +40,29 @@ public class PlayerStateMachine : MonoBehaviour
     // Attack variables
     public int _isAttackingHash {get{ return isAttackingHash; }set{ isAttackingHash = value; }}
     public bool _isAttackPressed {get{ return isAttackPressed; }}
-    void Awake()
+    public override void OnNetworkSpawn()
     {
-        mainCamera = Camera.main;
-        playerInput = new PlayerInput();
-        characterController = GetComponent<CharacterController>();
-        animator = GetComponent<Animator>();
-        // Set up states
-        states = new PlayerStateFactory(this);
-        _currentState = states.Idle();
-        _currentState.EnterState();
-        isAttackingHash = Animator.StringToHash("Attack");
-        isWalkingHash = Animator.StringToHash("Walk");
-        //playerInput.CharacterControls.Move.started += onMovementInput;
-        //playerInput.CharacterControls.Move.canceled += onMovementInput;
-        //playerInput.CharacterControls.Move.performed += onMovementInput;
-        playerInput.CharacterControls.Jab.performed += onAttack;
-        playerInput.CharacterControls.Jab.canceled += onAttack;
+        if (IsOwner)
+        {
+            mainCamera = Camera.main;
+            playerInput = new PlayerInput();
+            playerInput.CharacterControls.Enable();
+            characterController = GetComponent<CharacterController>();
+            animator = GetComponent<Animator>();
+            networkAnimator = GetComponent<NetworkAnimator>();
+            networkAnimator.Animator = animator;
+            // Set up states
+            states = new PlayerStateFactoryMultiplayer(this);
+            _currentState = states.Idle();
+            _currentState.EnterState();
+            isAttackingHash = Animator.StringToHash("Attack");
+            isWalkingHash = Animator.StringToHash("Walk");
+            //playerInput.CharacterControls.Move.started += onMovementInput;
+            //playerInput.CharacterControls.Move.canceled += onMovementInput;
+            //playerInput.CharacterControls.Move.performed += onMovementInput;
+            playerInput.CharacterControls.Jab.performed += onAttack;
+            playerInput.CharacterControls.Jab.canceled += onAttack;
+        }
     }
 
 
@@ -80,6 +88,7 @@ public class PlayerStateMachine : MonoBehaviour
 
     void CameraStatus()
     {
+        
         // Check if camera is moving
         Vector3 difference = mainCamera.transform.position - lastPosition;
         float sqrDistance = difference.sqrMagnitude;
@@ -106,19 +115,32 @@ public class PlayerStateMachine : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        CameraStatus();
-        currentState.UpdateStates();
-    }
-    
-
-    void OnEnable()
-    {
-        playerInput.CharacterControls.Enable();
+        if (IsOwner)
+        {
+            CameraStatus();
+            currentState.UpdateStates();
+        }
     }
 
-    void OnDisable()
+
+    public override void OnNetworkDespawn()
     {
-        playerInput.CharacterControls.Disable();
+        if (IsOwner)
+        {
+            playerInput.CharacterControls.Jab.performed -= onAttack;
+            playerInput.CharacterControls.Jab.canceled -= onAttack;
+        }
     }
+
+    //void OnEnable()
+    //{
+    //    
+    //    playerInput.CharacterControls.Enable();
+    //}
+//
+    //void OnDisable()
+    //{
+    //    playerInput.CharacterControls.Disable();
+    //}
 
 }
