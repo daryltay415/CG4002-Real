@@ -14,7 +14,7 @@ public class UIManager : NetworkBehaviour
     private void Start()
     {
         ShowCreateGameCanvas();
-        //AllPlayerDataManager.Instance.OnPlayerDead += InstanceOnOnPlayerDead;
+        PlayerDataManager.Instance.OnPlayerDead += InstanceOnOnPlayerDead;
         //RestartGame.OnRestartGame += RestartGameOnOnRestartGame;
     }
 
@@ -63,8 +63,8 @@ public class UIManager : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        CreateGameCanvas.gameObject.SetActive(false);
-        ControllerCanvas.gameObject.SetActive(true);
+        CreateGameCanvas.gameObject.SetActive(true);
+        ControllerCanvas.gameObject.SetActive(false);
         RestartQuitCanvas.gameObject.SetActive(false);
     }
 

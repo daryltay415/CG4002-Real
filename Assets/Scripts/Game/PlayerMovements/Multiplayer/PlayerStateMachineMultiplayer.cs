@@ -4,6 +4,7 @@ using Unity.Netcode;
 using Unity.Netcode.Components;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System;
 public class PlayerStateMachineMultiplayer : NetworkBehaviour
 {
 
@@ -13,10 +14,15 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
     bool camIsMoving = false;
     float tolerance = 0.1f;
 
+    public LayerMask hitLayer;
+    public GameObject lefthand;
+    public GameObject righthand;
     PlayerInput playerInput;
     CharacterController characterController;
     Animator animator;
     NetworkAnimator networkAnimator;
+    NetworkObject networkobj;
+    //PlayerHitbox childHitbox;
     bool isMoving;
 
     int isWalkingHash;
@@ -25,10 +31,13 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
 
     // Attack variables
 
+    public float punchRange = 1.0f;
     bool isAttackPressed = false;
     PlayerBaseStateMultiplayer _currentState;
     PlayerStateFactoryMultiplayer states;
+    int stillAttacking;
 
+    public static event Action<(ulong from, ulong to)> OnHitPlayer; 
     //getter and setter
     public PlayerBaseStateMultiplayer currentState { get { return _currentState; } set { _currentState = value; } }
     public Animator _animator{get{ return animator; }}
@@ -40,6 +49,7 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
     // Attack variables
     public int _isAttackingHash {get{ return isAttackingHash; }set{ isAttackingHash = value; }}
     public bool _isAttackPressed {get{ return isAttackPressed; }}
+    public int _stillAttacking {get{ return stillAttacking; }set{ stillAttacking = value; }}
     public override void OnNetworkSpawn()
     {
         if (IsOwner)
@@ -47,6 +57,7 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
             mainCamera = Camera.main;
             playerInput = new PlayerInput();
             playerInput.CharacterControls.Enable();
+            //childHitbox = GetComponentInChildren<PlayerHitbox>();
             characterController = GetComponent<CharacterController>();
             animator = GetComponent<Animator>();
             networkAnimator = GetComponent<NetworkAnimator>();
@@ -63,6 +74,8 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
             playerInput.CharacterControls.Jab.performed += onAttack;
             playerInput.CharacterControls.Jab.canceled += onAttack;
         }
+        //PlayerDataManager.Instance.OnPlayerDead += playerDead;
+        networkobj = GetComponent<NetworkObject>();
     }
 
 
@@ -77,13 +90,6 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
         //{
         //    animator.SetInteger(isAttackingHash,0);
         //}
-    }
-
-    void onMovementInput(InputAction.CallbackContext context)
-    {
-        // change to adapt to camera movement
-        //curMovementInput = context.ReadValue<Vector2>();
-        //isMoving = curMovementInput.x != 0 || curMovementInput.y != 0;
     }
 
     void CameraStatus()
@@ -130,8 +136,62 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
             playerInput.CharacterControls.Jab.performed -= onAttack;
             playerInput.CharacterControls.Jab.canceled -= onAttack;
         }
+        //PlayerDataManager.Instance.OnPlayerDead -= playerDead;
     }
 
+    //void playerDead(ulong id)
+    //{
+    //    if(networkobj.OwnerClientId == id)
+    //    {
+    //        // set player is dead variable to true;
+    //        Debug.Log("Player" + id + "has died");
+    //    }
+    //}
+
+    public void RaycastPunch(int handChoice)
+    {
+        GameObject hand;
+        switch (handChoice)
+        {
+            case 1:
+                hand = righthand;
+                break;
+            default:
+                hand = lefthand;
+                break;
+        }
+        RaycastHit hit;
+        // Project a ray from the hand forward
+        Vector3 direction = transform.forward;
+        
+        // Visualize the ray in the scene view for debugging
+        Debug.DrawRay(hand.transform.position, direction * punchRange, Color.red, 0.5f);
+
+        if (Physics.Raycast(hand.transform.position, direction, out hit, punchRange, hitLayer))
+        {
+            Debug.Log("Actual hit: " + hit.collider.name);
+            CollisionOnObject(hit);
+        }
+    }
+
+    public void CollisionOnObject(RaycastHit collision)
+    {
+        if (IsServer)
+        {
+            if (collision.transform.TryGetComponent(out NetworkObject networkObject))
+            {
+                if (collision.collider.gameObject.layer == LayerMask.NameToLayer("Player") && networkObject.OwnerClientId != networkobj.OwnerClientId)
+                {
+                    Debug.Log("hand has Collision to player");
+                    (ulong, ulong) fromPlayerToEnemey = new(networkobj.OwnerClientId, networkObject.OwnerClientId);
+                    OnHitPlayer?.Invoke(fromPlayerToEnemey);
+                    //childHitbox.SetHitboxActive(false);
+                    return;
+                }
+            }
+        }
+        
+    }
     //void OnEnable()
     //{
     //    

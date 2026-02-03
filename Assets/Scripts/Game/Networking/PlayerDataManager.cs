@@ -13,8 +13,8 @@ public class PlayerDataManager : NetworkBehaviour
     private const int LIFEPOINTS = 4;
     private const int LIFEPOINTS_TO_REDUCE = 1;
 
-    //public event Action<ulong> OnPlayerDead;
-    //public event Action<ulong> OnPlayerHealthChanged;
+    public event Action<ulong> OnPlayerDead;
+    public event Action<ulong> OnPlayerHealthChanged;
     
     private void Awake()
     {
@@ -72,125 +72,102 @@ public class PlayerDataManager : NetworkBehaviour
     void Start()
     {
         NetworkManager.Singleton.OnClientConnectedCallback += AddNewClientToList;
-        //BulletData.OnHitPlayer += BulletDataOnOnHitPlayer;
-        //KillPlayer.OnKillPlayer += KillPlayerOnOnKillPlayer;
-        //RestartGame.OnRestartGame += RestartGameOnOnRestartGame;
+        PlayerStateMachineMultiplayer.OnHitPlayer += PlayerHitboxOnHitPlayer;
+        RestartGame.OnRestartGame += RestartGameCallback;
     }
 
-    public override void OnNetworkDespawn()
+    public void OnDisable()
     {
-        NetworkManager.Singleton.OnClientConnectedCallback -= AddNewClientToList;
-        //BulletData.OnHitPlayer -= BulletDataOnOnHitPlayer;
-        //KillPlayer.OnKillPlayer -= KillPlayerOnOnKillPlayer;
-        //RestartGame.OnRestartGame -= RestartGameOnOnRestartGame;
+        if (IsServer)
+        {
+            allPlayerData.Clear();
+            NetworkManager.Singleton.OnClientConnectedCallback -= AddNewClientToList;
+        }
+        PlayerStateMachineMultiplayer.OnHitPlayer -= PlayerHitboxOnHitPlayer;
+        RestartGame.OnRestartGame -= RestartGameCallback;
+    }
+
+    private void RestartGameCallback()
+    {
+        if(!IsServer) return;
+
+        List<NetworkObject> playerObjects = FindObjectsOfType<PlayerMovement>()
+            .Select(x => x.transform.GetComponent<NetworkObject>()).ToList();
+
+        foreach (var playerobj in playerObjects)
+        {
+            playerobj.Despawn(); 
+        }
+
+        ResetNetworkList();
+    }
+    
+    void ResetNetworkList()
+    {
+        for (int i = 0; i < allPlayerData.Count; i++)
+        {
+            PlayerData resetPLayer = new PlayerData(
+                allPlayerData[i].clientID,
+                playerPlaced: false,
+                lifePoints: LIFEPOINTS,
+                score: 0
+                );
+
+            allPlayerData[i] = resetPLayer;
+        }
     }
 
 
-    //private void RestartGameOnOnRestartGame()
-    //{
-    //    if(!IsServer) return;
-//
-    //    List<NetworkObject> playerObjects = FindObjectsOfType<PlayerMovement>()
-    //        .Select(x => x.transform.GetComponent<NetworkObject>()).ToList();
-//
-    //    List<NetworkObject> bulletObjects = FindObjectsOfType<BulletData>()
-    //        .Select(x => x.transform.GetComponent<NetworkObject>()).ToList();
-//
-//
-//
-    //    foreach (var playerobj in playerObjects)
-    //    {
-    //       playerobj.Despawn(); 
-    //    }
-//
-    //    foreach (var bulletObject in bulletObjects)
-    //    {
-    //        bulletObject.Despawn();
-    //    }
-//
-    //    ResetNetworkList();
-    //}
+    public float GetPlayerHealth(ulong id)
+    {
+        for (int i = 0; i < allPlayerData.Count; i++)
+        {
+            if (allPlayerData[i].clientID == id)
+            {
+                return allPlayerData[i].lifePoints;
+            }
+        }
 
+        return default;
+    }
 
-    //void ResetNetworkList()
-    //{
-    //    for (int i = 0; i < allPlayerData.Count; i++)
-    //    {
-    //        PlayerData resetPLayer = new PlayerData(
-    //            allPlayerData[i].clientID,
-    //            playerPlaced: false,
-    //            lifePoints: LIFEPOINTS,
-    //            score: 0
-    //            );
-//
-    //        allPlayerData[i] = resetPLayer;
-    //    }
-    //}
-//
-    //private void KillPlayerOnOnKillPlayer(ulong id)
-    //{
-    //    (ulong, ulong) fromTO = new(555, id);
-    //    BulletDataOnOnHitPlayer(fromTO);
-    //}
+    private void PlayerHitboxOnHitPlayer((ulong from, ulong to) ids)
+    {
+        if (IsServer)
+        {
+            if (ids.from != ids.to)
+            {
+                for (int i = 0; i < allPlayerData.Count; i++)
+                {
+                    if (allPlayerData[i].clientID == ids.to)
+                    {
+                        int lifePointsToReduce = allPlayerData[i].lifePoints == 0 ? 0 : LIFEPOINTS_TO_REDUCE;
+                        PlayerData newData = new PlayerData(
+                            allPlayerData[i].clientID,
+                            allPlayerData[i].score,
+                            allPlayerData[i].lifePoints - lifePointsToReduce,
+                            allPlayerData[i].playerPlaced
+                        );
+                        if (newData.lifePoints <= 0)
+                        {
+                            OnPlayerDead?.Invoke(ids.to);
+                        }
+                        Debug.Log("Player got hit " + ids.to + " lifepoints left => " + newData.lifePoints +  " hit by " + ids.from);
+                        allPlayerData[i] = newData;
+                        break;
+                    }
+                }
+            }
+        }
 
-    //public float GetPlayerHealth(ulong id)
-    //{
-    //    for (int i = 0; i < allPlayerData.Count; i++)
-    //    {
-    //        if (allPlayerData[i].clientID == id)
-    //        {
-    //            return allPlayerData[i].lifePoints;
-    //        }
-    //    }
-//
-    //    return default;
-    //}
-//
-    //private void BulletDataOnOnHitPlayer((ulong from, ulong to) ids)
-    //{
-    //    if (IsServer)
-    //    {
-    //        if (ids.from != ids.to)
-    //        {
-    //            for (int i = 0; i < allPlayerData.Count; i++)
-    //            {
-    //                if (allPlayerData[i].clientID == ids.to)
-    //                {
-    //                    int lifePointsToReduce = allPlayerData[i].lifePoints == 0 ? 0 : LIFEPOINTS_TO_REDUCE;
-//
-    //                    PlayerData newData = new PlayerData(
-    //                        allPlayerData[i].clientID,
-    //                        allPlayerData[i].score,
-    //                        allPlayerData[i].lifePoints - lifePointsToReduce,
-    //                        allPlayerData[i].playerPlaced
-    //                    );
-    //                    
-    //                    
-//
-    //                    if (newData.lifePoints <= 0)
-    //                    {
-    //                        OnPlayerDead?.Invoke(ids.to);
-    //                    }
-    //                    
-    //                    
-    //                    
-    //                    Debug.Log("Player got hit " + ids.to + " lifepoints left => " + newData.lifePoints +  " shot by " + ids.from);
-//
-    //                    allPlayerData[i] = newData;
-    //                    break;
-    //                }
-    //            }
-    //        }
-    //    }
-//
-    //    SyncReducePlayerHealthClientRpc(ids.to);
-    //}
-//
-    //[ClientRpc]
-    //void SyncReducePlayerHealthClientRpc(ulong hitID)
-    //{
-    //    OnPlayerHealthChanged?.Invoke(hitID);
-    //}
+        SyncReducePlayerHealthClientRpc(ids.to);
+    }
+
+    [ClientRpc]
+    void SyncReducePlayerHealthClientRpc(ulong hitID)
+    {
+        OnPlayerHealthChanged?.Invoke(hitID);
+    }
 
     void AddNewClientToList(ulong clientID)
     {
