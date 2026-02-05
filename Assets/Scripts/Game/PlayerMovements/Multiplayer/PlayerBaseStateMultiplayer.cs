@@ -37,6 +37,7 @@ public abstract class PlayerBaseStateMultiplayer
     }
     protected void SwitchState(PlayerBaseStateMultiplayer newState)
     {
+        
         ExitState();
         newState.EnterState();
         _ctx.currentState = newState;

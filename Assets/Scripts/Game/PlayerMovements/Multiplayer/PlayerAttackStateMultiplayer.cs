@@ -10,7 +10,7 @@ public class PlayerAttackStateMultiplayer : PlayerBaseStateMultiplayer
     
     public override void EnterState()
     {
-        
+        Debug.Log($"<color=red>[Attack State]</color> Enter. Animator integer set to 1. Frame: {Time.frameCount}");
         Ctx._animator.SetInteger(Ctx._isAttackingHash, 1);
     }
     public override void UpdateState()
@@ -19,19 +19,35 @@ public class PlayerAttackStateMultiplayer : PlayerBaseStateMultiplayer
     }
     public override void ExitState()
     {
-        
+        Debug.Log($"<color=red>[Attack State]</color> Exit. Animator integer set to 0. Frame: {Time.frameCount}");
         Ctx._animator.SetInteger(Ctx._isAttackingHash, 0);
     }
     public override void CheckSwitchStates()
     {
-        if (!Ctx._isAttackPressed)
-        {
-            SwitchState(Factory.Idle());
-        }
-        else if (Ctx._camIsMoving)
+        //if (!Ctx._isAttackPressed && !Ctx._camIsMoving)
+        //{
+        //    SwitchState(Factory.Idle());
+        //}
+        //else if (Ctx._camIsMoving && !Ctx._isAttackPressed)
+        //{
+        //    SwitchState(Factory.Walk());
+        //}
+
+        Debug.Log("Switching");
+        if (Ctx._camIsMoving && Ctx._stillAttacking == 0)
         {
             SwitchState(Factory.Walk());
         }
+        else if(!Ctx._camIsMoving && Ctx._stillAttacking == 0)
+        {
+            Debug.Log("WHY U NO SWITCh");
+            SwitchState(Factory.Idle());
+        }
+        //if(Ctx._stillAttacking == 0)
+        //{
+        //    SwitchState(Factory.Idle());
+        //}
+
     }
     public override void InitializeSubState() { }
 }

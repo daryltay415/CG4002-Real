@@ -3643,7 +3643,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NetworkConfig:
     ProtocolVersion: 0
-    NetworkTransport: {fileID: 469008183}
+    NetworkTransport: {fileID: 2008692235}
     PlayerPrefab: {fileID: 0}
     Prefabs:
       NetworkPrefabsLists:
@@ -3733,6 +3733,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startHost: {fileID: 1931232361}
   startClient: {fileID: 274116570}
+  StartGameButton: {fileID: 730367269}
+  menu: {fileID: 853008449}
+  controls: {fileID: 273331602}
+  spawnpre: {fileID: 1556154563}
 --- !u!4 &2028606109
 Transform:
   m_ObjectHideFlags: 0

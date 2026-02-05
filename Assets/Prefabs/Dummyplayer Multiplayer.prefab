@@ -694,9 +694,6 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 3503167532966410781, guid: 9bd72731ebe2248478ba4849c274a43b, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 3184413757383267839}
-    - targetCorrespondingSourceObject: {fileID: 3503167532966410781, guid: 9bd72731ebe2248478ba4849c274a43b, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 2661206932934349489}
     - targetCorrespondingSourceObject: {fileID: 3503167532966410781, guid: 9bd72731ebe2248478ba4849c274a43b, type: 3}
       insertIndex: -1
@@ -731,20 +728,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 3503167532966410781, guid: 9bd72731ebe2248478ba4849c274a43b, type: 3}
   m_PrefabInstance: {fileID: 9121902550781575891}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &3184413757383267839
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5623379951936092366}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  TransitionStateInfoList: []
-  m_Animator: {fileID: 1414620929991489550}
 --- !u!114 &2661206932934349489
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -763,6 +746,7 @@ MonoBehaviour:
   lefthand: {fileID: 7330953147297973323}
   righthand: {fileID: 6917512468195173787}
   punchRange: 0.18
+  stillAttacking: 0
 --- !u!114 &7933272639859038948
 MonoBehaviour:
   m_ObjectHideFlags: 0

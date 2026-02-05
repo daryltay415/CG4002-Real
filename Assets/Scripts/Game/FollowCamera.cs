@@ -21,7 +21,10 @@ public class FollowCamera : NetworkBehaviour
     void Update()
     {
         if (IsOwner){
-            transform.position = mainCam.transform.position + mainCam.transform.forward * zoffset + mainCam.transform.up * yoffset;
+            //transform.position = mainCam.transform.position + mainCam.transform.forward * zoffset + mainCam.transform.up * yoffset;
+            Vector3 targetPos = mainCam.transform.position + mainCam.transform.forward * zoffset + mainCam.transform.up * yoffset;
+            transform.position = Vector3.Lerp(transform.position, targetPos, Time.deltaTime * 10f);
+            
             camEuler = mainCam.transform.rotation.eulerAngles;
             transform.rotation = Quaternion.Euler(0, camEuler.y, 0);
         }

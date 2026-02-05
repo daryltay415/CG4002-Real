@@ -18,14 +18,20 @@ public class PlayerIdleStateMultiplayer : PlayerBaseStateMultiplayer
     }
     public override void CheckSwitchStates()
     {
-        if (Ctx._camIsMoving)
+        
+        if (Ctx._camIsMoving && !Ctx._isAttackPressed)
         {
             SwitchState(Factory.Walk());
         }
         else if (Ctx._isAttackPressed)
         {
+            Debug.Log($"[Idle State] Condition Met: isAttackPressed is TRUE. Switching to Attack. Frame: {Time.frameCount}");
             SwitchState(Factory.Attack());
         }
+        //if (Ctx._isAttackPressed)
+        //{
+        //    SwitchState(Factory.Attack());
+        //}
     }
     public override void InitializeSubState() { }
 }

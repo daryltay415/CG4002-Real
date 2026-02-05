@@ -35,7 +35,7 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
     bool isAttackPressed = false;
     PlayerBaseStateMultiplayer _currentState;
     PlayerStateFactoryMultiplayer states;
-    int stillAttacking;
+    public int stillAttacking;
 
     public static event Action<(ulong from, ulong to)> OnHitPlayer; 
     //getter and setter
@@ -64,8 +64,8 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
             networkAnimator.Animator = animator;
             // Set up states
             states = new PlayerStateFactoryMultiplayer(this);
-            _currentState = states.Idle();
-            _currentState.EnterState();
+            currentState = states.Idle();
+            currentState.EnterState();
             isAttackingHash = Animator.StringToHash("Attack");
             isWalkingHash = Animator.StringToHash("Walk");
             //playerInput.CharacterControls.Move.started += onMovementInput;
