@@ -6,7 +6,7 @@ public class PlayerAttackStateMultiplayer : PlayerBaseStateMultiplayer
 {
     public PlayerAttackStateMultiplayer(PlayerStateMachineMultiplayer curContext, PlayerStateFactoryMultiplayer playerStateFactory)
     :base(curContext, playerStateFactory){ }
-    public static event Action<bool> hitBoxIsActive;
+    //public static event Action<bool> hitBoxIsActive;
     
     public override void EnterState()
     {
@@ -27,6 +27,10 @@ public class PlayerAttackStateMultiplayer : PlayerBaseStateMultiplayer
         if (!Ctx._isAttackPressed)
         {
             SwitchState(Factory.Idle());
+        }
+        else if (Ctx._camIsMoving)
+        {
+            SwitchState(Factory.Walk());
         }
     }
     public override void InitializeSubState() { }

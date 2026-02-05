@@ -189,7 +189,10 @@ public class PlayerDataManager : NetworkBehaviour
         if(allPlayerData.Contains(newPlayerData)) return;
         
         allPlayerData.Add(newPlayerData);
+        SyncPlayerListClientRpc();
         PrintAllPlayerPlayerList();
+        
+
     }
 
 
@@ -199,6 +202,12 @@ public class PlayerDataManager : NetworkBehaviour
         {
             Debug.Log("Player ID => " + playerData.clientID + " hasPlaced " + playerData.playerPlaced + " Called by " + NetworkManager.Singleton.LocalClientId);
         }
+    }
+
+    [ClientRpc]
+    void SyncPlayerListClientRpc()
+    {
+        PrintAllPlayerPlayerList();
     }
 
 }

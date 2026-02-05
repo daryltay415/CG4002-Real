@@ -20,10 +20,9 @@ public class LoadingScript : NetworkBehaviour
         }
 
 
-        //GameObject startGameARObject = FindObjectOfType<StartGameAR>().gameObject;
-        //Destroy(startGameARObject);
-        //GameObject startGameARObject = FindObjectOfType<StartGameNonAR>().gameObject;
-        //Destroy(startGameARObject);
+        GameObject startGameARObject = FindObjectOfType<StartGameAR>().gameObject;
+        Destroy(startGameARObject);
+        
         
         Destroy(FindObjectOfType<NetworkManager>().transform.gameObject);
         SceneManager.LoadScene("SampleScene", LoadSceneMode.Single);        

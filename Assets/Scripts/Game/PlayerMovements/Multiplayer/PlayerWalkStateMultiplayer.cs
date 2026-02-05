@@ -23,6 +23,10 @@ public class PlayerWalkStateMultiplayer : PlayerBaseStateMultiplayer
         {
             SwitchState(Factory.Idle());
         }
+        else if (Ctx._isAttackPressed)
+        {
+            SwitchState(Factory.Attack());
+        }
     }
     public override void InitializeSubState() { }
 }

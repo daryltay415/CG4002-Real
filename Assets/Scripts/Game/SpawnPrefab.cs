@@ -9,8 +9,30 @@ public class SpawnPrefab : NetworkBehaviour
     public GameObject prefabToSpawn;
     //private Transform parentObjectTrans;
 
+    //public override void OnNetworkSpawn()
+    //{
+    //    if (IsServer || IsClient)
+    //    {
+    //        StartGameAR.OnStartGame += Spawn;
+    //    }
+    //}
+
     public void Spawn() {
         //Vector3 spawnPos = new Vector3(0f,-0.842f,0.757f);
+        //if (NetworkManager.Singleton == null || !NetworkManager.Singleton.IsListening)
+        //{
+        //    Debug.LogError("Network not ready!");
+        //    return;
+        //}
+        //
+        //if (NetworkManager.Singleton.LocalClientId == 0)
+        //{
+        //    Debug.LogError("Client ID not assigned yet!");
+        //    return;
+        //}
+        Debug.Log("bruH");
+        Debug.Log("LocalclientID:" + NetworkManager.Singleton.LocalClientId);
+        
         SpawnPlayerServerRPC(Vector3.zero, Quaternion.identity, NetworkManager.Singleton.LocalClientId);
         
     }
@@ -28,11 +50,9 @@ public class SpawnPrefab : NetworkBehaviour
         //prefab.transform.SetParent(parentObjectTrans, true);
     }
 
-    void Update()
-    {
-        //if (PlayerDataManager.Instance.GetHasPlayerPlaced(NetworkManager.Singleton.LocalClientId))
-        //{
-        //    return;
-        //}
-    }
+    //public override void OnNetworkDespawn()
+    //{
+    //    StartGameAR.OnStartGame -= Spawn;
+    //}
+
 }
