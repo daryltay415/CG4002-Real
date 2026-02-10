@@ -10,14 +10,16 @@ public struct PlayerData : IEquatable<PlayerData>, INetworkSerializable
     public int score;
     public float lifePoints;
     public bool playerPlaced;
+    public bool playerGuarding;
 
 
-    public PlayerData(ulong clientID, int score, float lifePoints, bool playerPlaced)
+    public PlayerData(ulong clientID, int score, float lifePoints, bool playerPlaced, bool playerGuarding)
     {
         this.clientID = clientID;
         this.score = score;
         this.lifePoints = lifePoints;
         this.playerPlaced = playerPlaced;
+        this.playerGuarding = playerGuarding;
     }
     
     
@@ -38,5 +40,6 @@ public struct PlayerData : IEquatable<PlayerData>, INetworkSerializable
         serializer.SerializeValue(ref score);
         serializer.SerializeValue(ref lifePoints);
         serializer.SerializeValue(ref playerPlaced);
+        serializer.SerializeValue(ref playerGuarding);
     }
 }

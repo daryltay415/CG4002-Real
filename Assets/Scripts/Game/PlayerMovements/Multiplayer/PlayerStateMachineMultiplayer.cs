@@ -22,15 +22,16 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
     Animator animator;
     NetworkAnimator networkAnimator;
     NetworkObject networkobj;
-    //PlayerHitbox childHitbox;
+    // Guard variables
+    bool isGuarding;
     bool isMoving;
 
     int isWalkingHash;
     int isAttackingHash;
+    int isGuardingHash;
 
 
     // Attack variables
-
     public float punchRange = 1.0f;
     bool isAttackPressed = false;
     PlayerBaseStateMultiplayer _currentState;
@@ -43,7 +44,9 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
     public Animator _animator{get{ return animator; }}
     public CharacterController _characterController {get{ return characterController; }}
     public bool _isMovingPressed {get{ return isMoving; }}
+    public bool _isGuardingPressed {get{return isGuarding;}}
     public int _isWalkingHash {get{ return isWalkingHash; } set { isWalkingHash = value; }}
+    public int _isGuardingHash {get{return isGuardingHash; } set { isGuardingHash = value;}}
     public bool _camIsMoving {get{return camIsMoving;}}
 
     // Attack variables
@@ -68,11 +71,14 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
             currentState.EnterState();
             isAttackingHash = Animator.StringToHash("Attack");
             isWalkingHash = Animator.StringToHash("Walk");
+            isGuardingHash = Animator.StringToHash("Guard");
             //playerInput.CharacterControls.Move.started += onMovementInput;
             //playerInput.CharacterControls.Move.canceled += onMovementInput;
             //playerInput.CharacterControls.Move.performed += onMovementInput;
             playerInput.CharacterControls.Jab.performed += onAttack;
             playerInput.CharacterControls.Jab.canceled += onAttack;
+            playerInput.CharacterControls.Guard.performed += onGuard;
+            playerInput.CharacterControls.Guard.canceled += onGuard;
         }
         //PlayerDataManager.Instance.OnPlayerDead += playerDead;
         networkobj = GetComponent<NetworkObject>();
@@ -82,14 +88,12 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
     void onAttack(InputAction.CallbackContext context)
     {
         isAttackPressed = context.ReadValueAsButton();
-        //if (isAttackPressed)
-        //{
-        //    animator.SetInteger(isAttackingHash,1);
-        //}
-        //else
-        //{
-        //    animator.SetInteger(isAttackingHash,0);
-        //}
+    }
+
+    void onGuard(InputAction.CallbackContext context)
+    {
+        isGuarding = context.ReadValueAsButton();
+        PlayerDataManager.Instance.PlayerGuardStateServerRpc(networkobj.OwnerClientId,isGuarding);
     }
 
     void CameraStatus()
@@ -135,6 +139,8 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
         {
             playerInput.CharacterControls.Jab.performed -= onAttack;
             playerInput.CharacterControls.Jab.canceled -= onAttack;
+            playerInput.CharacterControls.Guard.performed -= onGuard;
+            playerInput.CharacterControls.Guard.canceled -= onGuard;
         }
         //PlayerDataManager.Instance.OnPlayerDead -= playerDead;
     }
@@ -185,7 +191,6 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
                     Debug.Log("hand has Collision to player");
                     (ulong, ulong) fromPlayerToEnemey = new(networkobj.OwnerClientId, networkObject.OwnerClientId);
                     OnHitPlayer?.Invoke(fromPlayerToEnemey);
-                    //childHitbox.SetHitboxActive(false);
                     return;
                 }
             }

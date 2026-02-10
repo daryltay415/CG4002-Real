@@ -38,10 +38,12 @@ public class PlayerAttackStateMultiplayer : PlayerBaseStateMultiplayer
         {
             SwitchState(Factory.Walk());
         }
-        else if(!Ctx._camIsMoving && Ctx._stillAttacking == 0)
+        else if(!Ctx._camIsMoving && Ctx._stillAttacking == 0 && !Ctx._isGuardingPressed)
         {
-            Debug.Log("WHY U NO SWITCh");
             SwitchState(Factory.Idle());
+        } else if(Ctx._isGuardingPressed && Ctx._stillAttacking == 0)
+        {
+            SwitchState(Factory.Guard());
         }
         //if(Ctx._stillAttacking == 0)
         //{

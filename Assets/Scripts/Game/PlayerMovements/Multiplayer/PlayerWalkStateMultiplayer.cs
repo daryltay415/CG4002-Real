@@ -19,13 +19,17 @@ public class PlayerWalkStateMultiplayer : PlayerBaseStateMultiplayer
     }
     public override void CheckSwitchStates()
     {
-        if (!Ctx._camIsMoving && !Ctx._isAttackPressed)
+        if (!Ctx._camIsMoving && !Ctx._isAttackPressed && !Ctx._isGuardingPressed)
         {
             SwitchState(Factory.Idle());
         }
         else if (Ctx._isAttackPressed)
         {
             SwitchState(Factory.Attack());
+        } 
+        else if (Ctx._isGuardingPressed)
+        {
+            SwitchState(Factory.Guard());
         }
     }
     public override void InitializeSubState() { }

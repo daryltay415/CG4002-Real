@@ -28,10 +28,11 @@ public class PlayerIdleStateMultiplayer : PlayerBaseStateMultiplayer
             Debug.Log($"[Idle State] Condition Met: isAttackPressed is TRUE. Switching to Attack. Frame: {Time.frameCount}");
             SwitchState(Factory.Attack());
         }
-        //if (Ctx._isAttackPressed)
-        //{
-        //    SwitchState(Factory.Attack());
-        //}
+        else if (Ctx._isGuardingPressed)
+        {
+            SwitchState(Factory.Guard());
+        }
+        
     }
     public override void InitializeSubState() { }
 }

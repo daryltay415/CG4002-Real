@@ -39,7 +39,8 @@ public class PlayerDataManager : NetworkBehaviour
                     allPlayerData[i].clientID,
                     allPlayerData[i].score,
                     allPlayerData[i].lifePoints,
-                    true
+                    true,
+                    allPlayerData[i].playerGuarding
                 );
                 
                 allPlayerData[i] = newData;
@@ -110,7 +111,8 @@ public class PlayerDataManager : NetworkBehaviour
                 allPlayerData[i].clientID,
                 playerPlaced: false,
                 lifePoints: LIFEPOINTS,
-                score: 0
+                score: 0,
+                playerGuarding: false
                 );
 
             allPlayerData[i] = resetPLayer;
@@ -131,22 +133,49 @@ public class PlayerDataManager : NetworkBehaviour
         return default;
     }
 
+
+    [ServerRpc(RequireOwnership = false)]
+    public void PlayerGuardStateServerRpc(ulong id, bool isGuarding)
+    {
+        Debug.Log("Why u no guard");
+        for (int i = 0; i < allPlayerData.Count; i++)
+        {
+            if (allPlayerData[i].clientID == id)
+            {
+                PlayerData newData = new PlayerData(
+                            allPlayerData[i].clientID,
+                            allPlayerData[i].score,
+                            allPlayerData[i].lifePoints,
+                            allPlayerData[i].playerPlaced,
+                            isGuarding
+                        );
+                Debug.Log(allPlayerData[i].clientID + "is guarding: " + isGuarding);
+                allPlayerData[i] = newData;
+            }
+        }
+    }
+
     private void PlayerHitboxOnHitPlayer((ulong from, ulong to) ids)
     {
-        if (IsServer)
+        if (IsServer && ids.from != ids.to)
         {
-            if (ids.from != ids.to)
+            for (int i = 0; i < allPlayerData.Count; i++)
             {
-                for (int i = 0; i < allPlayerData.Count; i++)
+                if (allPlayerData[i].clientID == ids.to)
                 {
-                    if (allPlayerData[i].clientID == ids.to)
+                    if (allPlayerData[i].playerGuarding)
+                    {
+                        Debug.Log("I WILL SURVIVE");
+                    }
+                    else
                     {
                         int lifePointsToReduce = allPlayerData[i].lifePoints == 0 ? 0 : LIFEPOINTS_TO_REDUCE;
                         PlayerData newData = new PlayerData(
                             allPlayerData[i].clientID,
                             allPlayerData[i].score,
                             allPlayerData[i].lifePoints - lifePointsToReduce,
-                            allPlayerData[i].playerPlaced
+                            allPlayerData[i].playerPlaced,
+                            allPlayerData[i].playerGuarding
                         );
                         if (newData.lifePoints <= 0)
                         {
@@ -156,8 +185,10 @@ public class PlayerDataManager : NetworkBehaviour
                         allPlayerData[i] = newData;
                         break;
                     }
+                    
                 }
             }
+            
         }
 
         SyncReducePlayerHealthClientRpc(ids.to);
@@ -185,6 +216,7 @@ public class PlayerDataManager : NetworkBehaviour
         newPlayerData.score = 0;
         newPlayerData.lifePoints = LIFEPOINTS;
         newPlayerData.playerPlaced = false;
+        newPlayerData.playerGuarding = false;
         
         if(allPlayerData.Contains(newPlayerData)) return;
         
