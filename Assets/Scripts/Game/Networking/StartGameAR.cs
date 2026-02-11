@@ -108,7 +108,7 @@ public class StartGameAR : MonoBehaviour
         }
 
         menu.SetActive(false);
-        spawnpre.Spawn();
+        spawnpre.Spawn(_sharedSpaceManager.SharedArOriginObject.transform);
         controls.SetActive(true);
     }
 
