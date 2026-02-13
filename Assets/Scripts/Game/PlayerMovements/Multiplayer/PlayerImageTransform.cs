@@ -8,52 +8,47 @@ using Unity.Netcode.Components;
 public class PlayerImageTransform : NetworkBehaviour
 {
     private ARTrackedImageManager _imageManager;
-    private bool _isImageVisible;
-    private Vector3 _arPosition;
-    private Quaternion _arRotation;
-    private Transform _arTrans;
-    public float zoffset = 0.8f;
-    public float yoffset = -0.8f;
-    private Vector3 camEuler;
-
-    [SerializeField] private float _smoothSpeed = 15f;
+    
+    // Set these in the prefab's Inspector
+    [SerializeField] private string hostImageName = "HostMarker";
+    [SerializeField] private string clientImageName = "ClientMarker";
 
     public override void OnNetworkSpawn()
     {
-        // We only override the OTHER player
+        // I don't need to track MYSELF via image, only the opponent
         if (IsOwner) return;
 
         _imageManager = FindFirstObjectByType<ARTrackedImageManager>();
-        _imageManager.trackedImagesChanged += OnImagesChanged;
+        if (_imageManager != null)
+        {
+            _imageManager.trackedImagesChanged += OnImagesChanged;
+        }
     }
 
     private void OnImagesChanged(ARTrackedImagesChangedEventArgs args)
     {
+        Debug.Log($"Images changed! Added: {args.added.Count}, Updated: {args.updated.Count}");
+        // Determine which image we are looking for based on who we are
+        // If I am Host (ID 0), I look for the Client image to find my opponent
+        string targetImage = NetworkManager.Singleton.LocalClientId == 0 ? clientImageName : hostImageName;
+
         foreach (var img in args.updated)
         {
-            if (img.referenceImage.name == "Client" && IsHost)
+            if (img.referenceImage.name == targetImage)
             {
-                _isImageVisible = img.trackingState == UnityEngine.XR.ARSubsystems.TrackingState.Tracking;
-                _arPosition = img.transform.position;
-                _arRotation = img.transform.rotation;
-                _arTrans = img.transform;
+                if (img.trackingState == UnityEngine.XR.ARSubsystems.TrackingState.Tracking)
+                {
+                    // Snap the prefab to the physical image
+                    transform.position = img.transform.position;
+                    transform.rotation = img.transform.rotation;
+                }
             }
         }
     }
 
-    void LateUpdate()
+    private void OnDestroy()
     {
-        if (IsOwner || !_isImageVisible) return;
-
-        // LATE UPDATE is key: it runs AFTER the NetworkTransform has moved the object.
-        // We now "snap" it back to the AR position.
-        //transform.position = Vector3.Lerp(transform.position, _arPosition, Time.deltaTime * _smoothSpeed);
-        //transform.rotation = Quaternion.Slerp(transform.rotation, _arRotation, Time.deltaTime * _smoothSpeed);
-        Vector3 targetPos = _arPosition + _arTrans.forward * zoffset + _arTrans.up * yoffset;
-        transform.position = Vector3.Lerp(transform.position, targetPos, Time.deltaTime * 10f);
-            
-        camEuler = _arRotation.eulerAngles;
-        transform.rotation = Quaternion.Euler(0, camEuler.y, 0);
-    
+        if (_imageManager != null)
+            _imageManager.trackedImagesChanged -= OnImagesChanged;
     }
 }

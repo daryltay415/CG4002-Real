@@ -8,174 +8,151 @@ using UnityEngine.UI;
 
 public class StartGameAR : MonoBehaviour
 {
-    [SerializeField] private SharedSpaceManager _sharedSpaceManager;
-    private const int MAX_AMOUNT_CLIENTS_ROOM = 2;
+    //[SerializeField] private SharedSpaceManager _sharedSpaceManager;
+    //private const int MAX_AMOUNT_CLIENTS_ROOM = 2;
+//
+    //[SerializeField] private Texture2D _targetImage;
+    //[SerializeField] private float _targetImageSize;
+    //private string roomName = "TestRoom";
+//
+    //[SerializeField] private Button StartGameButton;
+    //[SerializeField] private Button CreateRoomButton;
+    //[SerializeField] private Button JoinRoomButton;
+    //[SerializeField] private GameObject menu;
+    //[SerializeField] private GameObject controls;
+    //[SerializeField] private SpawnPrefab spawnpre;
+    //private bool isHost;
 
-    [SerializeField] private Texture2D _targetImage;
-    [SerializeField] private float _targetImageSize;
-    private string roomName = "TestRoom";
-
-    [SerializeField] private Button StartGameButton;
-    [SerializeField] private Button CreateRoomButton;
-    [SerializeField] private Button JoinRoomButton;
-    [SerializeField] private GameObject menu;
-    [SerializeField] private GameObject controls;
-    [SerializeField] private SpawnPrefab spawnpre;
-    private bool isHost;
-
-    //public static event Action OnStartSharedSpaceHost;
-    //public static event Action OnJoinSharedSpaceClient;
-    //public static event Action OnStartGame;
-    //public static event Action OnStartSharedSpace;
-
-    private void Awake()
+    void Start()
     {
-        DontDestroyOnLoad(gameObject);
-        _sharedSpaceManager.sharedSpaceManagerStateChanged += SharedSpaceManagerOnsharedSpaceManagerStateChanged;
-        Debug.Log("sharedspacemanager = " + _sharedSpaceManager);
-        StartGameButton.onClick.AddListener(StartGame);
-        CreateRoomButton.onClick.AddListener(CreateGameHost);
-        JoinRoomButton.onClick.AddListener(JoinGameClient);
-        
-        StartGameButton.interactable = false;
-        
-        //ImageForColocalization.OnTextureRendered += BlitImageForColocalizationOnTextureRendered;
-    }
-
-    private void OnDestroy()
-    {
-        _sharedSpaceManager.sharedSpaceManagerStateChanged -= SharedSpaceManagerOnsharedSpaceManagerStateChanged;
-        //ImageForColocalization.OnTextureRendered -= BlitImageForColocalizationOnTextureRendered;
-    }
-
-    //private void BlitImageForColocalizationOnTextureRendered(Texture2D texture)
-    //{
-    //    SetTargetImage(texture);
-    //    StartSharedSpace();
-    //}
-
-    //void SetTargetImage(Texture2D texture2D)
-    //{
-    //    _targetImage = texture2D;
-    //}
-
-    private void SharedSpaceManagerOnsharedSpaceManagerStateChanged(SharedSpaceManager.SharedSpaceManagerStateChangeEventArgs obj)
-    {
-        if (obj.Tracking)
-        {
-            Debug.Log("trackingobj");
-            StartGameButton.interactable = true;
-            CreateRoomButton.interactable = false;
-            JoinRoomButton.interactable = false;
-        }
-        Debug.Log("not tracking obj");
-    }
-
-    public void StartGame()
-    {
-        //OnStartGame?.Invoke();
-        
-        if (isHost)
-        {
-            NetworkManager.Singleton.StartHost();
-            Debug.Log("starting host");
-            OnNetworkReady();
-        }
-        else
-        {
-            NetworkManager.Singleton.StartClient();
-            Debug.Log("starting client");
-            NetworkManager.Singleton.OnClientConnectedCallback += HandleClientConnected;
-        }
-        //if(isHost==false && NetworkManager.Singleton.LocalClientId == 0){
-        //        Debug.Log("cool");
-        //        return;
-        //}
-        bool actuallyHost = NetworkManager.Singleton.IsHost;
-        Debug.Log($"Am I the host? {actuallyHost}");
-        //StartCoroutine(WaitForConnectionAndSpawn());
-        //menu.SetActive(false);
-        //spawnpre.Spawn();
-        //controls.SetActive(true);
-    }
-
-
-    private void OnNetworkReady()
-    {
-        if (PlayerDataManager.Instance.GetHasPlayerPlaced(NetworkManager.Singleton.LocalClientId))
-        {
-            return;
-        }
-
-        menu.SetActive(false);
-        spawnpre.Spawn(_sharedSpaceManager.SharedArOriginObject.transform);
-        controls.SetActive(true);
-    }
-
-    private void HandleClientConnected(ulong id)
-    {
-        // Make sure we only trigger this for our own local join
-        if (id == NetworkManager.Singleton.LocalClientId)
-        {
-            NetworkManager.Singleton.OnClientConnectedCallback -= HandleClientConnected;
-            OnNetworkReady();
-        }
-    }
-
-    void StartSharedSpace()
-    {
-        //OnStartSharedSpace?.Invoke();
-
-        if (_sharedSpaceManager.GetColocalizationType() == SharedSpaceManager.ColocalizationType.MockColocalization)
-        {
-            var mockTrackingArgs = ISharedSpaceTrackingOptions.CreateMockTrackingOptions();
-            var roomArgs = ISharedSpaceRoomOptions.CreateLightshipRoomOptions(
-                roomName,
-                MAX_AMOUNT_CLIENTS_ROOM,
-                "MockColocalizationDemo"
-            );
-            
-            _sharedSpaceManager.StartSharedSpace(mockTrackingArgs,roomArgs);
-            return;
-        }
-        
-        if (_sharedSpaceManager.GetColocalizationType() == SharedSpaceManager.ColocalizationType.ImageTrackingColocalization)
-        {
-            var imageTrackingOptions = ISharedSpaceTrackingOptions.CreateImageTrackingOptions(
-                _targetImage, _targetImageSize
-                );
-            
-            var roomArgs = ISharedSpaceRoomOptions.CreateLightshipRoomOptions(
-                roomName,
-                MAX_AMOUNT_CLIENTS_ROOM,
-                "ImageColocalization"
-            );
-            
-            _sharedSpaceManager.StartSharedSpace(imageTrackingOptions,roomArgs);
-            Debug.Log("Start shared space");
-            return;
-        }
-        
-        
         
     }
-    
 
-    void CreateGameHost()
-    {
-        Debug.Log("Creating host");
-        isHost = true;
-        //OnStartSharedSpaceHost?.Invoke();
-        StartSharedSpace();
-    }
 
-    void JoinGameClient()
-    {
-        Debug.Log("Join button clicked: Setting isHost to false");
-        isHost = false;
-        //OnJoinSharedSpaceClient?.Invoke();
-        StartSharedSpace();
-    }
-    
-    
+   //private void Awake()
+   //{
+   //    DontDestroyOnLoad(gameObject);
+   //    _sharedSpaceManager.sharedSpaceManagerStateChanged += SharedSpaceManagerOnsharedSpaceManagerStateChanged;
+   //    Debug.Log("sharedspacemanager = " + _sharedSpaceManager);
+   //    StartGameButton.onClick.AddListener(StartGame);
+   //    CreateRoomButton.onClick.AddListener(CreateGameHost);
+   //    JoinRoomButton.onClick.AddListener(JoinGameClient);
+   //    
+   //    StartGameButton.interactable = false;
+   //}
+
+   //private void OnDestroy()
+   //{
+   //    _sharedSpaceManager.sharedSpaceManagerStateChanged -= SharedSpaceManagerOnsharedSpaceManagerStateChanged;
+   //}
+
+
+   //private void SharedSpaceManagerOnsharedSpaceManagerStateChanged(SharedSpaceManager.SharedSpaceManagerStateChangeEventArgs obj)
+   //{
+   //    if (obj.Tracking)
+   //    {
+   //        Debug.Log("trackingobj");
+   //        StartGameButton.interactable = true;
+   //        CreateRoomButton.interactable = false;
+   //        JoinRoomButton.interactable = false;
+   //    }
+   //    Debug.Log("not tracking obj");
+   //}
+
+   //public void StartGame()
+   //{
+   //    //OnStartGame?.Invoke();
+   //    
+   //    if (isHost)
+   //    {
+   //        NetworkManager.Singleton.StartHost();
+   //        Debug.Log("starting host");
+   //        OnNetworkReady();
+   //    }
+   //    else
+   //    {
+   //        NetworkManager.Singleton.StartClient();
+   //        Debug.Log("starting client");
+   //        NetworkManager.Singleton.OnClientConnectedCallback += HandleClientConnected;
+   //    }
+   //    bool actuallyHost = NetworkManager.Singleton.IsHost;
+   //    Debug.Log($"Am I the host? {actuallyHost}");
+   //}
+
+
+   //private void OnNetworkReady()
+   //{
+   //    if (PlayerDataManager.Instance.GetHasPlayerPlaced(NetworkManager.Singleton.LocalClientId))
+   //    {
+   //        return;
+   //    }
+
+   //    menu.SetActive(false);
+   //    //spawnpre.Spawn(_sharedSpaceManager.SharedArOriginObject.transform);
+   //    controls.SetActive(true);
+   //}
+
+   //private void HandleClientConnected(ulong id)
+   //{
+   //    // Make sure we only trigger this for our own local join
+   //    if (id == NetworkManager.Singleton.LocalClientId)
+   //    {
+   //        NetworkManager.Singleton.OnClientConnectedCallback -= HandleClientConnected;
+   //        OnNetworkReady();
+   //    }
+   //}
+
+   //void StartSharedSpace()
+   //{
+
+   //    if (_sharedSpaceManager.GetColocalizationType() == SharedSpaceManager.ColocalizationType.MockColocalization)
+   //    {
+   //        var mockTrackingArgs = ISharedSpaceTrackingOptions.CreateMockTrackingOptions();
+   //        var roomArgs = ISharedSpaceRoomOptions.CreateLightshipRoomOptions(
+   //            roomName,
+   //            MAX_AMOUNT_CLIENTS_ROOM,
+   //            "MockColocalizationDemo"
+   //        );
+   //        
+   //        _sharedSpaceManager.StartSharedSpace(mockTrackingArgs,roomArgs);
+   //        return;
+   //    }
+   //    
+   //    if (_sharedSpaceManager.GetColocalizationType() == SharedSpaceManager.ColocalizationType.ImageTrackingColocalization)
+   //    {
+   //        var imageTrackingOptions = ISharedSpaceTrackingOptions.CreateImageTrackingOptions(
+   //            _targetImage, _targetImageSize
+   //            );
+   //        
+   //        var roomArgs = ISharedSpaceRoomOptions.CreateLightshipRoomOptions(
+   //            roomName,
+   //            MAX_AMOUNT_CLIENTS_ROOM,
+   //            "ImageColocalization"
+   //        );
+   //        
+   //        _sharedSpaceManager.StartSharedSpace(imageTrackingOptions,roomArgs);
+   //        Debug.Log("Start shared space");
+   //        return;
+   //    }
+   //    
+   //    
+   //    
+   //}
+   //
+
+   //void CreateGameHost()
+   //{
+   //    Debug.Log("Creating host");
+   //    isHost = true;
+   //    StartSharedSpace();
+   //}
+
+   //void JoinGameClient()
+   //{
+   //    Debug.Log("Join button clicked: Setting isHost to false");
+   //    isHost = false;
+   //    StartSharedSpace();
+   //}
+   //
+   //
 }

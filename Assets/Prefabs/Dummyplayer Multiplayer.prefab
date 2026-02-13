@@ -434,6 +434,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 1238277171960936495, guid: 9bd72731ebe2248478ba4849c274a43b, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1268482595157119653, guid: 9bd72731ebe2248478ba4849c274a43b, type: 3}
       propertyPath: m_Layer
       value: 3
@@ -607,6 +611,10 @@ PrefabInstance:
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 6064489368087367251, guid: 9bd72731ebe2248478ba4849c274a43b, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6064489368087367251, guid: 9bd72731ebe2248478ba4849c274a43b, type: 3}
       propertyPath: InLocalSpace
       value: 1
       objectReference: {fileID: 0}
@@ -708,6 +716,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 3503167532966410781, guid: 9bd72731ebe2248478ba4849c274a43b, type: 3}
       insertIndex: -1
       addedObject: {fileID: -2887951418986131207}
+    - targetCorrespondingSourceObject: {fileID: 3503167532966410781, guid: 9bd72731ebe2248478ba4849c274a43b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -5710410503345126706}
   m_SourcePrefab: {fileID: 100100000, guid: 9bd72731ebe2248478ba4849c274a43b, type: 3}
 --- !u!95 &1414620929991489550 stripped
 Animator:
@@ -795,9 +806,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1258c60ab59163840afc86329a696104, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hostImageName: Host
+  clientImageName: Client
+--- !u!114 &-5710410503345126706
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5623379951936092366}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f5e4df5bd5f453439a2f4f83194261c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   zoffset: 0.8
   yoffset: -0.8
-  _smoothSpeed: 15
 --- !u!1 &6917512468195173787 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2407300420155942728, guid: 9bd72731ebe2248478ba4849c274a43b, type: 3}

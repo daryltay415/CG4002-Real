@@ -358,6 +358,7 @@ GameObject:
   - component: {fileID: 258943274}
   - component: {fileID: 258943275}
   - component: {fileID: 258943276}
+  - component: {fileID: 258943277}
   m_Layer: 0
   m_Name: XR Origin
   m_TagString: Untagged
@@ -406,14 +407,26 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 258943273}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4dea56a9eaadd1c439095de4f9a371cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_SerializedLibrary: {fileID: 11400000, guid: d1af4b4df0c17864b99718fb2c5ef9a4, type: 2}
-  m_MaxNumberOfMovingImages: 1
+  m_MaxNumberOfMovingImages: 2
   m_TrackedImagePrefab: {fileID: 0}
+--- !u!114 &258943277
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 258943273}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6f3b31e9cd7ca347a7630398d1ead86, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &273331602
 GameObject:
   m_ObjectHideFlags: 0
@@ -903,7 +916,8 @@ GameObject:
   m_Component:
   - component: {fileID: 469008185}
   - component: {fileID: 469008184}
-  - component: {fileID: 469008183}
+  - component: {fileID: 469008186}
+  - component: {fileID: 469008187}
   m_Layer: 0
   m_Name: NetworkManagerAR
   m_TagString: Untagged
@@ -911,18 +925,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &469008183
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 469008182}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 39a7c1e438dc4e689f75a8ff942540a8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &469008184
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -937,7 +939,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   NetworkConfig:
     ProtocolVersion: 0
-    NetworkTransport: {fileID: 469008183}
+    NetworkTransport: {fileID: 469008187}
     PlayerPrefab: {fileID: 0}
     Prefabs:
       NetworkPrefabsLists:
@@ -975,6 +977,45 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &469008186
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 469008182}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3436447a60f21c24180b4ccb563d14be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &469008187
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 469008182}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6960e84d07fb87f47956e7a81d71c4e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ProtocolType: 0
+  m_MaxPacketQueueSize: 128
+  m_MaxPayloadSize: 6144
+  m_HeartbeatTimeoutMS: 500
+  m_ConnectTimeoutMS: 1000
+  m_MaxConnectAttempts: 60
+  m_DisconnectTimeoutMS: 30000
+  ConnectionData:
+    Address: 127.0.0.1
+    Port: 7777
+    ServerListenAddress: 127.0.0.1
+  DebugSimulator:
+    PacketDelayMS: 0
+    PacketJitterMS: 0
+    PacketDropRate: 0
 --- !u!1 &507319639
 GameObject:
   m_ObjectHideFlags: 0
@@ -1261,8 +1302,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 603567361}
-  - component: {fileID: 603567363}
-  - component: {fileID: 603567362}
+  - component: {fileID: 603567364}
   m_Layer: 0
   m_Name: SceneryAR
   m_TagString: Untagged
@@ -1289,7 +1329,7 @@ Transform:
   - {fileID: 670663699}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &603567362
+--- !u!114 &603567364
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1298,33 +1338,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 603567360}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5c9f87eb2fbbf324cabd7651372ae3db, type: 3}
+  m_Script: {fileID: 11500000, guid: 46ad926142ed8644fa5e0d660bb0ef37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _sharedSpaceManager: {fileID: 603567363}
-  _targetImage: {fileID: 2800000, guid: 9407f554d8d70984ebff1c06f9438e9b, type: 3}
-  _targetImageSize: 0.3
   StartGameButton: {fileID: 730367269}
   CreateRoomButton: {fileID: 1931232361}
   JoinRoomButton: {fileID: 274116570}
   menu: {fileID: 853008449}
   controls: {fileID: 273331602}
   spawnpre: {fileID: 1556154563}
---- !u!114 &603567363
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 603567360}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c5e00303423314ba88f0be8d259dfe62, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _colocalizationType: 1
-  _sharedArRootPrefab: {fileID: 4781414300907772666, guid: addffc4d55be14f14b776b2b504b86d6, type: 3}
-  _arLocationManager: {fileID: 0}
+  hostIpAddress: 192.168.100.37
 --- !u!1 &670663698
 GameObject:
   m_ObjectHideFlags: 0

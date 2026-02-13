@@ -17,7 +17,7 @@ public class SpawnPrefab : NetworkBehaviour
     //    }
     //}
 
-    public void Spawn(Transform origin) {
+    public void Spawn() {
         //Vector3 spawnPos = new Vector3(0f,-0.842f,0.757f);
         //if (NetworkManager.Singleton == null || !NetworkManager.Singleton.IsListening)
         //{
@@ -30,7 +30,7 @@ public class SpawnPrefab : NetworkBehaviour
         //    Debug.LogError("Client ID not assigned yet!");
         //    return;
         //}
-        Debug.Log("Spawning relative to: " + origin.name);
+        //Debug.Log("Spawning relative to: " + origin.name);
         //Debug.Log("bruH");
         //`Debug.Log("LocalclientID:" + NetworkManager.Singleton.LocalClientId);
         SpawnPlayerServerRPC(Vector3.zero, Quaternion.identity, NetworkManager.Singleton.LocalClientId);
@@ -46,14 +46,14 @@ public class SpawnPrefab : NetworkBehaviour
         GameObject prefab = Instantiate(prefabToSpawn, position, rotation);
         NetworkObject characterNetworkObject = prefab.GetComponent<NetworkObject>();
         characterNetworkObject.SpawnWithOwnership(callerID);
-        var manager = Object.FindFirstObjectByType<Niantic.Lightship.SharedAR.Colocalization.SharedSpaceManager>();
-        if (manager != null && manager.SharedArOriginObject != null)
-        {
-            // Set parent and ensure local position is used
-            prefab.transform.SetParent(manager.SharedArOriginObject.transform, false);
-            prefab.transform.localPosition = position;
-            prefab.transform.localRotation = rotation;
-        }
+        //var manager = Object.FindFirstObjectByType<Niantic.Lightship.SharedAR.Colocalization.SharedSpaceManager>();
+        //if (manager != null && manager.SharedArOriginObject != null)
+        //{
+        //    // Set parent and ensure local position is used
+        //    prefab.transform.SetParent(manager.SharedArOriginObject.transform, false);
+        //    prefab.transform.localPosition = position;
+        //    prefab.transform.localRotation = rotation;
+        //}
         PlayerDataManager.Instance.AddPlacedPlayer(callerID);
         //prefab.transform.SetParent(parentObjectTrans, true);
     }
