@@ -23,6 +23,7 @@ public class PlayerHealthUI : NetworkBehaviour
     {
         if (GetComponentInParent<NetworkObject>().OwnerClientId == id)
         {
+            Handheld.Vibrate();
             SetHealthTextClientRpc(id);
         }
     }

@@ -46,16 +46,30 @@ public class SpawnPrefab : NetworkBehaviour
         GameObject prefab = Instantiate(prefabToSpawn, position, rotation);
         NetworkObject characterNetworkObject = prefab.GetComponent<NetworkObject>();
         characterNetworkObject.SpawnWithOwnership(callerID);
-        var manager = Object.FindFirstObjectByType<Niantic.Lightship.SharedAR.Colocalization.SharedSpaceManager>();
-        if (manager != null && manager.SharedArOriginObject != null)
-        {
-            // Set parent and ensure local position is used
-            prefab.transform.SetParent(manager.SharedArOriginObject.transform, false);
-            prefab.transform.localPosition = position;
-            prefab.transform.localRotation = rotation;
-        }
+        //var manager = Object.FindFirstObjectByType<Niantic.Lightship.SharedAR.Colocalization.SharedSpaceManager>();
+        //if (manager != null && manager.SharedArOriginObject != null)
+        //{
+        //    // Set parent and ensure local position is used
+        //    prefab.transform.SetParent(manager.SharedArOriginObject.transform, false);
+        //    prefab.transform.localPosition = position;
+        //    prefab.transform.localRotation = rotation;
+        //}
         PlayerDataManager.Instance.AddPlacedPlayer(callerID);
+        //SetParentClientRpc(characterNetworkObject.NetworkObjectId);
         //prefab.transform.SetParent(parentObjectTrans, true);
+    }
+
+    [ClientRpc]
+    void SetParentClientRpc(ulong netObjId)
+    {
+        if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(netObjId, out var netObj))
+        {
+            var manager = Object.FindFirstObjectByType<Niantic.Lightship.SharedAR.Colocalization.SharedSpaceManager>();
+            if (manager != null && manager.SharedArOriginObject != null)
+            {
+                netObj.transform.SetParent(manager.SharedArOriginObject.transform, false);
+            }
+        }
     }
 
     //public override void OnNetworkDespawn()
