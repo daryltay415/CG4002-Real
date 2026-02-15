@@ -20,7 +20,7 @@ public class FollowCamera : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        /*
         if (IsOwner){
             // 1. Safety check: Are we parented to the Shared Origin?
             if (transform.parent == null) return;
@@ -43,6 +43,7 @@ public class FollowCamera : NetworkBehaviour
                 transform.localRotation = Quaternion.LookRotation(new Vector3(forwardInSharedSpace.x, 0, forwardInSharedSpace.z));
             }
         }
+        */
         
 
         

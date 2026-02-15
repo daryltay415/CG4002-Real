@@ -180,6 +180,50 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
         }
     }
 
+    public void DistancePunch(int handChoice)
+    {
+        if (!IsOwner) return;
+
+        // Use the hand's localPosition relative to the SharedArRoot
+        GameObject hand;
+        switch (handChoice)
+        {
+            case 1:
+                hand = righthand;
+                break;
+            default:
+                hand = lefthand;
+                break;
+        }
+        Vector3 myHandLocalPos = transform.parent.InverseTransformPoint(hand.transform.position);
+        // We need the local position of the hand relative to the IMAGE (the parent of the player)
+
+        foreach (var client in NetworkManager.Singleton.ConnectedClientsList)
+        {
+            if (client.ClientId == networkobj.OwnerClientId) continue;
+
+            // Get the enemy's position relative to the SAME Batman image
+            Vector3 enemyLocalPos = client.PlayerObject.transform.localPosition;
+
+            // 1. Calculate Horizontal distance in the shared space
+            float horizontalDist = Vector2.Distance(
+                new Vector2(myHandLocalPos.x, myHandLocalPos.z), 
+                new Vector2(enemyLocalPos.x, enemyLocalPos.z)
+            );
+
+            // 2. Vertical check (so you can't hit them if they duck/jump too far)
+            float verticalDiff = Mathf.Abs(myHandLocalPos.y - enemyLocalPos.y);
+
+            if (horizontalDist <= 0.2f && verticalDiff <= 0.6f)
+            {
+                // The hit is mathematically "true" in the shared coordinate system
+                (ulong, ulong) fromPlayerToEnemey = new(networkobj.OwnerClientId, client.ClientId);
+                OnHitPlayer?.Invoke(fromPlayerToEnemey);
+                break;
+            }
+        }
+    }
+
     public void CollisionOnObject(RaycastHit collision)
     {
         if (IsServer)

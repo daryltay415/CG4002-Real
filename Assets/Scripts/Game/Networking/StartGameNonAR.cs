@@ -37,7 +37,7 @@ public class StartGameNonAR : NetworkBehaviour
     void StartGame()
     {
         menu.SetActive(false);
-        //spawnpre.Spawn();
+        spawnpre.Spawn();
         controls.SetActive(true);
     }
 

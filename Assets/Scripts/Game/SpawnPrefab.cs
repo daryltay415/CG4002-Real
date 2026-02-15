@@ -17,7 +17,7 @@ public class SpawnPrefab : NetworkBehaviour
     //    }
     //}
 
-    public void Spawn(Transform origin) {
+    public void Spawn() {
         //Vector3 spawnPos = new Vector3(0f,-0.842f,0.757f);
         //if (NetworkManager.Singleton == null || !NetworkManager.Singleton.IsListening)
         //{
@@ -30,7 +30,7 @@ public class SpawnPrefab : NetworkBehaviour
         //    Debug.LogError("Client ID not assigned yet!");
         //    return;
         //}
-        Debug.Log("Spawning relative to: " + origin.name);
+        //Debug.Log("Spawning relative to: " + origin.name);
         //Debug.Log("bruH");
         //`Debug.Log("LocalclientID:" + NetworkManager.Singleton.LocalClientId);
         SpawnPlayerServerRPC(Vector3.zero, Quaternion.identity, NetworkManager.Singleton.LocalClientId);
