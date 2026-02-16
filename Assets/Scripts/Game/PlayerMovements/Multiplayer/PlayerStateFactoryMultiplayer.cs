@@ -33,6 +33,11 @@ public class PlayerStateFactoryMultiplayer
     //    return new PlayerFallState(_context, this);
     //}
 
+    public PlayerDmgStateMultiplayer Damaged()
+    {
+        return new PlayerDmgStateMultiplayer(_context, this);
+    }
+
     public PlayerGuardStateMultiplayer Guard()
     {
         return new PlayerGuardStateMultiplayer(_context, this);

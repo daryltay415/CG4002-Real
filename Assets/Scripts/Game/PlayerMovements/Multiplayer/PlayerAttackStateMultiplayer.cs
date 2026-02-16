@@ -33,8 +33,11 @@ public class PlayerAttackStateMultiplayer : PlayerBaseStateMultiplayer
         //    SwitchState(Factory.Walk());
         //}
 
-        Debug.Log("Switching");
-        if (Ctx._camIsMoving && Ctx._stillAttacking == 0)
+        if (Ctx._takingDmg== 1)
+        {
+            SwitchState(Factory.Damaged());
+        }
+        else if (Ctx._camIsMoving && Ctx._stillAttacking == 0)
         {
             SwitchState(Factory.Walk());
         }

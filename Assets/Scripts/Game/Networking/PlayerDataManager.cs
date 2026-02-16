@@ -183,6 +183,8 @@ public class PlayerDataManager : NetworkBehaviour
                         }
                         Debug.Log("Player got hit " + ids.to + " lifepoints left => " + newData.lifePoints +  " hit by " + ids.from);
                         allPlayerData[i] = newData;
+                        TriggerDamageAnimation(ids.to);
+                        
                         break;
                     }
                     
@@ -192,6 +194,33 @@ public class PlayerDataManager : NetworkBehaviour
         }
 
         SyncReducePlayerHealthClientRpc(ids.to);
+    }
+
+    private void TriggerDamageAnimation(ulong targetClientId)
+    {
+        // Find the object assigned to this client on the server
+        if (NetworkManager.Singleton.ConnectedClients.TryGetValue(targetClientId, out var client))
+        {
+            if (client.PlayerObject != null)
+            {
+                // Send the NetworkObjectId (which exists on all clients)
+                SyncDamageAnimationClientRpc(client.PlayerObject.NetworkObjectId);
+            }
+        }
+    }
+
+    [ClientRpc]
+    void SyncDamageAnimationClientRpc(ulong targetNetObjId)
+    {
+        // Every client looks into their own "SpawnedObjects" list using the shared ID
+        if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(targetNetObjId, out var netObj))
+        {
+            if (netObj.TryGetComponent(out PlayerStateMachineMultiplayer stateMachine))
+            {
+                stateMachine.takingDmg = 1;
+                Debug.Log($"Animation triggered for object: {targetNetObjId}");
+            }
+        }
     }
 
     [ClientRpc]

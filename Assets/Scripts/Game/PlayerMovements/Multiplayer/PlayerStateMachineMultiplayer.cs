@@ -29,6 +29,10 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
     int isWalkingHash;
     int isAttackingHash;
     int isGuardingHash;
+    int isDamagedHash;
+
+    //Dmg variables
+    public int takingDmg = 0;
 
 
     // Attack variables
@@ -47,7 +51,9 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
     public bool _isGuardingPressed {get{return isGuarding;}}
     public int _isWalkingHash {get{ return isWalkingHash; } set { isWalkingHash = value; }}
     public int _isGuardingHash {get{return isGuardingHash; } set { isGuardingHash = value;}}
+    public int _isDamagedHash {get{return isDamagedHash;} set { isDamagedHash = value;}}
     public bool _camIsMoving {get{return camIsMoving;}}
+    public int _takingDmg {get{return takingDmg;} set {takingDmg = value;}}
 
     // Attack variables
     public int _isAttackingHash {get{ return isAttackingHash; }set{ isAttackingHash = value; }}
@@ -72,6 +78,7 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
             isAttackingHash = Animator.StringToHash("Attack");
             isWalkingHash = Animator.StringToHash("Walk");
             isGuardingHash = Animator.StringToHash("Guard");
+            isDamagedHash = Animator.StringToHash("Damage");
             //playerInput.CharacterControls.Move.started += onMovementInput;
             //playerInput.CharacterControls.Move.canceled += onMovementInput;
             //playerInput.CharacterControls.Move.performed += onMovementInput;

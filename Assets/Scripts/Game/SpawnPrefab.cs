@@ -45,7 +45,8 @@ public class SpawnPrefab : NetworkBehaviour
         //GameObject prefab = Instantiate(prefabToSpawn, Vector3.zero, Quaternion.identity);
         GameObject prefab = Instantiate(prefabToSpawn, position, rotation);
         NetworkObject characterNetworkObject = prefab.GetComponent<NetworkObject>();
-        characterNetworkObject.SpawnWithOwnership(callerID);
+        //characterNetworkObject.SpawnWithOwnership(callerID);
+        characterNetworkObject.SpawnAsPlayerObject(callerID);
         //var manager = Object.FindFirstObjectByType<Niantic.Lightship.SharedAR.Colocalization.SharedSpaceManager>();
         //if (manager != null && manager.SharedArOriginObject != null)
         //{

@@ -10,7 +10,7 @@ public class PlayerStateMachine : MonoBehaviour
     private Camera mainCamera;
     private Vector3 lastPosition;
     bool camIsMoving = false;
-    float tolerance = 0.1f;
+    float tolerance = 0.2f;
 
     PlayerInput playerInput;
     CharacterController characterController;
@@ -19,6 +19,8 @@ public class PlayerStateMachine : MonoBehaviour
 
     int isWalkingHash;
     int isAttackingHash;
+
+    public bool takingDmg=false;
 
 
     // Attack variables
@@ -34,6 +36,7 @@ public class PlayerStateMachine : MonoBehaviour
     public bool _isMovingPressed {get{ return isMoving; }}
     public int _isWalkingHash {get{ return isWalkingHash; } set { isWalkingHash = value; }}
     public bool _camIsMoving {get{return camIsMoving;}}
+    public bool _takingDmg {get{return takingDmg;}}
 
     // Attack variables
     public int _isAttackingHash {get{ return isAttackingHash; }set{ isAttackingHash = value; }}
