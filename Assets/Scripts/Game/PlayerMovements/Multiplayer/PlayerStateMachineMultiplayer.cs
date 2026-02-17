@@ -36,11 +36,17 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
 
 
     // Attack variables
+    public enum AttackType
+    {
+        leftJab = 1, 
+        rightJab = 2
+    }
     public float punchRange = 1.0f;
     bool isAttackPressed = false;
     PlayerBaseStateMultiplayer _currentState;
     PlayerStateFactoryMultiplayer states;
     public int stillAttacking;
+    public AttackType atktype;
 
     public static event Action<(ulong from, ulong to)> OnHitPlayer; 
     //getter and setter
@@ -82,8 +88,10 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
             //playerInput.CharacterControls.Move.started += onMovementInput;
             //playerInput.CharacterControls.Move.canceled += onMovementInput;
             //playerInput.CharacterControls.Move.performed += onMovementInput;
-            playerInput.CharacterControls.Jab.performed += onAttack;
-            playerInput.CharacterControls.Jab.canceled += onAttack;
+            playerInput.CharacterControls.Jab.performed += onLeftJab;
+            playerInput.CharacterControls.Jab.canceled += onLeftJab;
+            playerInput.CharacterControls.RightJab.performed += onRightJab;
+            playerInput.CharacterControls.RightJab.canceled += onRightJab;
             playerInput.CharacterControls.Guard.performed += onGuard;
             playerInput.CharacterControls.Guard.canceled += onGuard;
         }
@@ -92,15 +100,24 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
     }
 
 
-    void onAttack(InputAction.CallbackContext context)
+    void onLeftJab(InputAction.CallbackContext context)
     {
         isAttackPressed = context.ReadValueAsButton();
+        atktype = AttackType.leftJab;
+        stillAttacking = 1;
     }
 
     void onGuard(InputAction.CallbackContext context)
     {
         isGuarding = context.ReadValueAsButton();
         PlayerDataManager.Instance.PlayerGuardStateServerRpc(networkobj.OwnerClientId,isGuarding);
+    }
+
+    void onRightJab(InputAction.CallbackContext context)
+    {
+        isAttackPressed = context.ReadValueAsButton();
+        atktype = AttackType.rightJab;
+        stillAttacking = 1;
     }
 
     void CameraStatus()
@@ -144,10 +161,12 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
     {
         if (IsOwner)
         {
-            playerInput.CharacterControls.Jab.performed -= onAttack;
-            playerInput.CharacterControls.Jab.canceled -= onAttack;
+            playerInput.CharacterControls.Jab.performed -= onLeftJab;
+            playerInput.CharacterControls.Jab.canceled -= onLeftJab;
             playerInput.CharacterControls.Guard.performed -= onGuard;
             playerInput.CharacterControls.Guard.canceled -= onGuard;
+            playerInput.CharacterControls.RightJab.performed -= onRightJab;
+            playerInput.CharacterControls.RightJab.canceled -= onRightJab;
         }
         //PlayerDataManager.Instance.OnPlayerDead -= playerDead;
     }

@@ -11,7 +11,7 @@ public class PlayerAttackStateMultiplayer : PlayerBaseStateMultiplayer
     public override void EnterState()
     {
         Debug.Log($"<color=red>[Attack State]</color> Enter. Animator integer set to 1. Frame: {Time.frameCount}");
-        Ctx._animator.SetInteger(Ctx._isAttackingHash, 1);
+        Ctx._animator.SetInteger(Ctx._isAttackingHash, (int)Ctx.atktype);
     }
     public override void UpdateState()
     {
