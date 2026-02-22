@@ -60,18 +60,18 @@ public class SpawnPrefab : NetworkBehaviour
         //prefab.transform.SetParent(parentObjectTrans, true);
     }
 
-    [ClientRpc]
-    void SetParentClientRpc(ulong netObjId)
-    {
-        if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(netObjId, out var netObj))
-        {
-            var manager = Object.FindFirstObjectByType<Niantic.Lightship.SharedAR.Colocalization.SharedSpaceManager>();
-            if (manager != null && manager.SharedArOriginObject != null)
-            {
-                netObj.transform.SetParent(manager.SharedArOriginObject.transform, false);
-            }
-        }
-    }
+    //[ClientRpc]
+    //void SetParentClientRpc(ulong netObjId)
+    //{
+    //    if (NetworkManager.Singleton.SpawnManager.SpawnedObjects.TryGetValue(netObjId, out var netObj))
+    //    {
+    //        var manager = Object.FindFirstObjectByType<Niantic.Lightship.SharedAR.Colocalization.SharedSpaceManager>();
+    //        if (manager != null && manager.SharedArOriginObject != null)
+    //        {
+    //            netObj.transform.SetParent(manager.SharedArOriginObject.transform, false);
+    //        }
+    //    }
+    //}
 
     //public override void OnNetworkDespawn()
     //{

@@ -105,6 +105,7 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
         isAttackPressed = context.ReadValueAsButton();
         atktype = AttackType.leftJab;
         stillAttacking = 1;
+        PlayerDataManager.Instance.LIFEPOINTS_TO_REDUCE = 1;
     }
 
     void onGuard(InputAction.CallbackContext context)
@@ -118,6 +119,7 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
         isAttackPressed = context.ReadValueAsButton();
         atktype = AttackType.rightJab;
         stillAttacking = 1;
+        PlayerDataManager.Instance.LIFEPOINTS_TO_REDUCE = 2;
     }
 
     void CameraStatus()
@@ -221,15 +223,36 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
                 hand = lefthand;
                 break;
         }
-        Vector3 myHandLocalPos = transform.parent.InverseTransformPoint(hand.transform.position);
+        //Vector3 myHandLocalPos = transform.parent.InverseTransformPoint(hand.transform.position);
+        Vector3 myHandLocalPos = hand.transform.position;
         // We need the local position of the hand relative to the IMAGE (the parent of the player)
 
         foreach (var client in NetworkManager.Singleton.ConnectedClientsList)
         {
+            //if (client.ClientId == networkobj.OwnerClientId) continue;
+//
+            //// Get the enemy's position relative to the SAME Batman image
+            //Vector3 enemyLocalPos = client.PlayerObject.transform.localPosition;
+//
+            //// 1. Calculate Horizontal distance in the shared space
+            //float horizontalDist = Vector2.Distance(
+            //    new Vector2(myHandLocalPos.x, myHandLocalPos.z), 
+            //    new Vector2(enemyLocalPos.x, enemyLocalPos.z)
+            //);
+//
+            //// 2. Vertical check (so you can't hit them if they duck/jump too far)
+            //float verticalDiff = Mathf.Abs(myHandLocalPos.y - enemyLocalPos.y);
+            //Debug.Log("VerticalDiff = " + verticalDiff + " horizontalDist = " + horizontalDist);
+            //if (horizontalDist <= 0.2f && verticalDiff <= 0.6f)
+            //{
+            //    // The hit is mathematically "true" in the shared coordinate system
+            //    (ulong, ulong) fromPlayerToEnemey = new(networkobj.OwnerClientId, client.ClientId);
+            //    OnHitPlayer?.Invoke(fromPlayerToEnemey);
+            //    break;
+            //}
             if (client.ClientId == networkobj.OwnerClientId) continue;
-
             // Get the enemy's position relative to the SAME Batman image
-            Vector3 enemyLocalPos = client.PlayerObject.transform.localPosition;
+            Vector3 enemyLocalPos = client.PlayerObject.transform.position;
 
             // 1. Calculate Horizontal distance in the shared space
             float horizontalDist = Vector2.Distance(
@@ -239,8 +262,8 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
 
             // 2. Vertical check (so you can't hit them if they duck/jump too far)
             float verticalDiff = Mathf.Abs(myHandLocalPos.y - enemyLocalPos.y);
-
-            if (horizontalDist <= 0.2f && verticalDiff <= 0.6f)
+            Debug.Log("VerticalDiff = " + verticalDiff + " horizontalDist = " + horizontalDist);
+            if (horizontalDist <= 0.24f && verticalDiff <= 0.7f)
             {
                 // The hit is mathematically "true" in the shared coordinate system
                 (ulong, ulong) fromPlayerToEnemey = new(networkobj.OwnerClientId, client.ClientId);
@@ -267,6 +290,20 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
         }
         
     }
+
+    public void ProjectileCollisionOnObject(ulong from, ulong to)
+    {
+        if (IsServer)
+        {
+            Debug.Log("Projectile has Collision to player");
+            (ulong, ulong) fromPlayerToEnemey = new(from, to);
+            OnHitPlayer?.Invoke(fromPlayerToEnemey);
+            return;
+            
+        }
+    }
+        
+    
     //void OnEnable()
     //{
     //    

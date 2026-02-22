@@ -46,7 +46,8 @@ public class FollowCamera : NetworkBehaviour
         */
         
 
-        
+        //2nd
+        /*
         if (IsOwner)
         {
             Transform sharedOrigin = transform.parent;
@@ -79,5 +80,42 @@ public class FollowCamera : NetworkBehaviour
             }
 
         }
+        */
+    
+
+        //3rd
+        
+        if (IsOwner)
+        {
+            Transform sharedOrigin = transform.parent;
+
+            // 1. Get Camera position relative to the Shared Origin
+            Vector3 localCamPos = sharedOrigin.InverseTransformPoint(mainCam.transform.position);
+
+            // 2. Get Camera forward direction relative to the Shared Origin's rotation
+            // This is the critical step: we translate the phone's "forward" 
+            // into the Shared Origin's coordinate system.
+            Vector3 localCamForward = sharedOrigin.InverseTransformDirection(mainCam.transform.forward);
+
+            // 3. Flatten the direction (so the sprite doesn't tilt into the ground)
+            
+
+            // 4. Calculate the offset using the SHARED LOCAL forward
+            // If localForwardFlat is (1,0,0) in the shared space, 
+            // everyone sees the sprite moved in that same shared direction.
+            Vector3 localForwardFlat = new Vector3(localCamForward.x, 0, localCamForward.z).normalized;
+            //Vector3 targetLocalPos = localCamPos + (localForwardFlat * zoffset) + (Vector3.up * yoffset);
+            //Vector3 upInSharedSpace = sharedOrigin.InverseTransformDirection(mainCam.transform.up);
+            Vector3 targetLocalPos = localCamPos + (localForwardFlat * zoffset);
+            // 5. Apply to transform
+            transform.localPosition = new Vector3(targetLocalPos.x, transform.localPosition.y, targetLocalPos.z);
+            
+            // 6. Sync Rotation
+            if (localForwardFlat != Vector3.zero)
+            {
+                transform.localRotation = Quaternion.LookRotation(localForwardFlat, Vector3.up);
+            }
+        }
+        
     }
 }

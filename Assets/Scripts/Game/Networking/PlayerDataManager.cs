@@ -10,8 +10,8 @@ public class PlayerDataManager : NetworkBehaviour
     public static PlayerDataManager Instance;
 
     private NetworkList<PlayerData> allPlayerData;
-    private const int LIFEPOINTS = 4;
-    private const int LIFEPOINTS_TO_REDUCE = 1;
+    private const int LIFEPOINTS = 10;
+    public int LIFEPOINTS_TO_REDUCE = 1;
 
     public event Action<ulong> OnPlayerDead;
     public event Action<ulong> OnPlayerHealthChanged;

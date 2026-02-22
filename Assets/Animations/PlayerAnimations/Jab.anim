@@ -45137,7 +45137,7 @@ AnimationClip:
     intParameter: 1
     messageOptions: 0
   - time: 0.41666666
-    functionName: RaycastPunch
+    functionName: DistancePunch
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
