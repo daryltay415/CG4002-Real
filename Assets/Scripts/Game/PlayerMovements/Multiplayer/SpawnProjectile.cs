@@ -23,6 +23,6 @@ public class SpawnProjectile : NetworkBehaviour
         GameObject projectile = Instantiate(projectileToSpawn, spawnPoint.position, spawnPoint.rotation);
         NetworkObject projectileNetworkObject = projectile.GetComponent<NetworkObject>();
         projectileNetworkObject.SpawnWithOwnership(networkobj.OwnerClientId);
-        projectile.GetComponent<Rigidbody>().AddForce(spawnPoint.forward * speed);
+        projectile.GetComponent<Rigidbody>().AddForce(spawnPoint.right * speed);
     }
 }

@@ -143,15 +143,13 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6381165557686382716}
-  - component: {fileID: 6409185796937356265}
-  - component: {fileID: 3620088459274589558}
   m_Layer: 3
   m_Name: RHandHitbox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &6381165557686382716
 Transform:
   m_ObjectHideFlags: 0
@@ -161,45 +159,12 @@ Transform:
   m_GameObject: {fileID: 2401417095669394703}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0.274, y: 0, z: -0}
   m_LocalScale: {x: 0.22218, y: 0.22218, z: 0.22218}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7352822835119512305}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &6409185796937356265
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2401417095669394703}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.87228024, y: 0.7943812, z: 0.7353503}
-  m_Center: {x: 0.06385939, y: 0.047587108, z: -0.0420366}
---- !u!114 &3620088459274589558
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2401417095669394703}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d71620d3ea1f8364ba2481d0b521a1a5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &2449891583392312983
 GameObject:
   m_ObjectHideFlags: 0
@@ -436,7 +401,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1238277171960936495, guid: 9bd72731ebe2248478ba4849c274a43b, type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1268482595157119653, guid: 9bd72731ebe2248478ba4849c274a43b, type: 3}
       propertyPath: m_Layer
@@ -719,6 +684,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 3503167532966410781, guid: 9bd72731ebe2248478ba4849c274a43b, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1556242094615738184}
+    - targetCorrespondingSourceObject: {fileID: 3503167532966410781, guid: 9bd72731ebe2248478ba4849c274a43b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -2176884048816303401}
+    - targetCorrespondingSourceObject: {fileID: 3503167532966410781, guid: 9bd72731ebe2248478ba4849c274a43b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -5533393765548339850}
   m_SourcePrefab: {fileID: 100100000, guid: 9bd72731ebe2248478ba4849c274a43b, type: 3}
 --- !u!95 &1414620929991489550 stripped
 Animator:
@@ -841,6 +812,40 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18f923625762ee64da25ea49d670c163, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spawnPoint: {fileID: 6381165557686382716}
+  projectileToSpawn: {fileID: 3035804698235843119, guid: 572bfaf1f6766344bb166639d6cc3f1b, type: 3}
+  speed: 20
+--- !u!114 &-2176884048816303401
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5623379951936092366}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f17eaa6a6c9d4084cb6bc3f9f2000b13, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  zoffset: 0.8
+  yoffset: -0.8
+--- !u!114 &-5533393765548339850
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5623379951936092366}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 99014dab1e06885429bcaa73ef316408, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  specialMeterBar: {fileID: 0}
+  isCoolDownActive: 0
+  maxLevel: 100
+  curLevel: 0
+  chargeRate: 4
 --- !u!1 &6917512468195173787 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2407300420155942728, guid: 9bd72731ebe2248478ba4849c274a43b, type: 3}

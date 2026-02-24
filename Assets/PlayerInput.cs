@@ -53,6 +53,15 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Shoot"",
+                    ""type"": ""Button"",
+                    ""id"": ""20ca1b60-f6d8-4e19-a573-e75ee034db5d"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -88,6 +97,17 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""action"": ""RightJab"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0a55a3d0-7519-4392-9190-efd097027146"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Shoot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -99,6 +119,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_CharacterControls_Jab = m_CharacterControls.FindAction("Jab", throwIfNotFound: true);
         m_CharacterControls_Guard = m_CharacterControls.FindAction("Guard", throwIfNotFound: true);
         m_CharacterControls_RightJab = m_CharacterControls.FindAction("RightJab", throwIfNotFound: true);
+        m_CharacterControls_Shoot = m_CharacterControls.FindAction("Shoot", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -163,6 +184,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_CharacterControls_Jab;
     private readonly InputAction m_CharacterControls_Guard;
     private readonly InputAction m_CharacterControls_RightJab;
+    private readonly InputAction m_CharacterControls_Shoot;
     public struct CharacterControlsActions
     {
         private @PlayerInput m_Wrapper;
@@ -170,6 +192,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         public InputAction @Jab => m_Wrapper.m_CharacterControls_Jab;
         public InputAction @Guard => m_Wrapper.m_CharacterControls_Guard;
         public InputAction @RightJab => m_Wrapper.m_CharacterControls_RightJab;
+        public InputAction @Shoot => m_Wrapper.m_CharacterControls_Shoot;
         public InputActionMap Get() { return m_Wrapper.m_CharacterControls; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -188,6 +211,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @RightJab.started += instance.OnRightJab;
             @RightJab.performed += instance.OnRightJab;
             @RightJab.canceled += instance.OnRightJab;
+            @Shoot.started += instance.OnShoot;
+            @Shoot.performed += instance.OnShoot;
+            @Shoot.canceled += instance.OnShoot;
         }
 
         private void UnregisterCallbacks(ICharacterControlsActions instance)
@@ -201,6 +227,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @RightJab.started -= instance.OnRightJab;
             @RightJab.performed -= instance.OnRightJab;
             @RightJab.canceled -= instance.OnRightJab;
+            @Shoot.started -= instance.OnShoot;
+            @Shoot.performed -= instance.OnShoot;
+            @Shoot.canceled -= instance.OnShoot;
         }
 
         public void RemoveCallbacks(ICharacterControlsActions instance)
@@ -223,5 +252,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         void OnJab(InputAction.CallbackContext context);
         void OnGuard(InputAction.CallbackContext context);
         void OnRightJab(InputAction.CallbackContext context);
+        void OnShoot(InputAction.CallbackContext context);
     }
 }

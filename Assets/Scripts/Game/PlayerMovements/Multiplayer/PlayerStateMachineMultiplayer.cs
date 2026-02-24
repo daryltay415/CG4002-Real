@@ -39,12 +39,14 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
     public enum AttackType
     {
         leftJab = 1, 
-        rightJab = 2
+        rightJab = 2,
+        shoot = 3,
     }
     public float punchRange = 1.0f;
     bool isAttackPressed = false;
     PlayerBaseStateMultiplayer _currentState;
     PlayerStateFactoryMultiplayer states;
+    PlayerSpecialUI specialUi;
     public int stillAttacking;
     public AttackType atktype;
 
@@ -88,6 +90,8 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
             //playerInput.CharacterControls.Move.started += onMovementInput;
             //playerInput.CharacterControls.Move.canceled += onMovementInput;
             //playerInput.CharacterControls.Move.performed += onMovementInput;
+            playerInput.CharacterControls.Shoot.performed += onShoot;
+            playerInput.CharacterControls.Shoot.canceled += onShoot;
             playerInput.CharacterControls.Jab.performed += onLeftJab;
             playerInput.CharacterControls.Jab.canceled += onLeftJab;
             playerInput.CharacterControls.RightJab.performed += onRightJab;
@@ -97,6 +101,23 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
         }
         //PlayerDataManager.Instance.OnPlayerDead += playerDead;
         networkobj = GetComponent<NetworkObject>();
+        specialUi = GetComponent<PlayerSpecialUI>();
+
+    }
+
+    void onShoot(InputAction.CallbackContext context)
+    {
+        isAttackPressed = context.ReadValueAsButton();
+        if(specialUi.isCoolDownActive)
+        {
+            isAttackPressed = false;
+            return;
+        }
+        atktype = AttackType.shoot;
+        stillAttacking = 1;
+        PlayerDataManager.Instance.LIFEPOINTS_TO_REDUCE = 2;
+        specialUi.DepleteMeter();
+        specialUi.StartCoroutine(specialUi.Recharge());
     }
 
 
@@ -142,12 +163,6 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
         }
     }
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-
-    }
-
     // Update is called once per frame
     void Update()
     {
@@ -163,6 +178,8 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
     {
         if (IsOwner)
         {
+            playerInput.CharacterControls.Shoot.performed -= onShoot;
+            playerInput.CharacterControls.Shoot.canceled -= onShoot;
             playerInput.CharacterControls.Jab.performed -= onLeftJab;
             playerInput.CharacterControls.Jab.canceled -= onLeftJab;
             playerInput.CharacterControls.Guard.performed -= onGuard;
