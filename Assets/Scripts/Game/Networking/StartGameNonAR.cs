@@ -11,6 +11,8 @@ public class StartGameNonAR : NetworkBehaviour
     [SerializeField] private Button StartGameButton;
     [SerializeField] private GameObject menu;
     [SerializeField] private GameObject controls;
+    [SerializeField] private GameObject specialMeter;
+    [SerializeField] private UIManager uimanager;
     [SerializeField] private SpawnPrefab spawnpre;
     
     
@@ -36,9 +38,11 @@ public class StartGameNonAR : NetworkBehaviour
 
     void StartGame()
     {
-        menu.SetActive(false);
+        //menu.SetActive(false);
+        uimanager.ShowPlayerControls();
         spawnpre.Spawn();
-        controls.SetActive(true);
+        //specialMeter.SetActive(true);
+        //controls.SetActive(true);
     }
 
 }

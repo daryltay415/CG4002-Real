@@ -159,7 +159,7 @@ Transform:
   m_GameObject: {fileID: 2401417095669394703}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.274, y: 0, z: -0}
+  m_LocalPosition: {x: 0.37, y: -0, z: 0}
   m_LocalScale: {x: 0.22218, y: 0.22218, z: 0.22218}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -401,7 +401,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1238277171960936495, guid: 9bd72731ebe2248478ba4849c274a43b, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1268482595157119653, guid: 9bd72731ebe2248478ba4849c274a43b, type: 3}
       propertyPath: m_Layer
@@ -723,12 +723,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a785e1ecb7eed14699815b4b29f5666, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lifepointsToReduce: 1
+  takingDmg: 0
   hitLayer:
     serializedVersion: 2
     m_Bits: 8
   lefthand: {fileID: 7330953147297973323}
   righthand: {fileID: 6917512468195173787}
-  takingDmg: 0
   punchRange: 0.18
   stillAttacking: 0
   atktype: 0
@@ -814,7 +815,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnPoint: {fileID: 6381165557686382716}
   projectileToSpawn: {fileID: 3035804698235843119, guid: 572bfaf1f6766344bb166639d6cc3f1b, type: 3}
-  speed: 20
+  speed: 5
 --- !u!114 &-2176884048816303401
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -822,7 +823,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5623379951936092366}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f17eaa6a6c9d4084cb6bc3f9f2000b13, type: 3}
   m_Name: 
@@ -845,7 +846,7 @@ MonoBehaviour:
   isCoolDownActive: 0
   maxLevel: 100
   curLevel: 0
-  chargeRate: 4
+  chargeRate: 20
 --- !u!1 &6917512468195173787 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2407300420155942728, guid: 9bd72731ebe2248478ba4849c274a43b, type: 3}

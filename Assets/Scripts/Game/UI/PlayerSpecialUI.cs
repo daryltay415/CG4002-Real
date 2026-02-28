@@ -2,27 +2,33 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+/// <summary>
+/// Manages the special bar UI in the game to allow it to recharge or deplete
+/// </summary>
 
 public class PlayerSpecialUI : MonoBehaviour
 {
     public Image specialMeterBar;
+    private UIManager uimanager;
     public bool isCoolDownActive = false;
-    public float maxLevel;
-    public float curLevel;
-    public float chargeRate;
-    // Start is called before the first frame update
+    public float maxLevel; // max level the special meter can reach
+    public float curLevel; // current level of the special meter
+    public float chargeRate; 
+
     void Start()
     {
-        specialMeterBar = GameObject.FindWithTag("Special").GetComponent<Image>();
+        uimanager = GameObject.FindWithTag("UIManager").GetComponent<UIManager>();
+        specialMeterBar = uimanager.specialMeterBar;
     }
 
+    // Depletes the meter when the player shoots a projectile
     public void DepleteMeter()
     {
         curLevel = 0;
         specialMeterBar.fillAmount = curLevel/maxLevel;
     }
 
+    // Recharges the sepcial meter via a coroutine
     public IEnumerator Recharge()
     {
         isCoolDownActive = true;

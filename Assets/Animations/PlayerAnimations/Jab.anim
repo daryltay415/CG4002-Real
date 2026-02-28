@@ -45136,8 +45136,15 @@ AnimationClip:
     floatParameter: 0
     intParameter: 1
     messageOptions: 0
+  - time: 0
+    functionName: SetAtkType
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 1
+    messageOptions: 0
   - time: 0.41666666
-    functionName: DistancePunch
+    functionName: RaycastPunch
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0

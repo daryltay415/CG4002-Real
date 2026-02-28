@@ -4,7 +4,9 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-
+/// <summary>
+/// This class manages the process of quiting the game
+/// </summary>
 public class QuitGame : NetworkBehaviour
 {
     [SerializeField] private Button quitButton;
@@ -14,6 +16,7 @@ public class QuitGame : NetworkBehaviour
         quitButton.onClick.AddListener(RequestServerToQuitGameServerRpc);
     }
 
+    // Loads the loading scene
     [ServerRpc(RequireOwnership = false)]
     void RequestServerToQuitGameServerRpc()
     {

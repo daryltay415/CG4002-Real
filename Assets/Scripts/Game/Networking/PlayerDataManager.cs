@@ -4,13 +4,16 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.Netcode;
 using UnityEngine;
-
+/// <summary>
+/// This class manages all the player data of the connected clients in the game
+/// </summary>
 public class PlayerDataManager : NetworkBehaviour
 {
     public static PlayerDataManager Instance;
 
     private NetworkList<PlayerData> allPlayerData;
-    private const int LIFEPOINTS = 10;
+    public NetworkVariable<ulong> winner;
+    private const int LIFEPOINTS = 5;
     public int LIFEPOINTS_TO_REDUCE = 1;
 
     public event Action<ulong> OnPlayerDead;
@@ -29,6 +32,7 @@ public class PlayerDataManager : NetworkBehaviour
         
     }
     
+    // Adds the spawned player's data into the list of all player datas
     public void AddPlacedPlayer(ulong id)
     {
         for (int i = 0; i < allPlayerData.Count; i++)
@@ -47,6 +51,8 @@ public class PlayerDataManager : NetworkBehaviour
             }
         }
     }
+
+    // Checks if the player has placed his sprite
     public bool GetHasPlayerPlaced(ulong id)
     {
         for (int i = 0; i < allPlayerData.Count; i++)
@@ -88,6 +94,7 @@ public class PlayerDataManager : NetworkBehaviour
         RestartGame.OnRestartGame -= RestartGameCallback;
     }
 
+    // Restarts the game
     private void RestartGameCallback()
     {
         if(!IsServer) return;
@@ -119,7 +126,7 @@ public class PlayerDataManager : NetworkBehaviour
         }
     }
 
-
+    // Gets the player health
     public float GetPlayerHealth(ulong id)
     {
         for (int i = 0; i < allPlayerData.Count; i++)
@@ -133,7 +140,7 @@ public class PlayerDataManager : NetworkBehaviour
         return default;
     }
 
-
+    // Updates the player data on whether the player is guarding or not
     [ServerRpc(RequireOwnership = false)]
     public void PlayerGuardStateServerRpc(ulong id, bool isGuarding)
     {
@@ -155,7 +162,8 @@ public class PlayerDataManager : NetworkBehaviour
         }
     }
 
-    private void PlayerHitboxOnHitPlayer((ulong from, ulong to) ids)
+    // Determines how much life points to reduce for the player that has been hit
+    private void PlayerHitboxOnHitPlayer((ulong from, ulong to, int _lifePointsToReduce) ids)
     {
         if (IsServer && ids.from != ids.to)
         {
@@ -165,11 +173,12 @@ public class PlayerDataManager : NetworkBehaviour
                 {
                     if (allPlayerData[i].playerGuarding)
                     {
-                        Debug.Log("I WILL SURVIVE");
+                        return;
                     }
                     else
                     {
-                        int lifePointsToReduce = allPlayerData[i].lifePoints == 0 ? 0 : LIFEPOINTS_TO_REDUCE;
+                        int lifePointsToReduce = allPlayerData[i].lifePoints == 0 ? 0 : ids._lifePointsToReduce;
+                        Debug.Log("lifepoints to reduce " + ids._lifePointsToReduce );
                         PlayerData newData = new PlayerData(
                             allPlayerData[i].clientID,
                             allPlayerData[i].score,
@@ -179,6 +188,7 @@ public class PlayerDataManager : NetworkBehaviour
                         );
                         if (newData.lifePoints <= 0)
                         {
+                            winner.Value = ids.from;
                             OnPlayerDead?.Invoke(ids.to);
                         }
                         Debug.Log("Player got hit " + ids.to + " lifepoints left => " + newData.lifePoints +  " hit by " + ids.from);
@@ -196,6 +206,7 @@ public class PlayerDataManager : NetworkBehaviour
         SyncReducePlayerHealthClientRpc(ids.to);
     }
 
+    // Triggers the damage animation for the player that was hit
     private void TriggerDamageAnimation(ulong targetClientId)
     {
         // Find the object assigned to this client on the server
@@ -209,6 +220,7 @@ public class PlayerDataManager : NetworkBehaviour
         }
     }
 
+    // Syncs the damage animation for both the host and client
     [ClientRpc]
     void SyncDamageAnimationClientRpc(ulong targetNetObjId)
     {
@@ -223,12 +235,14 @@ public class PlayerDataManager : NetworkBehaviour
         }
     }
 
+    // Syncs the player's health for both the client and host
     [ClientRpc]
     void SyncReducePlayerHealthClientRpc(ulong hitID)
     {
         OnPlayerHealthChanged?.Invoke(hitID);
     }
 
+    // Adds a new client to the list with a player data
     void AddNewClientToList(ulong clientID)
     {
         
@@ -256,7 +270,7 @@ public class PlayerDataManager : NetworkBehaviour
 
     }
 
-
+    // Prints all the player's in the game
     void PrintAllPlayerPlayerList()
     {
         foreach (var playerData in allPlayerData)

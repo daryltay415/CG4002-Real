@@ -3,7 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
-
+/// <summary>
+/// This class stores the player data for each player
+/// </summary>
 public struct PlayerData : IEquatable<PlayerData>, INetworkSerializable
 {
     public ulong clientID;
@@ -23,7 +25,7 @@ public struct PlayerData : IEquatable<PlayerData>, INetworkSerializable
     }
     
     
-
+    // Checks if one player data is the same as this player data
     public bool Equals(PlayerData other)
     {
         return (

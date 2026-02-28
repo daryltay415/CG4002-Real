@@ -1,7 +1,9 @@
 using System;
 using Unity.Netcode;
 using UnityEngine;
-
+/// <summary>
+/// This class manages the base state. All the other states inherit from this class
+/// </summary>
 public abstract class PlayerBaseStateMultiplayer
 {
     private bool isRootState = false;

@@ -16,8 +16,8 @@ GameObject:
   - component: {fileID: 5003423956583590867}
   - component: {fileID: 9086372329219506032}
   - component: {fileID: 2198291201794686202}
-  - component: {fileID: -8992224348509742030}
-  - component: {fileID: 2835917932917989537}
+  - component: {fileID: 5060422760432551435}
+  - component: {fileID: -1540089973418622366}
   m_Layer: 0
   m_Name: ProjectileSample
   m_TagString: Untagged
@@ -35,7 +35,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.46589285, y: -0.20157588, z: 1.411}
-  m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
+  m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -183,7 +183,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &-8992224348509742030
+--- !u!114 &5060422760432551435
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -213,7 +213,7 @@ MonoBehaviour:
   InLocalSpace: 1
   Interpolate: 1
   SlerpPosition: 0
---- !u!114 &2835917932917989537
+--- !u!114 &-1540089973418622366
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

@@ -4,12 +4,15 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Linq;
-
+/// <summary>
+/// This class manages the loading of the main game scene
+/// </summary>
 public class LoadingScript : NetworkBehaviour
 {
     // Start is called before the first frame update
     void Start()
     {
+        // Destroys all the network objects in the previous scene
         NetworkManager.Singleton.Shutdown();
         List<GameObject> netObjects =
             FindObjectsOfType<NetworkObject>().Select(obj => obj.transform.gameObject).ToList();
@@ -19,11 +22,9 @@ public class LoadingScript : NetworkBehaviour
             Destroy(obj);
         }
 
-
+        // Destroys the startgameAR object and networkmanager to reload the entire scene
         GameObject startGameARObject = FindObjectOfType<StartGameAR>().gameObject;
         Destroy(startGameARObject);
-        
-        
         Destroy(FindObjectOfType<NetworkManager>().transform.gameObject);
         SceneManager.LoadScene("SampleScene", LoadSceneMode.Single);        
     }

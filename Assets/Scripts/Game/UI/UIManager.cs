@@ -3,12 +3,20 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
-
+using TMPro;
+using UnityEngine.UI;
+/// <summary>
+/// Manages the UI in the game at different states of the game
+/// </summary>
 public class UIManager : NetworkBehaviour
 {
     [SerializeField] private Canvas CreateGameCanvas;
     [SerializeField] private Canvas ControllerCanvas;
     [SerializeField] private Canvas RestartQuitCanvas;
+    [SerializeField] private TextMeshProUGUI winnerTextDisplay;
+    [SerializeField] private TextMeshProUGUI loserTextDisplay;
+    [SerializeField] private Canvas specialMeterDisplay;
+    public Image specialMeterBar; //The level of the special meter
 
 
     private void Start()
@@ -18,47 +26,67 @@ public class UIManager : NetworkBehaviour
         //RestartGame.OnRestartGame += RestartGameOnOnRestartGame;
     }
 
-    private void RestartGameOnOnRestartGame()
-    {
-        ShowPlayerControlsServerRpc();
-    }
+    //private void RestartGameOnOnRestartGame()
+    //{
+    //    ShowPlayerControlsServerRpc();
+    //}
+//
+    //[ServerRpc(RequireOwnership = false)]
+    //void ShowPlayerControlsServerRpc()
+    //{
+    //    ShowPlayerControlsClientRpc();
+    //}
 
-    [ServerRpc(RequireOwnership = false)]
-    void ShowPlayerControlsServerRpc()
-    {
-        ShowPlayerControlsClientRpc();
-    }
-
-    [ClientRpc]
-    void ShowPlayerControlsClientRpc()
+    public void ShowPlayerControls()
     {
         CreateGameCanvas.gameObject.SetActive(false);
         ControllerCanvas.gameObject.SetActive(true);
         RestartQuitCanvas.gameObject.SetActive(false);
+        winnerTextDisplay.gameObject.SetActive(false);
+        loserTextDisplay.gameObject.SetActive(false);
+        specialMeterDisplay.gameObject.SetActive(true);
+        Debug.Log("Why u no dispaly?");
     }
 
     private void InstanceOnOnPlayerDead(ulong obj)
     {
         if (IsServer)
         {
-            PlayerIsDeadClientRpc();
+            PlayerIsDeadClientRpc(obj);
         }
     }
 
+    // This function is called when one of the player is dead. It shows the winner/loser and quit button
     [ClientRpc]
-    void PlayerIsDeadClientRpc()
+    void PlayerIsDeadClientRpc(ulong id)
     {
+        
         CreateGameCanvas.gameObject.SetActive(false);
         ControllerCanvas.gameObject.SetActive(false);
         RestartQuitCanvas.gameObject.SetActive(true);
+        specialMeterDisplay.gameObject.SetActive(false);
+        if(NetworkManager.Singleton.LocalClientId != id)
+        {
+            winnerTextDisplay.gameObject.SetActive(true);
+            loserTextDisplay.gameObject.SetActive(false);
+        }
+        else
+        {
+            winnerTextDisplay.gameObject.SetActive(false);
+            loserTextDisplay.gameObject.SetActive(true);
+        }
+        
     }
 
-
+    //Shows the menu screen
     void ShowCreateGameCanvas()
     {
         CreateGameCanvas.gameObject.SetActive(true);
         ControllerCanvas.gameObject.SetActive(false);
         RestartQuitCanvas.gameObject.SetActive(false);
+        winnerTextDisplay.gameObject.SetActive(false);
+        loserTextDisplay.gameObject.SetActive(false);
+        specialMeterDisplay.gameObject.SetActive(false);
     }
 
     public override void OnNetworkSpawn()
@@ -66,11 +94,14 @@ public class UIManager : NetworkBehaviour
         CreateGameCanvas.gameObject.SetActive(true);
         ControllerCanvas.gameObject.SetActive(false);
         RestartQuitCanvas.gameObject.SetActive(false);
+        winnerTextDisplay.gameObject.SetActive(false);
+        loserTextDisplay.gameObject.SetActive(false);
+        specialMeterDisplay.gameObject.SetActive(false);
     }
 
     public override void OnNetworkDespawn()
     {
-        //AllPlayerDataManager.Instance.OnPlayerDead -= InstanceOnOnPlayerDead;
+        PlayerDataManager.Instance.OnPlayerDead -= InstanceOnOnPlayerDead;
         //RestartGame.OnRestartGame -= RestartGameOnOnRestartGame;
     }
 }

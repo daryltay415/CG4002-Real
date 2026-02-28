@@ -1,7 +1,9 @@
 using System;
 using Unity.Netcode;
 using UnityEngine;
-
+/// <summary>
+/// This class manages the attack state
+/// </summary>
 public class PlayerAttackStateMultiplayer : PlayerBaseStateMultiplayer
 {
     public PlayerAttackStateMultiplayer(PlayerStateMachineMultiplayer curContext, PlayerStateFactoryMultiplayer playerStateFactory)
@@ -41,12 +43,13 @@ public class PlayerAttackStateMultiplayer : PlayerBaseStateMultiplayer
         {
             SwitchState(Factory.Walk());
         }
-        else if(!Ctx._camIsMoving && Ctx._stillAttacking == 0 && !Ctx._isGuardingPressed)
-        {
-            SwitchState(Factory.Idle());
-        } else if(Ctx._isGuardingPressed && Ctx._stillAttacking == 0)
+        else if(Ctx._isGuardingPressed && Ctx._stillAttacking == 0)
         {
             SwitchState(Factory.Guard());
+        }
+        else if(Ctx._stillAttacking == 0)
+        {
+            SwitchState(Factory.Idle());
         }
         //if(Ctx._stillAttacking == 0)
         //{

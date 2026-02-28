@@ -47,7 +47,7 @@ public class FollowCamera : NetworkBehaviour
         
 
         //2nd
-        /*
+        
         if (IsOwner)
         {
             Transform sharedOrigin = transform.parent;
@@ -56,35 +56,30 @@ public class FollowCamera : NetworkBehaviour
             Vector3 localCamPos = sharedOrigin.InverseTransformPoint(mainCam.transform.position);
 
             // 2. Get Camera forward direction relative to the Shared Origin's rotation
-            // This is the critical step: we translate the phone's "forward" 
-            // into the Shared Origin's coordinate system.
+            // Translates the phone's "forward" into the Shared Origin's coordinate system.
             Vector3 localCamForward = sharedOrigin.InverseTransformDirection(mainCam.transform.forward);
 
-            // 3. Flatten the direction (so the sprite doesn't tilt into the ground)
-            
-
-            // 4. Calculate the offset using the SHARED LOCAL forward
-            // If localForwardFlat is (1,0,0) in the shared space, 
+            // 3. Calculate the offset using the SHARED LOCAL forward
             // everyone sees the sprite moved in that same shared direction.
             Vector3 localForwardFlat = new Vector3(localCamForward.x, 0, localCamForward.z).normalized;
-            //Vector3 targetLocalPos = localCamPos + (localForwardFlat * zoffset) + (Vector3.up * yoffset);
-            Vector3 upInSharedSpace = sharedOrigin.InverseTransformDirection(mainCam.transform.up);
-            Vector3 targetLocalPos = localCamPos + (localCamForward * zoffset) + (upInSharedSpace * yoffset);
-            // 5. Apply to transform
+            Vector3 targetLocalPos = localCamPos + (localForwardFlat * zoffset) + (Vector3.up * yoffset);
+            //Vector3 upInSharedSpace = sharedOrigin.InverseTransformDirection(mainCam.transform.up);
+            //Vector3 targetLocalPos = localCamPos + (localCamForward * zoffset) + (upInSharedSpace * yoffset);
+            // 4. Apply to transform
             transform.localPosition = targetLocalPos;
             
-            // 6. Sync Rotation
+            // 5. Sync Rotation
             if (localForwardFlat != Vector3.zero)
             {
                 transform.localRotation = Quaternion.LookRotation(localForwardFlat, Vector3.up);
             }
 
         }
-        */
+        
     
 
         //3rd
-        
+        /*
         if (IsOwner)
         {
             Transform sharedOrigin = transform.parent;
@@ -116,6 +111,6 @@ public class FollowCamera : NetworkBehaviour
                 transform.localRotation = Quaternion.LookRotation(localForwardFlat, Vector3.up);
             }
         }
-        
+        */
     }
 }

@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+/// <summary>
+/// This class manages the guard state
+/// </summary>
 public class PlayerGuardStateMultiplayer : PlayerBaseStateMultiplayer
 {
     public PlayerGuardStateMultiplayer(PlayerStateMachineMultiplayer curContext, PlayerStateFactoryMultiplayer playerStateFactory)

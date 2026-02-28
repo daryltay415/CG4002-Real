@@ -1,5 +1,7 @@
 using UnityEngine;
-
+/// <summary>
+/// This class manages the walking state
+/// </summary>
 public class PlayerWalkStateMultiplayer : PlayerBaseStateMultiplayer
 {
     public PlayerWalkStateMultiplayer(PlayerStateMachineMultiplayer curContext, PlayerStateFactoryMultiplayer playerStateFactory)

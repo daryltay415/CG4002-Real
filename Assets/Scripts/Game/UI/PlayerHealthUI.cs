@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 using TMPro;
-
+/// <summary>
+/// This class manages the player health and the health UI
+/// </summary>
 public class PlayerHealthUI : NetworkBehaviour
 {
-    [SerializeField] private TMP_Text HealthText;
+    [SerializeField] private TMP_Text HealthText; // The health points UI
 
     private Camera _mainCamera;
 
@@ -17,7 +19,8 @@ public class PlayerHealthUI : NetworkBehaviour
         InstanceOnOnPlayerHealthChangedServerRpc(GetComponentInParent<NetworkObject>().OwnerClientId);
 
     }
-
+    
+    // When the player's health is changed, the health UI will be updated
     [ServerRpc(RequireOwnership = false)]
     private void InstanceOnOnPlayerHealthChangedServerRpc(ulong id)
     {

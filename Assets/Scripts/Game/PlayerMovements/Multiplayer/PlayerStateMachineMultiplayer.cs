@@ -5,6 +5,9 @@ using Unity.Netcode.Components;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using System;
+/// <summary>
+/// This class manages the player inputs and corresponding movements
+/// </summary>
 public class PlayerStateMachineMultiplayer : NetworkBehaviour
 {
 
@@ -14,18 +17,19 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
     bool camIsMoving = false;
     float tolerance = 0.1f;
 
-    public LayerMask hitLayer;
-    public GameObject lefthand;
-    public GameObject righthand;
+    // Player components
     PlayerInput playerInput;
     CharacterController characterController;
     Animator animator;
     NetworkAnimator networkAnimator;
     NetworkObject networkobj;
+    public int lifepointsToReduce = 1;
+
     // Guard variables
     bool isGuarding;
     bool isMoving;
 
+    // animator hashes
     int isWalkingHash;
     int isAttackingHash;
     int isGuardingHash;
@@ -42,15 +46,18 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
         rightJab = 2,
         shoot = 3,
     }
+    public LayerMask hitLayer;
+    public GameObject lefthand;
+    public GameObject righthand;
     public float punchRange = 1.0f;
     bool isAttackPressed = false;
+    public int stillAttacking;
+    public AttackType atktype;
     PlayerBaseStateMultiplayer _currentState;
     PlayerStateFactoryMultiplayer states;
     PlayerSpecialUI specialUi;
-    public int stillAttacking;
-    public AttackType atktype;
 
-    public static event Action<(ulong from, ulong to)> OnHitPlayer; 
+    public static event Action<(ulong from, ulong to, int lifepointsToReduce)> OnHitPlayer; 
     //getter and setter
     public PlayerBaseStateMultiplayer currentState { get { return _currentState; } set { _currentState = value; } }
     public Animator _animator{get{ return animator; }}
@@ -62,8 +69,6 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
     public int _isDamagedHash {get{return isDamagedHash;} set { isDamagedHash = value;}}
     public bool _camIsMoving {get{return camIsMoving;}}
     public int _takingDmg {get{return takingDmg;} set {takingDmg = value;}}
-
-    // Attack variables
     public int _isAttackingHash {get{ return isAttackingHash; }set{ isAttackingHash = value; }}
     public bool _isAttackPressed {get{ return isAttackPressed; }}
     public int _stillAttacking {get{ return stillAttacking; }set{ stillAttacking = value; }}
@@ -71,6 +76,7 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
     {
         if (IsOwner)
         {
+            // Sets up all the components, actions and animators
             mainCamera = Camera.main;
             playerInput = new PlayerInput();
             playerInput.CharacterControls.Enable();
@@ -105,28 +111,61 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
 
     }
 
+    public void SetAtkType(AttackType type)
+    {
+        atktype = type;
+    }
+
+    private int GetDamageFromType(AttackType type)
+    {
+        switch (type)
+        {
+            case AttackType.shoot: return 3;
+            case AttackType.rightJab: return 2;
+            case AttackType.leftJab: return 1;
+            default: return 1;
+        }
+    }
+
     void onShoot(InputAction.CallbackContext context)
     {
         isAttackPressed = context.ReadValueAsButton();
-        if(specialUi.isCoolDownActive)
+        if(isAttackPressed == true && specialUi.isCoolDownActive == false && !(currentState is PlayerAttackStateMultiplayer))
+        {
+            atktype = AttackType.shoot;
+            lifepointsToReduce = 3;
+        }
+        else
         {
             isAttackPressed = false;
-            return;
         }
-        atktype = AttackType.shoot;
-        stillAttacking = 1;
-        PlayerDataManager.Instance.LIFEPOINTS_TO_REDUCE = 2;
-        specialUi.DepleteMeter();
-        specialUi.StartCoroutine(specialUi.Recharge());
+        
+    }
+
+    public void activateSpecial()
+    {
+        if(IsOwner)
+        {
+            specialUi.DepleteMeter();
+            specialUi.StartCoroutine(specialUi.Recharge());
+        }        
     }
 
 
     void onLeftJab(InputAction.CallbackContext context)
     {
+        Debug.Log("Still attacking: "+ stillAttacking);
         isAttackPressed = context.ReadValueAsButton();
-        atktype = AttackType.leftJab;
-        stillAttacking = 1;
-        PlayerDataManager.Instance.LIFEPOINTS_TO_REDUCE = 1;
+        if (isAttackPressed && !(currentState is PlayerAttackStateMultiplayer))
+        {
+            atktype = AttackType.leftJab;
+            lifepointsToReduce = 1;
+        }
+        else
+        {
+            isAttackPressed = false;
+        }
+        
     }
 
     void onGuard(InputAction.CallbackContext context)
@@ -138,11 +177,18 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
     void onRightJab(InputAction.CallbackContext context)
     {
         isAttackPressed = context.ReadValueAsButton();
-        atktype = AttackType.rightJab;
-        stillAttacking = 1;
-        PlayerDataManager.Instance.LIFEPOINTS_TO_REDUCE = 2;
+        if(isAttackPressed && !(currentState is PlayerAttackStateMultiplayer))
+        {
+            atktype = AttackType.rightJab;
+            lifepointsToReduce = 2;
+        }
+        else
+        {
+            isAttackPressed = false;
+        }
     }
 
+    // Checks if the camera is currently moving
     void CameraStatus()
     {
         
@@ -199,6 +245,7 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
     //    }
     //}
 
+    // Cast a raycast at the chosen hand to detect if the punch hits a player
     public void RaycastPunch(int handChoice)
     {
         GameObject hand;
@@ -225,6 +272,8 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
         }
     }
 
+
+    // Punch detection based on the distance of the hand from the player
     public void DistancePunch(int handChoice)
     {
         if (!IsOwner) return;
@@ -283,13 +332,14 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
             if (horizontalDist <= 0.24f && verticalDiff <= 0.7f)
             {
                 // The hit is mathematically "true" in the shared coordinate system
-                (ulong, ulong) fromPlayerToEnemey = new(networkobj.OwnerClientId, client.ClientId);
+                (ulong, ulong, int) fromPlayerToEnemey = new(networkobj.OwnerClientId, client.ClientId, lifepointsToReduce);
                 OnHitPlayer?.Invoke(fromPlayerToEnemey);
                 break;
             }
         }
     }
 
+    // Checks if the collision of the hand and the player is valid
     public void CollisionOnObject(RaycastHit collision)
     {
         if (IsServer)
@@ -298,8 +348,9 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
             {
                 if (collision.collider.gameObject.layer == LayerMask.NameToLayer("Player") && networkObject.OwnerClientId != networkobj.OwnerClientId)
                 {
+                    int damage = GetDamageFromType(atktype);
                     Debug.Log("hand has Collision to player");
-                    (ulong, ulong) fromPlayerToEnemey = new(networkobj.OwnerClientId, networkObject.OwnerClientId);
+                    (ulong, ulong, int) fromPlayerToEnemey = new(networkobj.OwnerClientId, networkObject.OwnerClientId, damage);
                     OnHitPlayer?.Invoke(fromPlayerToEnemey);
                     return;
                 }
@@ -308,12 +359,13 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
         
     }
 
-    public void ProjectileCollisionOnObject(ulong from, ulong to)
+    // Invokes the onhitplayer public event when the projectile hits the player
+    public void ProjectileCollisionOnObject(ulong from, ulong to, int damage)
     {
         if (IsServer)
         {
             Debug.Log("Projectile has Collision to player");
-            (ulong, ulong) fromPlayerToEnemey = new(from, to);
+            (ulong, ulong, int) fromPlayerToEnemey = new(from, to, damage);
             OnHitPlayer?.Invoke(fromPlayerToEnemey);
             return;
             

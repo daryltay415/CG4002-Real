@@ -1,5 +1,7 @@
 using UnityEngine;
-
+/// <summary>
+/// This class manages the Idle state
+/// </summary>
 public class PlayerIdleStateMultiplayer : PlayerBaseStateMultiplayer
 {
     public PlayerIdleStateMultiplayer(PlayerStateMachineMultiplayer curContext, PlayerStateFactoryMultiplayer playerStateFactory)

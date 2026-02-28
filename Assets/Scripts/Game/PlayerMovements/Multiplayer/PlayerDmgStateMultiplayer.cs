@@ -1,7 +1,9 @@
 using System;
 using Unity.Netcode;
 using UnityEngine;
-
+/// <summary>
+/// This class manages the damage state
+/// </summary>
 public class PlayerDmgStateMultiplayer : PlayerBaseStateMultiplayer
 {
     public PlayerDmgStateMultiplayer(PlayerStateMachineMultiplayer curContext, PlayerStateFactoryMultiplayer playerStateFactory)

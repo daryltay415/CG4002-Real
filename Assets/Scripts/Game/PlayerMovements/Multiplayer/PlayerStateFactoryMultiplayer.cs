@@ -1,4 +1,7 @@
 public class PlayerStateFactoryMultiplayer
+/// <summary>
+/// This class manages the intialisation of the different states
+/// </summary>
 {
     PlayerStateMachineMultiplayer _context;
 

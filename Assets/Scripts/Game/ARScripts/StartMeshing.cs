@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
-
+/// <summary>
+/// This class manages the meshing in the game
+/// </summary>
 public class StartMeshing: NetworkBehaviour
 {
+    
     [SerializeField] private ARMeshManager _meshManager;
     // Start is called before the first frame update
     void Start()
