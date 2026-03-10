@@ -23,6 +23,7 @@ public class PlayerAttackStateMultiplayer : PlayerBaseStateMultiplayer
     {
         Debug.Log($"<color=red>[Attack State]</color> Exit. Animator integer set to 0. Frame: {Time.frameCount}");
         Ctx._animator.SetInteger(Ctx._isAttackingHash, 0);
+        Ctx._isAttackPressed = false;
     }
     public override void CheckSwitchStates()
     {
