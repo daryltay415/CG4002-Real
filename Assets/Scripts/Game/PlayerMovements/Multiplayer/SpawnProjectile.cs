@@ -31,7 +31,6 @@ public class SpawnProjectile : NetworkBehaviour
         projectileNetworkObject.SpawnWithOwnership(networkobj.OwnerClientId);
         Vector3 localRight = transform.parent.InverseTransformDirection(spawnPoint.right);
         localRight.y=  0;
-        //projectile.GetComponent<Rigidbody>().AddForce(spawnPoint.right * speed);
         projectile.GetComponent<Rigidbody>().velocity = localRight * speed;
         Debug.Log("Spawn projectile");
 

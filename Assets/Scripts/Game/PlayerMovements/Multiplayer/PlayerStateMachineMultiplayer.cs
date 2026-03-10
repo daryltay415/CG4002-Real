@@ -10,7 +10,9 @@ using System;
 /// </summary>
 public class PlayerStateMachineMultiplayer : NetworkBehaviour
 {
-
+    // Hit effect variable
+    public Transform hitPosition;
+    public GameObject hitEffect;
     // Camera variables
     private Camera mainCamera;
     private Vector3 lastPosition;
@@ -370,6 +372,13 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
             return;
             
         }
+    }
+
+    // Plays the hit effects
+    public void SpawnHitParticles()
+    {
+        GameObject hitVfx = Instantiate(hitEffect,hitPosition.position,Quaternion.identity);
+        Destroy(hitVfx,1f);
     }
         
     

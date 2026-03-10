@@ -13,6 +13,7 @@ public class UIManager : NetworkBehaviour
     [SerializeField] private Canvas CreateGameCanvas;
     [SerializeField] private Canvas ControllerCanvas;
     [SerializeField] private Canvas RestartQuitCanvas;
+    [SerializeField] private Canvas TutorialCanvas;
     [SerializeField] private TextMeshProUGUI winnerTextDisplay;
     [SerializeField] private TextMeshProUGUI loserTextDisplay;
     [SerializeField] private Canvas specialMeterDisplay;
@@ -42,10 +43,22 @@ public class UIManager : NetworkBehaviour
         CreateGameCanvas.gameObject.SetActive(false);
         ControllerCanvas.gameObject.SetActive(true);
         RestartQuitCanvas.gameObject.SetActive(false);
+        TutorialCanvas.gameObject.SetActive(false);
         winnerTextDisplay.gameObject.SetActive(false);
         loserTextDisplay.gameObject.SetActive(false);
         specialMeterDisplay.gameObject.SetActive(true);
         Debug.Log("Why u no dispaly?");
+    }
+
+    public void ShowTutorialControls()
+    {
+        CreateGameCanvas.gameObject.SetActive(false);
+        ControllerCanvas.gameObject.SetActive(true);
+        RestartQuitCanvas.gameObject.SetActive(false);
+        TutorialCanvas.gameObject.SetActive(true);
+        winnerTextDisplay.gameObject.SetActive(false);
+        loserTextDisplay.gameObject.SetActive(false);
+        specialMeterDisplay.gameObject.SetActive(true);
     }
 
     private void InstanceOnOnPlayerDead(ulong obj)
@@ -64,6 +77,7 @@ public class UIManager : NetworkBehaviour
         CreateGameCanvas.gameObject.SetActive(false);
         ControllerCanvas.gameObject.SetActive(false);
         RestartQuitCanvas.gameObject.SetActive(true);
+        TutorialCanvas.gameObject.SetActive(false);
         specialMeterDisplay.gameObject.SetActive(false);
         if(NetworkManager.Singleton.LocalClientId != id)
         {
@@ -84,6 +98,7 @@ public class UIManager : NetworkBehaviour
         CreateGameCanvas.gameObject.SetActive(true);
         ControllerCanvas.gameObject.SetActive(false);
         RestartQuitCanvas.gameObject.SetActive(false);
+        TutorialCanvas.gameObject.SetActive(false);
         winnerTextDisplay.gameObject.SetActive(false);
         loserTextDisplay.gameObject.SetActive(false);
         specialMeterDisplay.gameObject.SetActive(false);
@@ -94,6 +109,7 @@ public class UIManager : NetworkBehaviour
         CreateGameCanvas.gameObject.SetActive(true);
         ControllerCanvas.gameObject.SetActive(false);
         RestartQuitCanvas.gameObject.SetActive(false);
+        TutorialCanvas.gameObject.SetActive(false);
         winnerTextDisplay.gameObject.SetActive(false);
         loserTextDisplay.gameObject.SetActive(false);
         specialMeterDisplay.gameObject.SetActive(false);

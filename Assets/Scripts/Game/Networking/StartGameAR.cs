@@ -19,6 +19,7 @@ public class StartGameAR : MonoBehaviour
     private string roomName = "TestRoom";
 
     // Game UI buttons and variables
+    [SerializeField] private Button TutorialButton;
     [SerializeField] private Button StartGameButton;
     [SerializeField] private Button CreateRoomButton;
     [SerializeField] private Button JoinRoomButton;
@@ -26,9 +27,11 @@ public class StartGameAR : MonoBehaviour
     [SerializeField] private GameObject controls;
     [SerializeField] private UIManager uimanager;
     [SerializeField] private SpawnPrefab spawnpre;
+    [SerializeField] private SpawnPB spawnBag;
 
     //Network variables
     private bool isHost;
+    private bool isTutMode = false;
 
     private void Awake()
     {
@@ -38,7 +41,7 @@ public class StartGameAR : MonoBehaviour
         StartGameButton.onClick.AddListener(StartGame);
         CreateRoomButton.onClick.AddListener(CreateGameHost);
         JoinRoomButton.onClick.AddListener(JoinGameClient);
-        
+        TutorialButton.onClick.AddListener(StartTutorial);
         StartGameButton.interactable = false;
         
         //ImageForColocalization.OnTextureRendered += BlitImageForColocalizationOnTextureRendered;
@@ -70,6 +73,7 @@ public class StartGameAR : MonoBehaviour
             StartGameButton.interactable = true;
             CreateRoomButton.interactable = false;
             JoinRoomButton.interactable = false;
+            TutorialButton.interactable = false;
         }
         Debug.Log("not tracking obj");
     }
@@ -114,8 +118,18 @@ public class StartGameAR : MonoBehaviour
         //menu.SetActive(false);
         //spawnpre.Spawn();
         //controls.SetActive(true);
-        uimanager.ShowPlayerControls();
         spawnpre.Spawn();
+        if (isTutMode)
+        {
+            spawnBag.SpawnPunchingBag();
+            uimanager.ShowTutorialControls();
+        }
+        else
+        {
+            uimanager.ShowPlayerControls();
+        }
+        Debug.Log("Tut mode? " + isTutMode);
+        
     }
 
     // Checks if the client has joined the game before spawning their sprite
@@ -153,12 +167,17 @@ public class StartGameAR : MonoBehaviour
             var imageTrackingOptions = ISharedSpaceTrackingOptions.CreateImageTrackingOptions(
                 _targetImage, _targetImageSize
                 );
-            
+            int noOfClients = MAX_AMOUNT_CLIENTS_ROOM;
+            if (isTutMode)
+            {
+                noOfClients = 1;
+            }   
             var roomArgs = ISharedSpaceRoomOptions.CreateLightshipRoomOptions(
-                roomName,
-                MAX_AMOUNT_CLIENTS_ROOM,
-                "ImageColocalization"
-            );
+            roomName,
+            noOfClients,
+            "ImageColocalization"
+                );
+        
             
             _sharedSpaceManager.StartSharedSpace(imageTrackingOptions,roomArgs);
             Debug.Log("Start shared space");
@@ -182,6 +201,20 @@ public class StartGameAR : MonoBehaviour
         isHost = false;
         //OnJoinSharedSpaceClient?.Invoke();
         StartSharedSpace();
+    }
+
+    private void SpawnBag()
+    {
+        spawnBag.SpawnPunchingBag();
+    }
+
+    void StartTutorial()
+    {
+        Debug.Log("Creating tutorial");
+        isHost = true;
+        isTutMode = true;
+        StartSharedSpace();
+        
     }
     
     

@@ -4,8 +4,10 @@ using UnityEngine;
 public class OldFollowCamera : NetworkBehaviour
 {
     private Camera mainCam;
+    public float xoffset = -0.2f;
     public float zoffset = 0.8f;
     public float yoffset = -0.8f;
+    public float yRotationOffset = 0.1f;
 
     public override void OnNetworkSpawn()
     {   
@@ -28,7 +30,8 @@ public class OldFollowCamera : NetworkBehaviour
             if (mainCam == null) return;
 
             // Simple follow logic: Move to camera position + offsets
-            Vector3 targetPos = mainCam.transform.position + 
+            Vector3 targetPos = mainCam.transform.position +
+                                mainCam.transform.right * xoffset +  
                                 mainCam.transform.forward * zoffset + 
                                 mainCam.transform.up * yoffset;
 
@@ -38,7 +41,11 @@ public class OldFollowCamera : NetworkBehaviour
             Vector3 camForward = mainCam.transform.forward;
             if (camForward.x != 0 || camForward.z != 0)
             {
-                transform.rotation = Quaternion.LookRotation(new Vector3(camForward.x, 0, camForward.z));
+                
+                Quaternion baseRotation = Quaternion.LookRotation(new Vector3(camForward.x, 0, camForward.z));
+                Quaternion offset = Quaternion.Euler(0, yRotationOffset, 0);
+                // Combine them (order matters: base * offset)
+                transform.rotation = baseRotation * offset;
             }
         }
     }

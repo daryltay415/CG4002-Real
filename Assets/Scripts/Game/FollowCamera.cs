@@ -1,20 +1,27 @@
 using Unity.Netcode;
 using UnityEngine;
+using Unity.XR.CoreUtils;
 
 public class FollowCamera : NetworkBehaviour
 {
     private Camera mainCam;
+    public float xoffset = -0.4f;
     public float zoffset = 0.8f;
     public float yoffset = -0.8f;
     private Vector3 camEuler;
+    private XROrigin xrOrigin;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     public override void OnNetworkSpawn()
     {   
     if (IsOwner)
         {
             mainCam = Camera.main;
         }
+    }
+
+    void Start()
+    {
+        xrOrigin = FindObjectOfType<XROrigin>();
     }
 
     // Update is called once per frame
@@ -62,7 +69,8 @@ public class FollowCamera : NetworkBehaviour
             // 3. Calculate the offset using the SHARED LOCAL forward
             // everyone sees the sprite moved in that same shared direction.
             Vector3 localForwardFlat = new Vector3(localCamForward.x, 0, localCamForward.z).normalized;
-            Vector3 targetLocalPos = localCamPos + (localForwardFlat * zoffset) + (Vector3.up * yoffset);
+            Vector3 localRightFlat = Vector3.Cross(Vector3.up, localForwardFlat);
+            Vector3 targetLocalPos = localCamPos + (localForwardFlat * zoffset) + (Vector3.up * yoffset) + (localRightFlat * xoffset);
             //Vector3 upInSharedSpace = sharedOrigin.InverseTransformDirection(mainCam.transform.up);
             //Vector3 targetLocalPos = localCamPos + (localCamForward * zoffset) + (upInSharedSpace * yoffset);
             // 4. Apply to transform
