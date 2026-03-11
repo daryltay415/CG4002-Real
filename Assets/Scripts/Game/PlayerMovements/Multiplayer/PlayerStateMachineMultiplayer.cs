@@ -47,6 +47,10 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
         leftJab = 1, 
         rightJab = 2,
         shoot = 3,
+        leftHook = 4,
+        rightHook = 5,
+        leftUpper = 6,
+        rightUpper = 7,
     }
     public LayerMask hitLayer;
     public GameObject lefthand;
@@ -101,8 +105,8 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
             playerInput.CharacterControls.Shoot.performed += onShoot;
             playerInput.CharacterControls.Shoot.canceled += onShoot;
             MsgVisualiser.Instance.OnInputDetected += onInstanceInputDetected;
-            //playerInput.CharacterControls.Jab.performed += onLeftJab;
-            //playerInput.CharacterControls.Jab.canceled += onLeftJab;
+            playerInput.CharacterControls.Jab.performed += onLeftJab;
+            playerInput.CharacterControls.Jab.canceled += onLeftJab;
             playerInput.CharacterControls.RightJab.performed += onRightJab;
             playerInput.CharacterControls.RightJab.canceled += onRightJab;
             playerInput.CharacterControls.Guard.performed += onGuard;
@@ -119,19 +123,19 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
         switch (moveData)
         {
             case "JAB":
-                onLeftJab();
+                onAttack(AttackType.leftJab,1);
                 break;
             case "LEFT_UPPER":
-                onLeftJab();
+                onAttack(AttackType.leftUpper,2);
                 break;
             case "LEFT_HOOK":
-                onLeftJab();
+                onAttack(AttackType.leftHook,2);
                 break;
             case "LEFT_PROTECT":
-                onLeftJab();
+                onProtect(true);
                 break;
-            case "LEFT_GUARD":
-                onLeftJab();
+            default:
+                onProtect(false);
                 break;
         }
     }
@@ -159,7 +163,6 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
         {
             atktype = AttackType.shoot;
             lifepointsToReduce = 3;
-            isAttackPressed = false;
         }
         else
         {
@@ -178,31 +181,14 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
     }
 
 
-    //void onLeftJab(InputAction.CallbackContext context)
-    //{
-    //    Debug.Log("Still attacking: "+ stillAttacking);
-    //    isAttackPressed = context.ReadValueAsButton();
-    //    if (isAttackPressed && !(currentState is PlayerAttackStateMultiplayer))
-    //    {
-    //        atktype = AttackType.leftJab;
-    //        lifepointsToReduce = 1;
-    //    }
-    //    else
-    //    {
-    //        isAttackPressed = false;
-    //    }
-    //    
-    //}
-
-    void onLeftJab()
+    void onLeftJab(InputAction.CallbackContext context)
     {
         Debug.Log("Still attacking: "+ stillAttacking);
-        isAttackPressed = true;
+        isAttackPressed = context.ReadValueAsButton();
         if (isAttackPressed && !(currentState is PlayerAttackStateMultiplayer))
         {
             atktype = AttackType.leftJab;
             lifepointsToReduce = 1;
-            Debug.Log("JABBING");
         }
         else
         {
@@ -211,9 +197,32 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
         
     }
 
+    void onAttack(AttackType attackType, int dmg)
+    {
+        Debug.Log("Still attacking: "+ stillAttacking);
+        isAttackPressed = true;
+        if (isAttackPressed && !(currentState is PlayerAttackStateMultiplayer))
+        {
+            atktype = attackType;
+            lifepointsToReduce = dmg;
+            Debug.Log("Attacktype= "  + attackType);
+        }
+        else
+        {
+            isAttackPressed = false;
+        }
+    }
+
+
     void onGuard(InputAction.CallbackContext context)
     {
         isGuarding = context.ReadValueAsButton();
+        PlayerDataManager.Instance.PlayerGuardStateServerRpc(networkobj.OwnerClientId,isGuarding);
+    }
+
+    void onProtect(bool guarding)
+    {
+        isGuarding = guarding;
         PlayerDataManager.Instance.PlayerGuardStateServerRpc(networkobj.OwnerClientId,isGuarding);
     }
 
@@ -270,8 +279,8 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
             playerInput.CharacterControls.Shoot.performed -= onShoot;
             playerInput.CharacterControls.Shoot.canceled -= onShoot;
             MsgVisualiser.Instance.OnInputDetected -= onInstanceInputDetected;
-            //playerInput.CharacterControls.Jab.performed -= onLeftJab;
-            //playerInput.CharacterControls.Jab.canceled -= onLeftJab;
+            playerInput.CharacterControls.Jab.performed -= onLeftJab;
+            playerInput.CharacterControls.Jab.canceled -= onLeftJab;
             playerInput.CharacterControls.Guard.performed -= onGuard;
             playerInput.CharacterControls.Guard.canceled -= onGuard;
             playerInput.CharacterControls.RightJab.performed -= onRightJab;
