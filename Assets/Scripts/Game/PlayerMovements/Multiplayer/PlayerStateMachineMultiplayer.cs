@@ -104,13 +104,22 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
             //playerInput.CharacterControls.Move.performed += onMovementInput;
             playerInput.CharacterControls.Shoot.performed += onShoot;
             playerInput.CharacterControls.Shoot.canceled += onShoot;
-            MsgVisualiser.Instance.OnInputDetected += onInstanceInputDetected;
+            //MsgVisualiser.Instance.OnInputDetected += onInstanceInputDetected;
             playerInput.CharacterControls.Jab.performed += onLeftJab;
             playerInput.CharacterControls.Jab.canceled += onLeftJab;
             playerInput.CharacterControls.RightJab.performed += onRightJab;
             playerInput.CharacterControls.RightJab.canceled += onRightJab;
             playerInput.CharacterControls.Guard.performed += onGuard;
             playerInput.CharacterControls.Guard.canceled += onGuard;
+            //
+            playerInput.CharacterControls.LeftHook.performed += onLeftHook;
+            playerInput.CharacterControls.LeftHook.canceled += onLeftHook;
+            playerInput.CharacterControls.RightHook.performed += onRightHook;
+            playerInput.CharacterControls.RightHook.canceled += onRightHook;
+            playerInput.CharacterControls.LeftUppercut.performed += onLeftUpper;
+            playerInput.CharacterControls.LeftUppercut.canceled += onLeftUpper;
+            playerInput.CharacterControls.RightUppercut.performed += onRightUpper;
+            playerInput.CharacterControls.RightUppercut.canceled += onRightUpper;
         }
         //PlayerDataManager.Instance.OnPlayerDead += playerDead;
         networkobj = GetComponent<NetworkObject>();
@@ -188,6 +197,66 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
         if (isAttackPressed && !(currentState is PlayerAttackStateMultiplayer))
         {
             atktype = AttackType.leftJab;
+            lifepointsToReduce = 1;
+        }
+        else
+        {
+            isAttackPressed = false;
+        }
+        
+    }
+
+    void onLeftHook(InputAction.CallbackContext context)
+    {
+        isAttackPressed = context.ReadValueAsButton();
+        if (isAttackPressed && !(currentState is PlayerAttackStateMultiplayer))
+        {
+            atktype = AttackType.leftHook;
+            lifepointsToReduce = 1;
+        }
+        else
+        {
+            isAttackPressed = false;
+        }
+        
+    }
+
+    void onRightHook(InputAction.CallbackContext context)
+    {
+        isAttackPressed = context.ReadValueAsButton();
+        if (isAttackPressed && !(currentState is PlayerAttackStateMultiplayer))
+        {
+            atktype = AttackType.rightHook;
+            lifepointsToReduce = 1;
+        }
+        else
+        {
+            isAttackPressed = false;
+        }
+        
+    }
+
+    void onLeftUpper(InputAction.CallbackContext context)
+    {
+        isAttackPressed = context.ReadValueAsButton();
+        if (isAttackPressed && !(currentState is PlayerAttackStateMultiplayer))
+        {
+            atktype = AttackType.leftUpper;
+            lifepointsToReduce = 1;
+        }
+        else
+        {
+            isAttackPressed = false;
+        }
+        
+    }
+
+    void onRightUpper(InputAction.CallbackContext context)
+    {
+        isAttackPressed = context.ReadValueAsButton();
+        if (isAttackPressed && !(currentState is PlayerAttackStateMultiplayer))
+        {
+            atktype = AttackType.rightUpper;
             lifepointsToReduce = 1;
         }
         else
@@ -278,7 +347,7 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
         {
             playerInput.CharacterControls.Shoot.performed -= onShoot;
             playerInput.CharacterControls.Shoot.canceled -= onShoot;
-            MsgVisualiser.Instance.OnInputDetected -= onInstanceInputDetected;
+            //MsgVisualiser.Instance.OnInputDetected -= onInstanceInputDetected;
             playerInput.CharacterControls.Jab.performed -= onLeftJab;
             playerInput.CharacterControls.Jab.canceled -= onLeftJab;
             playerInput.CharacterControls.Guard.performed -= onGuard;
@@ -397,7 +466,12 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
     {
         if (IsServer)
         {
-            if (collision.transform.TryGetComponent(out NetworkObject networkObject))
+            if(collision.collider.gameObject.layer == LayerMask.NameToLayer("Bag"))
+            {
+                Debug.Log("Detected bag");
+                SpawnHitParticlesForBag(collision.collider.gameObject.transform);
+            }
+            else if (collision.transform.TryGetComponent(out NetworkObject networkObject))
             {
                 if (collision.collider.gameObject.layer == LayerMask.NameToLayer("Player") && networkObject.OwnerClientId != networkobj.OwnerClientId)
                 {
@@ -407,7 +481,8 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
                     OnHitPlayer?.Invoke(fromPlayerToEnemey);
                     return;
                 }
-            }
+            } 
+            
         }
         
     }
@@ -429,6 +504,13 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
     public void SpawnHitParticles()
     {
         GameObject hitVfx = Instantiate(hitEffect,hitPosition.position,Quaternion.identity);
+        Destroy(hitVfx,1f);
+    }
+
+    private void SpawnHitParticlesForBag(Transform hitPos)
+    {
+        GameObject hitVfx = Instantiate(hitEffect,hitPos.position,Quaternion.identity);
+        Debug.Log("Spawning particles");
         Destroy(hitVfx,1f);
     }
         

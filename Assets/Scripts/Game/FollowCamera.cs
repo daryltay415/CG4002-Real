@@ -5,9 +5,10 @@ using Unity.XR.CoreUtils;
 public class FollowCamera : NetworkBehaviour
 {
     private Camera mainCam;
-    public float xoffset = -0.4f;
+    public float xoffset = -0.2f;
     public float zoffset = 0.8f;
     public float yoffset = -0.8f;
+    public float yRotationOffset = 23f;
     private Vector3 camEuler;
     private XROrigin xrOrigin;
 
@@ -79,7 +80,10 @@ public class FollowCamera : NetworkBehaviour
             // 5. Sync Rotation
             if (localForwardFlat != Vector3.zero)
             {
-                transform.localRotation = Quaternion.LookRotation(localForwardFlat, Vector3.up);
+                Quaternion baseRotation = Quaternion.LookRotation(localForwardFlat, Vector3.up);
+                Quaternion offset = Quaternion.Euler(0, yRotationOffset, 0);
+                transform.rotation = baseRotation * offset;
+                //transform.localRotation = Quaternion.LookRotation(localForwardFlat, Vector3.up);
             }
 
         }

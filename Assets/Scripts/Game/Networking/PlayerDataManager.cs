@@ -13,7 +13,7 @@ public class PlayerDataManager : NetworkBehaviour
 
     private NetworkList<PlayerData> allPlayerData;
     public NetworkVariable<ulong> winner;
-    private const int LIFEPOINTS = 5;
+    private const int LIFEPOINTS = 20;
     public int LIFEPOINTS_TO_REDUCE = 1;
 
     public event Action<ulong> OnPlayerDead;

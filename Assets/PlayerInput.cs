@@ -62,6 +62,42 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""LeftHook"",
+                    ""type"": ""Button"",
+                    ""id"": ""359e85c4-9576-4e36-885a-0d1819f6ac7b"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""RightHook"",
+                    ""type"": ""Button"",
+                    ""id"": ""1261beb1-243a-496c-990a-1d453f4ea508"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""LeftUppercut"",
+                    ""type"": ""Button"",
+                    ""id"": ""ca68b146-0a20-4b96-afb1-da6c0f58ac75"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""RightUppercut"",
+                    ""type"": ""Button"",
+                    ""id"": ""4b349b35-c5c3-4738-a231-ba84d3873af7"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -108,6 +144,50 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""action"": ""Shoot"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4cb870cc-6a79-4dd2-93ea-79912f19619f"",
+                    ""path"": ""<Keyboard>/t"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""LeftHook"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""37e7f635-9d86-4ac1-aeda-9488fd88bd15"",
+                    ""path"": ""<Keyboard>/y"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RightHook"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6769b8ad-0596-460d-a273-357709ed51c4"",
+                    ""path"": ""<Keyboard>/u"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""LeftUppercut"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""250fca60-a4fc-47b3-adb3-29f76aa240c9"",
+                    ""path"": ""<Keyboard>/i"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RightUppercut"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -120,6 +200,10 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_CharacterControls_Guard = m_CharacterControls.FindAction("Guard", throwIfNotFound: true);
         m_CharacterControls_RightJab = m_CharacterControls.FindAction("RightJab", throwIfNotFound: true);
         m_CharacterControls_Shoot = m_CharacterControls.FindAction("Shoot", throwIfNotFound: true);
+        m_CharacterControls_LeftHook = m_CharacterControls.FindAction("LeftHook", throwIfNotFound: true);
+        m_CharacterControls_RightHook = m_CharacterControls.FindAction("RightHook", throwIfNotFound: true);
+        m_CharacterControls_LeftUppercut = m_CharacterControls.FindAction("LeftUppercut", throwIfNotFound: true);
+        m_CharacterControls_RightUppercut = m_CharacterControls.FindAction("RightUppercut", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -185,6 +269,10 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_CharacterControls_Guard;
     private readonly InputAction m_CharacterControls_RightJab;
     private readonly InputAction m_CharacterControls_Shoot;
+    private readonly InputAction m_CharacterControls_LeftHook;
+    private readonly InputAction m_CharacterControls_RightHook;
+    private readonly InputAction m_CharacterControls_LeftUppercut;
+    private readonly InputAction m_CharacterControls_RightUppercut;
     public struct CharacterControlsActions
     {
         private @PlayerInput m_Wrapper;
@@ -193,6 +281,10 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         public InputAction @Guard => m_Wrapper.m_CharacterControls_Guard;
         public InputAction @RightJab => m_Wrapper.m_CharacterControls_RightJab;
         public InputAction @Shoot => m_Wrapper.m_CharacterControls_Shoot;
+        public InputAction @LeftHook => m_Wrapper.m_CharacterControls_LeftHook;
+        public InputAction @RightHook => m_Wrapper.m_CharacterControls_RightHook;
+        public InputAction @LeftUppercut => m_Wrapper.m_CharacterControls_LeftUppercut;
+        public InputAction @RightUppercut => m_Wrapper.m_CharacterControls_RightUppercut;
         public InputActionMap Get() { return m_Wrapper.m_CharacterControls; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -214,6 +306,18 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Shoot.started += instance.OnShoot;
             @Shoot.performed += instance.OnShoot;
             @Shoot.canceled += instance.OnShoot;
+            @LeftHook.started += instance.OnLeftHook;
+            @LeftHook.performed += instance.OnLeftHook;
+            @LeftHook.canceled += instance.OnLeftHook;
+            @RightHook.started += instance.OnRightHook;
+            @RightHook.performed += instance.OnRightHook;
+            @RightHook.canceled += instance.OnRightHook;
+            @LeftUppercut.started += instance.OnLeftUppercut;
+            @LeftUppercut.performed += instance.OnLeftUppercut;
+            @LeftUppercut.canceled += instance.OnLeftUppercut;
+            @RightUppercut.started += instance.OnRightUppercut;
+            @RightUppercut.performed += instance.OnRightUppercut;
+            @RightUppercut.canceled += instance.OnRightUppercut;
         }
 
         private void UnregisterCallbacks(ICharacterControlsActions instance)
@@ -230,6 +334,18 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Shoot.started -= instance.OnShoot;
             @Shoot.performed -= instance.OnShoot;
             @Shoot.canceled -= instance.OnShoot;
+            @LeftHook.started -= instance.OnLeftHook;
+            @LeftHook.performed -= instance.OnLeftHook;
+            @LeftHook.canceled -= instance.OnLeftHook;
+            @RightHook.started -= instance.OnRightHook;
+            @RightHook.performed -= instance.OnRightHook;
+            @RightHook.canceled -= instance.OnRightHook;
+            @LeftUppercut.started -= instance.OnLeftUppercut;
+            @LeftUppercut.performed -= instance.OnLeftUppercut;
+            @LeftUppercut.canceled -= instance.OnLeftUppercut;
+            @RightUppercut.started -= instance.OnRightUppercut;
+            @RightUppercut.performed -= instance.OnRightUppercut;
+            @RightUppercut.canceled -= instance.OnRightUppercut;
         }
 
         public void RemoveCallbacks(ICharacterControlsActions instance)
@@ -253,5 +369,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         void OnGuard(InputAction.CallbackContext context);
         void OnRightJab(InputAction.CallbackContext context);
         void OnShoot(InputAction.CallbackContext context);
+        void OnLeftHook(InputAction.CallbackContext context);
+        void OnRightHook(InputAction.CallbackContext context);
+        void OnLeftUppercut(InputAction.CallbackContext context);
+        void OnRightUppercut(InputAction.CallbackContext context);
     }
 }

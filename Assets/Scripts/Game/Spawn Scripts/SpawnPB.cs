@@ -9,7 +9,7 @@ public class SpawnPB : MonoBehaviour
     public void SpawnPunchingBag()
     {
         player = GameObject.FindGameObjectWithTag("Player");
-        Vector3 spawnPos = new Vector3(player.transform.position.x, player.transform.position.y, player.transform.position.z + 0.5f);
+        Vector3 spawnPos = new Vector3(player.transform.position.x - 1.3f, player.transform.position.y, player.transform.position.z);
         GameObject punchingBag = Instantiate(punchingBagPrefab,spawnPos,Quaternion.identity);
         Debug.Log("Spawning punching bag");
     }

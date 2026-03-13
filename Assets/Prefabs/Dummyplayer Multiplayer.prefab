@@ -400,8 +400,20 @@ PrefabInstance:
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 1238277171960936495, guid: 9bd72731ebe2248478ba4849c274a43b, type: 3}
+      propertyPath: xoffset
+      value: -0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 1238277171960936495, guid: 9bd72731ebe2248478ba4849c274a43b, type: 3}
+      propertyPath: zoffset
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 1238277171960936495, guid: 9bd72731ebe2248478ba4849c274a43b, type: 3}
       propertyPath: m_Enabled
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1238277171960936495, guid: 9bd72731ebe2248478ba4849c274a43b, type: 3}
+      propertyPath: yRotationOffset
+      value: 23
       objectReference: {fileID: 0}
     - target: {fileID: 1268482595157119653, guid: 9bd72731ebe2248478ba4849c274a43b, type: 3}
       propertyPath: m_Layer
@@ -729,7 +741,7 @@ MonoBehaviour:
   takingDmg: 0
   hitLayer:
     serializedVersion: 2
-    m_Bits: 8
+    m_Bits: 72
   lefthand: {fileID: 7330953147297973323}
   righthand: {fileID: 6917512468195173787}
   punchRange: 0.18
