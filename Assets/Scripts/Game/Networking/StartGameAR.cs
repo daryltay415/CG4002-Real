@@ -23,6 +23,8 @@ public class StartGameAR : MonoBehaviour
     [SerializeField] private Button StartGameButton;
     [SerializeField] private Button CreateRoomButton;
     [SerializeField] private Button JoinRoomButton;
+    [SerializeField] private Button player1Button;
+    [SerializeField] private Button player2Button;
     [SerializeField] private GameObject menu;
     [SerializeField] private GameObject controls;
     [SerializeField] private UIManager uimanager;
@@ -31,6 +33,7 @@ public class StartGameAR : MonoBehaviour
 
     //Network variables
     private bool isHost;
+    private int topicToSub;
     private bool isTutMode = false;
 
     private void Awake()
@@ -42,6 +45,8 @@ public class StartGameAR : MonoBehaviour
         CreateRoomButton.onClick.AddListener(CreateGameHost);
         JoinRoomButton.onClick.AddListener(JoinGameClient);
         TutorialButton.onClick.AddListener(StartTutorial);
+        player1Button.onClick.AddListener(SetPlayer1);
+        player2Button.onClick.AddListener(SetPlayer2);
         StartGameButton.interactable = false;
         
         //ImageForColocalization.OnTextureRendered += BlitImageForColocalizationOnTextureRendered;
@@ -63,6 +68,18 @@ public class StartGameAR : MonoBehaviour
     //{
     //    _targetImage = texture2D;
     //}
+
+    private void SetPlayer1()
+    {
+        player1Button.GetComponent<Image>().color = Color.green;  
+        topicToSub = 1;
+    }
+
+    private void SetPlayer2()
+    {
+        player2Button.GetComponent<Image>().color = Color.green;  
+        topicToSub = 1;
+    }
 
     // Checks if the image in the Image tracking AR manager is in the camera's view. If it is, the start button is set active
     private void SharedSpaceManagerOnsharedSpaceManagerStateChanged(SharedSpaceManager.SharedSpaceManagerStateChangeEventArgs obj)

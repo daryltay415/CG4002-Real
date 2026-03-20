@@ -9,15 +9,20 @@ public class StartGameNonAR : NetworkBehaviour
     [SerializeField] private Button startHost;
     [SerializeField] private Button startClient;
     [SerializeField] private Button StartGameButton;
+    [SerializeField] private Button player1Button;
+    [SerializeField] private Button player2Button;
     [SerializeField] private GameObject menu;
     [SerializeField] private GameObject controls;
     [SerializeField] private GameObject specialMeter;
     [SerializeField] private UIManager uimanager;
     [SerializeField] private SpawnPrefab spawnpre;
+    public MsgVisualiser msgVisualiser;
     
     
     void Start()
     {
+        player1Button.onClick.AddListener(onPlayer1ButtonClicked);
+        player2Button.onClick.AddListener(onPlayer2ButtonClicked);
         startHost.onClick.AddListener(() =>
         {
             NetworkManager.Singleton.StartHost();
@@ -34,6 +39,20 @@ public class StartGameNonAR : NetworkBehaviour
         
         StartGameButton.interactable = false;
         
+    }
+
+    private void onPlayer1ButtonClicked()
+    {
+        player1Button.GetComponent<Image>().color = Color.green;
+        player2Button.GetComponent<Image>().color = Color.white;
+        msgVisualiser.TopicToSub = 1;
+    }
+
+    private void onPlayer2ButtonClicked()
+    {
+        player1Button.GetComponent<Image>().color = Color.white;
+        player2Button.GetComponent<Image>().color = Color.green;
+        msgVisualiser.TopicToSub = 2;
     }
 
     void StartGame()

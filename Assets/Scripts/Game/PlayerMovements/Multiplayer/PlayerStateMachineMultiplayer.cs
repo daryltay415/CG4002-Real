@@ -104,7 +104,7 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
             //playerInput.CharacterControls.Move.performed += onMovementInput;
             playerInput.CharacterControls.Shoot.performed += onShoot;
             playerInput.CharacterControls.Shoot.canceled += onShoot;
-            //MsgVisualiser.Instance.OnInputDetected += onInstanceInputDetected;
+            MsgVisualiser.Instance.OnInputDetected += onInstanceInputDetected;
             playerInput.CharacterControls.Jab.performed += onLeftJab;
             playerInput.CharacterControls.Jab.canceled += onLeftJab;
             playerInput.CharacterControls.RightJab.performed += onRightJab;
@@ -139,6 +139,15 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
                 break;
             case "LEFT_HOOK":
                 onAttack(AttackType.leftHook,2);
+                break;
+            case "RIGHT_HOOK":
+                onAttack(AttackType.rightHook,2);
+                break;
+            case "RIGHT_UPPER":
+                onAttack(AttackType.rightUpper,2);
+                break;
+            case "PUNCH":
+                onAttack(AttackType.rightJab,2);
                 break;
             case "LEFT_PROTECT":
                 onProtect(true);
@@ -291,6 +300,7 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
 
     void onProtect(bool guarding)
     {
+        //isAttackPressed = false;
         isGuarding = guarding;
         PlayerDataManager.Instance.PlayerGuardStateServerRpc(networkobj.OwnerClientId,isGuarding);
     }
@@ -347,7 +357,7 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
         {
             playerInput.CharacterControls.Shoot.performed -= onShoot;
             playerInput.CharacterControls.Shoot.canceled -= onShoot;
-            //MsgVisualiser.Instance.OnInputDetected -= onInstanceInputDetected;
+            MsgVisualiser.Instance.OnInputDetected -= onInstanceInputDetected;
             playerInput.CharacterControls.Jab.performed -= onLeftJab;
             playerInput.CharacterControls.Jab.canceled -= onLeftJab;
             playerInput.CharacterControls.Guard.performed -= onGuard;

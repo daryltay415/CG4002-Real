@@ -28,6 +28,7 @@ public class MsgVisualiser : NetworkBehaviour{
 
     private string p2_Message = "";
     private bool p2_NewData = false;
+    public int TopicToSub = 1;
 
     private void Awake()
     {
@@ -73,7 +74,7 @@ public class MsgVisualiser : NetworkBehaviour{
         
         Debug.Log("SUCCESS: Unity Connected!");
 
-        if (IsServer)
+        if (TopicToSub == 1)
         {
             client.Subscribe(new string[] { p1_topic }, new byte[] { MqttMsgBase.QOS_LEVEL_AT_MOST_ONCE });
             Debug.Log("Successfully subscribed to" + p1_topic);
@@ -142,14 +143,14 @@ public class MsgVisualiser : NetworkBehaviour{
         if (p1_NewData) {
             //ProcessGesture(p1_Message, 1);
             OnInputDetected?.Invoke(p1_Message);
-            Debug.Log("PLAYER1 got input");
+            Debug.Log("PLAYER1 got input " + p1_Message);
             p1_NewData = false; // Reset flag
         }
         if (p2_NewData)
         {   
             OnInputDetected?.Invoke(p2_Message);
             //ProcessGesture(p2_Message, 2);
-            Debug.Log("PLAYER2 got input");
+            Debug.Log("PLAYER2 got input " + p2_Message);
             p2_NewData = false; // Reset flag
         }
     }
