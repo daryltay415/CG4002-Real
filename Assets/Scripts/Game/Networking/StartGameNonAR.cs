@@ -16,7 +16,7 @@ public class StartGameNonAR : NetworkBehaviour
     [SerializeField] private GameObject specialMeter;
     [SerializeField] private UIManager uimanager;
     [SerializeField] private SpawnPrefab spawnpre;
-    public MsgVisualiser msgVisualiser;
+    public MsgVisualiser_V3 msgVisualiser;
     
     
     void Start()
@@ -46,6 +46,7 @@ public class StartGameNonAR : NetworkBehaviour
         player1Button.GetComponent<Image>().color = Color.green;
         player2Button.GetComponent<Image>().color = Color.white;
         msgVisualiser.TopicToSub = 1;
+        Debug.Log("Im player 1");
     }
 
     private void onPlayer2ButtonClicked()
@@ -53,6 +54,7 @@ public class StartGameNonAR : NetworkBehaviour
         player1Button.GetComponent<Image>().color = Color.white;
         player2Button.GetComponent<Image>().color = Color.green;
         msgVisualiser.TopicToSub = 2;
+        Debug.Log("Im player 2");
     }
 
     void StartGame()

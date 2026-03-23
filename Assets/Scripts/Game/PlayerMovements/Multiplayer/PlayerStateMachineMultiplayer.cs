@@ -104,7 +104,7 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
             //playerInput.CharacterControls.Move.performed += onMovementInput;
             playerInput.CharacterControls.Shoot.performed += onShoot;
             playerInput.CharacterControls.Shoot.canceled += onShoot;
-            MsgVisualiser_V3.Instance.OnInputDetected += onInstanceInputDetected;
+            //MsgVisualiser_V3.Instance.OnInputDetected += onInstanceInputDetected;
             //MsgVisualiser.Instance.OnInputDetected += onInstanceInputDetected;
             playerInput.CharacterControls.Jab.performed += onLeftJab;
             playerInput.CharacterControls.Jab.canceled += onLeftJab;
@@ -370,7 +370,7 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
         {
             playerInput.CharacterControls.Shoot.performed -= onShoot;
             playerInput.CharacterControls.Shoot.canceled -= onShoot;
-            MsgVisualiser_V3.Instance.OnInputDetected -= onInstanceInputDetected;
+            //MsgVisualiser_V3.Instance.OnInputDetected -= onInstanceInputDetected;
             //MsgVisualiser.Instance.OnInputDetected -= onInstanceInputDetected;
             playerInput.CharacterControls.Jab.performed -= onLeftJab;
             playerInput.CharacterControls.Jab.canceled -= onLeftJab;
@@ -503,9 +503,9 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
                     Debug.Log("hand has Collision to player");
                     //play feedback here for both players
                     //player
-                    MsgVisualiser_V3.Instance.sendFeedback("smth", networkobj.OwnerClientId);
+                    //MsgVisualiser_V3.Instance.sendFeedback("smth", networkobj.OwnerClientId);
                     //opponent
-                    MsgVisualiser_V3.Instance.sendFeedback("smth", networkObject.OwnerClientId);
+                    //MsgVisualiser_V3.Instance.sendFeedback("smth", networkObject.OwnerClientId);
                     (ulong, ulong, int) fromPlayerToEnemey = new(networkobj.OwnerClientId, networkObject.OwnerClientId, damage);
                     OnHitPlayer?.Invoke(fromPlayerToEnemey);
                     return;
@@ -524,7 +524,7 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
             Debug.Log("Projectile has Collision to player");
             (ulong, ulong, int) fromPlayerToEnemey = new(from, to, damage);
             //play feedback here for enemy
-            MsgVisualiser_V3.Instance.sendFeedback("smth", to);
+            //MsgVisualiser_V3.Instance.sendFeedback("smth", to);
             OnHitPlayer?.Invoke(fromPlayerToEnemey);
             return;
             

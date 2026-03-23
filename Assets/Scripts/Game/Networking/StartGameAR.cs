@@ -30,6 +30,7 @@ public class StartGameAR : MonoBehaviour
     [SerializeField] private UIManager uimanager;
     [SerializeField] private SpawnPrefab spawnpre;
     [SerializeField] private SpawnPB spawnBag;
+    public MsgVisualiser_V3 msgVisualiser;
 
     //Network variables
     private bool isHost;
@@ -72,13 +73,13 @@ public class StartGameAR : MonoBehaviour
     private void SetPlayer1()
     {
         player1Button.GetComponent<Image>().color = Color.green;  
-        topicToSub = 1;
+        msgVisualiser.TopicToSub = 1;
     }
 
     private void SetPlayer2()
     {
         player2Button.GetComponent<Image>().color = Color.green;  
-        topicToSub = 1;
+        msgVisualiser.TopicToSub = 2;
     }
 
     // Checks if the image in the Image tracking AR manager is in the camera's view. If it is, the start button is set active
