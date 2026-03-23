@@ -104,7 +104,8 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
             //playerInput.CharacterControls.Move.performed += onMovementInput;
             playerInput.CharacterControls.Shoot.performed += onShoot;
             playerInput.CharacterControls.Shoot.canceled += onShoot;
-            MsgVisualiser.Instance.OnInputDetected += onInstanceInputDetected;
+            MsgVisualiser_V3.Instance.OnInputDetected += onInstanceInputDetected;
+            //MsgVisualiser.Instance.OnInputDetected += onInstanceInputDetected;
             playerInput.CharacterControls.Jab.performed += onLeftJab;
             playerInput.CharacterControls.Jab.canceled += onLeftJab;
             playerInput.CharacterControls.RightJab.performed += onRightJab;
@@ -150,6 +151,18 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
                 onAttack(AttackType.rightJab,2);
                 break;
             case "LEFT_PROTECT":
+                onProtect(true);
+                break;
+            case "SPECIAL":
+                onAttack(AttackType.shoot, 3);
+                break;
+            case "LEFT_GUARD":
+                onProtect(true);
+                break;
+            case "RIGHT_GUARD":
+                onProtect(true);
+                break;
+            case "RIGHT_PROTECT":
                 onProtect(true);
                 break;
             default:
@@ -357,7 +370,8 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
         {
             playerInput.CharacterControls.Shoot.performed -= onShoot;
             playerInput.CharacterControls.Shoot.canceled -= onShoot;
-            MsgVisualiser.Instance.OnInputDetected -= onInstanceInputDetected;
+            MsgVisualiser_V3.Instance.OnInputDetected -= onInstanceInputDetected;
+            //MsgVisualiser.Instance.OnInputDetected -= onInstanceInputDetected;
             playerInput.CharacterControls.Jab.performed -= onLeftJab;
             playerInput.CharacterControls.Jab.canceled -= onLeftJab;
             playerInput.CharacterControls.Guard.performed -= onGuard;
@@ -487,6 +501,11 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
                 {
                     int damage = GetDamageFromType(atktype);
                     Debug.Log("hand has Collision to player");
+                    //play feedback here for both players
+                    //player
+                    MsgVisualiser_V3.Instance.sendFeedback("smth", networkobj.OwnerClientId);
+                    //opponent
+                    MsgVisualiser_V3.Instance.sendFeedback("smth", networkObject.OwnerClientId);
                     (ulong, ulong, int) fromPlayerToEnemey = new(networkobj.OwnerClientId, networkObject.OwnerClientId, damage);
                     OnHitPlayer?.Invoke(fromPlayerToEnemey);
                     return;
@@ -504,6 +523,8 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
         {
             Debug.Log("Projectile has Collision to player");
             (ulong, ulong, int) fromPlayerToEnemey = new(from, to, damage);
+            //play feedback here for enemy
+            MsgVisualiser_V3.Instance.sendFeedback("smth", to);
             OnHitPlayer?.Invoke(fromPlayerToEnemey);
             return;
             
