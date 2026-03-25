@@ -503,9 +503,9 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
                     Debug.Log("hand has Collision to player");
                     //play feedback here for both players
                     //player
-                    MsgVisualiser_V3.Instance.sendFeedback("smth", networkobj.OwnerClientId);
+                    MsgVisualiser_V3.Instance.sendFeedback("HIT", networkobj.OwnerClientId);
                     //opponent
-                    MsgVisualiser_V3.Instance.sendFeedback("smth", networkObject.OwnerClientId);
+                    MsgVisualiser_V3.Instance.sendFeedback("DAMAGE", networkObject.OwnerClientId);
                     (ulong, ulong, int) fromPlayerToEnemey = new(networkobj.OwnerClientId, networkObject.OwnerClientId, damage);
                     OnHitPlayer?.Invoke(fromPlayerToEnemey);
                     return;
@@ -524,7 +524,7 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
             Debug.Log("Projectile has Collision to player");
             (ulong, ulong, int) fromPlayerToEnemey = new(from, to, damage);
             //play feedback here for enemy
-            MsgVisualiser_V3.Instance.sendFeedback("smth", to);
+            MsgVisualiser_V3.Instance.sendFeedback("DAMAGE", to);
             OnHitPlayer?.Invoke(fromPlayerToEnemey);
             return;
             

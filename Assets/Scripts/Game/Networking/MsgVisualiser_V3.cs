@@ -70,7 +70,7 @@ public class MsgVisualiser_V3 : NetworkBehaviour{
     try {
 
         //Added this line to distiniguish host and client (not sure if it matters)
-        string clientId = "Unity-" + OwnerClientId.ToString();
+        string clientId = "Unity-" + TopicToSub.ToString();
         Debug.Log("Attempting to connect to " + brokerIP + "...");
         
         // 4. Connect
@@ -156,6 +156,7 @@ public class MsgVisualiser_V3 : NetworkBehaviour{
     }
 
     public void sendFeedback(String msg, ulong clientID) {
+        Debug.Log("clientID " + clientID + " Msg: " + msg);
         string pub_topic = "";
         if (clientID == 0) {
             pub_topic = p1_feedback_topic;

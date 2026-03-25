@@ -46,8 +46,8 @@ public class StartGameAR : MonoBehaviour
         CreateRoomButton.onClick.AddListener(CreateGameHost);
         JoinRoomButton.onClick.AddListener(JoinGameClient);
         TutorialButton.onClick.AddListener(StartTutorial);
-        player1Button.onClick.AddListener(SetPlayer1);
-        player2Button.onClick.AddListener(SetPlayer2);
+        player1Button.onClick.AddListener(onPlayer1ButtonClicked);
+        player2Button.onClick.AddListener(onPlayer2ButtonClicked);
         StartGameButton.interactable = false;
         
         //ImageForColocalization.OnTextureRendered += BlitImageForColocalizationOnTextureRendered;
@@ -70,16 +70,20 @@ public class StartGameAR : MonoBehaviour
     //    _targetImage = texture2D;
     //}
 
-    private void SetPlayer1()
+    private void onPlayer1ButtonClicked()
     {
-        player1Button.GetComponent<Image>().color = Color.green;  
+        player1Button.GetComponent<Image>().color = Color.green;
+        player2Button.GetComponent<Image>().color = Color.white;
         msgVisualiser.TopicToSub = 1;
+        Debug.Log("Im player 1");
     }
 
-    private void SetPlayer2()
+    private void onPlayer2ButtonClicked()
     {
-        player2Button.GetComponent<Image>().color = Color.green;  
+        player1Button.GetComponent<Image>().color = Color.white;
+        player2Button.GetComponent<Image>().color = Color.green;
         msgVisualiser.TopicToSub = 2;
+        Debug.Log("Im player 2");
     }
 
     // Checks if the image in the Image tracking AR manager is in the camera's view. If it is, the start button is set active
@@ -186,10 +190,10 @@ public class StartGameAR : MonoBehaviour
                 _targetImage, _targetImageSize
                 );
             int noOfClients = MAX_AMOUNT_CLIENTS_ROOM;
-            if (isTutMode)
-            {
-                noOfClients = 1;
-            }   
+            //if (isTutMode)
+            //{
+            //    noOfClients = 1;
+            //}   
             var roomArgs = ISharedSpaceRoomOptions.CreateLightshipRoomOptions(
             roomName,
             noOfClients,

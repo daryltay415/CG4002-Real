@@ -1964,7 +1964,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &469008183
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2439,7 +2439,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &603567361
 Transform:
   m_ObjectHideFlags: 0
@@ -2477,13 +2477,14 @@ MonoBehaviour:
   StartGameButton: {fileID: 730367269}
   CreateRoomButton: {fileID: 1931232361}
   JoinRoomButton: {fileID: 274116570}
-  player1Button: {fileID: 0}
-  player2Button: {fileID: 0}
+  player1Button: {fileID: 115544195}
+  player2Button: {fileID: 1296789730}
   menu: {fileID: 853008449}
   controls: {fileID: 273331602}
   uimanager: {fileID: 1094424688}
   spawnpre: {fileID: 1556154563}
   spawnBag: {fileID: 652756847}
+  msgVisualiser: {fileID: 338641901}
 --- !u!114 &603567363
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3553,7 +3554,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!81 &963194226
 AudioListener:
   m_ObjectHideFlags: 0
@@ -3621,13 +3622,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 10.73}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
+  m_LocalPosition: {x: -1.78, y: 1, z: 12.88}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!1 &989239569
 GameObject:
   m_ObjectHideFlags: 0
@@ -4235,7 +4236,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!108 &1194894749
 Light:
   m_ObjectHideFlags: 0
@@ -6859,7 +6860,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &2008692235
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6956,7 +6957,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &2028606107
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7443,7 +7444,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!64 &2080029734
 MeshCollider:
   m_ObjectHideFlags: 0
