@@ -17,6 +17,7 @@ public class StartGameNonAR : NetworkBehaviour
     [SerializeField] private UIManager uimanager;
     [SerializeField] private SpawnPrefab spawnpre;
     public MsgVisualiser_V3 msgVisualiser;
+    private int topicToSub = 1;
     
     
     void Start()
@@ -45,7 +46,8 @@ public class StartGameNonAR : NetworkBehaviour
     {
         player1Button.GetComponent<Image>().color = Color.green;
         player2Button.GetComponent<Image>().color = Color.white;
-        msgVisualiser.TopicToSub = 1;
+        topicToSub = 1;
+        //msgVisualiser.TopicToSub = topicToSub;
         Debug.Log("Im player 1");
     }
 
@@ -53,7 +55,8 @@ public class StartGameNonAR : NetworkBehaviour
     {
         player1Button.GetComponent<Image>().color = Color.white;
         player2Button.GetComponent<Image>().color = Color.green;
-        msgVisualiser.TopicToSub = 2;
+        topicToSub = 2;
+        //msgVisualiser.TopicToSub = topicToSub;
         Debug.Log("Im player 2");
     }
 
@@ -61,7 +64,7 @@ public class StartGameNonAR : NetworkBehaviour
     {
         //menu.SetActive(false);
         uimanager.ShowPlayerControls();
-        spawnpre.Spawn();
+        spawnpre.Spawn(topicToSub);
         //specialMeter.SetActive(true);
         //controls.SetActive(true);
     }

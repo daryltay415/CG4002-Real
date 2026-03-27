@@ -10,6 +10,10 @@ using System;
 /// </summary>
 public class PlayerStateMachineMultiplayer : NetworkBehaviour
 {
+    // Sound effect variable
+    public AudioClip dmgSound;
+    public AudioClip shootingSound;
+    public AudioManager audioManager;
     // Hit effect variable
     public Transform hitPosition;
     public GameObject hitEffect;
@@ -104,7 +108,7 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
             //playerInput.CharacterControls.Move.performed += onMovementInput;
             playerInput.CharacterControls.Shoot.performed += onShoot;
             playerInput.CharacterControls.Shoot.canceled += onShoot;
-            MsgVisualiser_V3.Instance.OnInputDetected += onInstanceInputDetected;
+            //MsgVisualiser_V3.Instance.OnInputDetected += onInstanceInputDetected;
             //MsgVisualiser.Instance.OnInputDetected += onInstanceInputDetected;
             playerInput.CharacterControls.Jab.performed += onLeftJab;
             playerInput.CharacterControls.Jab.canceled += onLeftJab;
@@ -169,6 +173,16 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
                 onProtect(false);
                 break;
         }
+    }
+
+    public void PlayDmgSound()
+    {
+        audioManager.PlaySoundFXClip(dmgSound, transform, 1);
+    }
+
+    public void PlayShootSound()
+    {
+        audioManager.PlaySoundFXClip(shootingSound, transform, 1);
     }
 
     public void SetAtkType(AttackType type)
@@ -370,7 +384,7 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
         {
             playerInput.CharacterControls.Shoot.performed -= onShoot;
             playerInput.CharacterControls.Shoot.canceled -= onShoot;
-            MsgVisualiser_V3.Instance.OnInputDetected -= onInstanceInputDetected;
+            //MsgVisualiser_V3.Instance.OnInputDetected -= onInstanceInputDetected;
             //MsgVisualiser.Instance.OnInputDetected -= onInstanceInputDetected;
             playerInput.CharacterControls.Jab.performed -= onLeftJab;
             playerInput.CharacterControls.Jab.canceled -= onLeftJab;
@@ -503,9 +517,9 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
                     Debug.Log("hand has Collision to player");
                     //play feedback here for both players
                     //player
-                    MsgVisualiser_V3.Instance.sendFeedback("HIT", networkobj.OwnerClientId);
+                    //MsgVisualiser_V3.Instance.sendFeedback("HIT", networkobj.OwnerClientId);
                     //opponent
-                    MsgVisualiser_V3.Instance.sendFeedback("DAMAGE", networkObject.OwnerClientId);
+                    //MsgVisualiser_V3.Instance.sendFeedback("DAMAGE", networkObject.OwnerClientId);
                     (ulong, ulong, int) fromPlayerToEnemey = new(networkobj.OwnerClientId, networkObject.OwnerClientId, damage);
                     OnHitPlayer?.Invoke(fromPlayerToEnemey);
                     return;
@@ -524,7 +538,7 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
             Debug.Log("Projectile has Collision to player");
             (ulong, ulong, int) fromPlayerToEnemey = new(from, to, damage);
             //play feedback here for enemy
-            MsgVisualiser_V3.Instance.sendFeedback("DAMAGE", to);
+            //MsgVisualiser_V3.Instance.sendFeedback("DAMAGE", to);
             OnHitPlayer?.Invoke(fromPlayerToEnemey);
             return;
             

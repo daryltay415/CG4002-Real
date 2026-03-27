@@ -34,7 +34,7 @@ public class StartGameAR : MonoBehaviour
 
     //Network variables
     private bool isHost;
-    private int topicToSub;
+    private int topicToSub =1;
     private bool isTutMode = false;
 
     private void Awake()
@@ -74,7 +74,8 @@ public class StartGameAR : MonoBehaviour
     {
         player1Button.GetComponent<Image>().color = Color.green;
         player2Button.GetComponent<Image>().color = Color.white;
-        msgVisualiser.TopicToSub = 1;
+        topicToSub = 1;
+        //msgVisualiser.TopicToSub = topicToSub;
         Debug.Log("Im player 1");
     }
 
@@ -82,7 +83,8 @@ public class StartGameAR : MonoBehaviour
     {
         player1Button.GetComponent<Image>().color = Color.white;
         player2Button.GetComponent<Image>().color = Color.green;
-        msgVisualiser.TopicToSub = 2;
+        topicToSub = 2;
+        //msgVisualiser.TopicToSub = topicToSub;
         Debug.Log("Im player 2");
     }
 
@@ -140,7 +142,7 @@ public class StartGameAR : MonoBehaviour
         //menu.SetActive(false);
         //spawnpre.Spawn();
         //controls.SetActive(true);
-        spawnpre.Spawn();
+        spawnpre.Spawn(topicToSub);
         if (isTutMode)
         {
             spawnBag.SpawnPunchingBag();
