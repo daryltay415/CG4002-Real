@@ -16,6 +16,11 @@ public class PlayerHealthUI : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
+        NetworkObject rootNetObj = GetComponentInParent<NetworkObject>();
+        if(NetworkManager.Singleton.LocalClientId == rootNetObj.OwnerClientId)
+        {
+            gameObject.SetActive(false);
+        }
         _mainCamera = GameObject.FindObjectOfType<Camera>();
         PlayerDataManager.Instance.OnPlayerHealthChanged += InstanceOnOnPlayerHealthChangedServerRpc;
         InstanceOnOnPlayerHealthChangedServerRpc(GetComponentInParent<NetworkObject>().OwnerClientId);

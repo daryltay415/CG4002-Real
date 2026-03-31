@@ -32,6 +32,7 @@ public class HeartRateUI : MonoBehaviour
 
     void UpdateBPM(int BPM)
     {
+        Debug.Log("BPM: " + BPM);
         heartRate = BPM;
     }
 
@@ -95,6 +96,6 @@ public class HeartRateUI : MonoBehaviour
     }
 
     private void OnDestroy() {
-        //MsgVisualiser.Instance.OnBPMDetected -= UpdateBPM;
+        MsgVisualiser.Instance.OnBPMDetected -= UpdateBPM;
     }
 }

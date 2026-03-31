@@ -13,7 +13,7 @@ public class MsgVisualiser : NetworkBehaviour{
     public event Action<string> OnInputDetected;
     public event Action<int> OnBPMDetected;
     private MqttClient client;
-    public string brokerIP = "10.166.207.131";
+    public string brokerIP = "54.66.30.206";
     public string p1_move_topic = "unity/moves/player-1";
     public string p2_move_topic = "unity/moves/player-2";
     public string p1_feedback_topic = "unity/feedback/player-1";
@@ -143,6 +143,7 @@ public class MsgVisualiser : NetworkBehaviour{
         // Only update if the flag is true
         if (p1_NewData) {
             var(gesture, bpm) = ParseSensorData(p1_Message);
+            Debug.Log("Player 1: " + bpm);
             OnInputDetected?.Invoke(gesture);
             OnBPMDetected?.Invoke(bpm);
             Debug.Log("PLAYER1 got input");
@@ -151,6 +152,7 @@ public class MsgVisualiser : NetworkBehaviour{
         if (p2_NewData)
         {   
             var(gesture, bpm) = ParseSensorData(p1_Message);
+            Debug.Log("Player 2: " + bpm);
             OnInputDetected?.Invoke(gesture);
             OnBPMDetected?.Invoke(bpm);
             Debug.Log("PLAYER2 got input");

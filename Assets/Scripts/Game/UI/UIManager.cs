@@ -17,6 +17,7 @@ public class UIManager : NetworkBehaviour
     [SerializeField] private TextMeshProUGUI winnerTextDisplay;
     [SerializeField] private TextMeshProUGUI loserTextDisplay;
     [SerializeField] private Canvas specialMeterDisplay;
+    [SerializeField] private Canvas lifePointsDisplay;
     public Image specialMeterBar; //The level of the special meter
 
 
@@ -47,6 +48,7 @@ public class UIManager : NetworkBehaviour
         winnerTextDisplay.gameObject.SetActive(false);
         loserTextDisplay.gameObject.SetActive(false);
         specialMeterDisplay.gameObject.SetActive(true);
+        lifePointsDisplay.gameObject.SetActive(true);
         Debug.Log("Why u no dispaly?");
     }
 
@@ -59,6 +61,7 @@ public class UIManager : NetworkBehaviour
         winnerTextDisplay.gameObject.SetActive(false);
         loserTextDisplay.gameObject.SetActive(false);
         specialMeterDisplay.gameObject.SetActive(true);
+        lifePointsDisplay.gameObject.SetActive(true);
     }
 
     private void InstanceOnOnPlayerDead(ulong obj)
@@ -79,6 +82,7 @@ public class UIManager : NetworkBehaviour
         RestartQuitCanvas.gameObject.SetActive(true);
         TutorialCanvas.gameObject.SetActive(false);
         specialMeterDisplay.gameObject.SetActive(false);
+        lifePointsDisplay.gameObject.SetActive(false);
         if(NetworkManager.Singleton.LocalClientId != id)
         {
             winnerTextDisplay.gameObject.SetActive(true);
@@ -102,6 +106,7 @@ public class UIManager : NetworkBehaviour
         winnerTextDisplay.gameObject.SetActive(false);
         loserTextDisplay.gameObject.SetActive(false);
         specialMeterDisplay.gameObject.SetActive(false);
+        lifePointsDisplay.gameObject.SetActive(false);
     }
 
     public override void OnNetworkSpawn()
@@ -113,6 +118,7 @@ public class UIManager : NetworkBehaviour
         winnerTextDisplay.gameObject.SetActive(false);
         loserTextDisplay.gameObject.SetActive(false);
         specialMeterDisplay.gameObject.SetActive(false);
+        lifePointsDisplay.gameObject.SetActive(false);
     }
 
     public override void OnNetworkDespawn()

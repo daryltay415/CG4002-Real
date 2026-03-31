@@ -759,9 +759,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   xoffset: -0.05
-  zoffset: 0.7
+  zoffset: 0.05
   yoffset: -0.9
-  yRotationOffset: 17.7
+  yRotationOffset: -10
 --- !u!114 &8982092129559753382
 MonoBehaviour:
   m_ObjectHideFlags: 0
