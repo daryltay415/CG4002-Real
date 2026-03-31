@@ -126,7 +126,7 @@ public class MsgVisualiser : NetworkBehaviour{
     // MQTT Background Thread
     void OnMessageReceived(object sender, MqttMsgPublishEventArgs e) {
     string msg = System.Text.Encoding.UTF8.GetString(e.Message);
-
+    //Debug.Log(msg);
     // Identify which topic the message belongs to
     if (e.Topic == p1_move_topic) {
         p1_Message = msg;
@@ -143,7 +143,8 @@ public class MsgVisualiser : NetworkBehaviour{
         // Only update if the flag is true
         if (p1_NewData) {
             var(gesture, bpm) = ParseSensorData(p1_Message);
-            Debug.Log("Player 1: " + bpm);
+            Debug.Log("Player 1 bpm: " + bpm);
+            Debug.Log("Player1 gesture: " + gesture);
             OnInputDetected?.Invoke(gesture);
             OnBPMDetected?.Invoke(bpm);
             Debug.Log("PLAYER1 got input");
@@ -151,8 +152,9 @@ public class MsgVisualiser : NetworkBehaviour{
         }
         if (p2_NewData)
         {   
-            var(gesture, bpm) = ParseSensorData(p1_Message);
-            Debug.Log("Player 2: " + bpm);
+            var(gesture, bpm) = ParseSensorData(p2_Message);
+            Debug.Log("Player 2 bpm: " + bpm);
+            Debug.Log("Player2 gesture: " + gesture);
             OnInputDetected?.Invoke(gesture);
             OnBPMDetected?.Invoke(bpm);
             Debug.Log("PLAYER2 got input");
@@ -190,9 +192,10 @@ public class MsgVisualiser : NetworkBehaviour{
     (string gesture, int bpm) ParseSensorData(string jsonString) {
         try {
             PlayerData incomingData = JsonUtility.FromJson<PlayerData>(jsonString);
-
+            Debug.Log("Incoming data: " + incomingData);
             if (incomingData != null) 
             {
+                Debug.Log("Gesture: " + incomingData.gesture + " , Bpm: " + incomingData.bpm);
                 // Return the two values directly
                 return (incomingData.gesture, incomingData.bpm);
             }
