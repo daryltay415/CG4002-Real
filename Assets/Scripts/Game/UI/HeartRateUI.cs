@@ -27,6 +27,12 @@ public class HeartRateUI : MonoBehaviour
         redHeartHash = Animator.StringToHash("HighRate");
         orangeHeartHash = Animator.StringToHash("MedRate");
         greenHeartHash = Animator.StringToHash("LowRate");
+        //MsgVisualiser.Instance.OnBPMDetected += UpdateBPM;
+    }
+
+    void UpdateBPM(int BPM)
+    {
+        heartRate = BPM;
     }
 
     void Update()
@@ -86,5 +92,9 @@ public class HeartRateUI : MonoBehaviour
         animator.SetBool(greenHeartHash, false);
         animator.SetBool(orangeHeartHash, false);
         animator.SetBool(redHeartHash, true);
+    }
+
+    private void OnDestroy() {
+        //MsgVisualiser.Instance.OnBPMDetected -= UpdateBPM;
     }
 }

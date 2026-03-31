@@ -11,10 +11,14 @@ using Unity.Netcode;
 public class MsgVisualiser : NetworkBehaviour{
     public static MsgVisualiser Instance;
     public event Action<string> OnInputDetected;
+    public event Action<int> OnBPMDetected;
     private MqttClient client;
     public string brokerIP = "10.166.207.131";
-    public string p1_topic = "unity/moves/player-1";
-    public string p2_topic = "unity/moves/player-2";
+    public string p1_move_topic = "unity/moves/player-1";
+    public string p2_move_topic = "unity/moves/player-2";
+    public string p1_feedback_topic = "unity/feedback/player-1";
+    public string p2_feedback_topic = "unity/feedback/player-2";
+    public int TopicToSub = 1;
 
     [Header("UI References")]
     public Image statusLight;
@@ -28,7 +32,6 @@ public class MsgVisualiser : NetworkBehaviour{
 
     private string p2_Message = "";
     private bool p2_NewData = false;
-    public int TopicToSub = 1;
 
     private void Awake()
     {
@@ -66,7 +69,9 @@ public class MsgVisualiser : NetworkBehaviour{
     client.MqttMsgPublishReceived += OnMessageReceived;
 
     try {
-        string clientId = "Unity";
+
+        //Added this line to distiniguish host and client (not sure if it matters)
+        string clientId = "Unity-" + TopicToSub.ToString();
         Debug.Log("Attempting to connect to " + brokerIP + "...");
         
         // 4. Connect
@@ -76,18 +81,14 @@ public class MsgVisualiser : NetworkBehaviour{
 
         if (TopicToSub == 1)
         {
-            client.Subscribe(new string[] { p1_topic }, new byte[] { MqttMsgBase.QOS_LEVEL_AT_MOST_ONCE });
-            Debug.Log("Successfully subscribed to" + p1_topic);
+            client.Subscribe(new string[] { p1_move_topic }, new byte[] { MqttMsgBase.QOS_LEVEL_AT_MOST_ONCE });
+            Debug.Log("Successfully subscribed to" + p1_move_topic);
         }
         else
         {
-            client.Subscribe(new string[] { p2_topic }, new byte[] { MqttMsgBase.QOS_LEVEL_AT_MOST_ONCE });
-            Debug.Log("Successfully subscribed to" + p2_topic);
+            client.Subscribe(new string[] { p2_move_topic }, new byte[] { MqttMsgBase.QOS_LEVEL_AT_MOST_ONCE });
+            Debug.Log("Successfully subscribed to" + p2_move_topic);
         }
-        
-        
-
-
         
     } catch (Exception e) {
         // Print the INNER exception for debugging
@@ -127,11 +128,11 @@ public class MsgVisualiser : NetworkBehaviour{
     string msg = System.Text.Encoding.UTF8.GetString(e.Message);
 
     // Identify which topic the message belongs to
-    if (e.Topic == p1_topic) {
+    if (e.Topic == p1_move_topic) {
         p1_Message = msg;
         p1_NewData = true; 
     } 
-    else if (e.Topic == p2_topic) {
+    else if (e.Topic == p2_move_topic) {
         p2_Message = msg;
         p2_NewData = true;
     }
@@ -141,41 +142,73 @@ public class MsgVisualiser : NetworkBehaviour{
     void Update() {
         // Only update if the flag is true
         if (p1_NewData) {
-            //ProcessGesture(p1_Message, 1);
-            OnInputDetected?.Invoke(p1_Message);
-            Debug.Log("PLAYER1 got input " + p1_Message);
+            var(gesture, bpm) = ParseSensorData(p1_Message);
+            OnInputDetected?.Invoke(gesture);
+            OnBPMDetected?.Invoke(bpm);
+            Debug.Log("PLAYER1 got input");
             p1_NewData = false; // Reset flag
         }
         if (p2_NewData)
         {   
-            OnInputDetected?.Invoke(p2_Message);
-            //ProcessGesture(p2_Message, 2);
-            Debug.Log("PLAYER2 got input " + p2_Message);
+            var(gesture, bpm) = ParseSensorData(p1_Message);
+            OnInputDetected?.Invoke(gesture);
+            OnBPMDetected?.Invoke(bpm);
+            Debug.Log("PLAYER2 got input");
             p2_NewData = false; // Reset flag
         }
     }
 
-//    void ProcessGesture(string json, int playerId) {
-//
-//        MoveData data = JsonUtility.FromJson<MoveData>(json);
-//        
-//        // ============ INSERT AR CODE HERE ==============
-//        Animator targetAnim = (playerId == 1) ? character1Animator : character2Animator;
-//
-//        if (targetAnim != null && !string.IsNullOrEmpty(data.gesture)) {
-//            targetAnim.SetTrigger(data.gesture);
-//            Debug.Log($"Triggering {data.gesture} for Player {playerId}");
-//        }
-//    }
-//
-//}
+    public void sendFeedback(String msg, ulong clientID) {
+        string pub_topic = "";
+        if (clientID == 0) {
+            pub_topic = p1_feedback_topic;
+            Debug.Log("P1 got feedback");
+
+        } else if (clientID == 1) {
+            pub_topic = p2_feedback_topic;
+            Debug.Log("P2 got feedback");
+        } else {
+            Debug.Log("Wrong client ID");
+            return;
+        }
+
+        if (client != null && client.IsConnected) {
+        // Convert string directly to UTF8 bytes
+            byte[] payload = System.Text.Encoding.UTF8.GetBytes(msg);
+            
+            // Publish with QoS 1 to ensure delivery
+            client.Publish(pub_topic, payload, MqttMsgBase.QOS_LEVEL_AT_LEAST_ONCE, false);
+            
+            Debug.Log($"[MQTT] Sent to {pub_topic}: {msg}");
+        } else {
+            Debug.LogError("MQTT Client is offline!");
+        }
+    }
+
+    (string gesture, int bpm) ParseSensorData(string jsonString) {
+        try {
+            PlayerData incomingData = JsonUtility.FromJson<PlayerData>(jsonString);
+
+            if (incomingData != null) 
+            {
+                // Return the two values directly
+                return (incomingData.gesture, incomingData.bpm);
+            }
+        }
+        catch (Exception e) 
+        {
+            Debug.LogError($"Parse Error: {e.Message}");
+        }
+
+        // Return default/fallback values if parsing fails
+        return ("UNKNOWN", 0);
+    }
 
 
     [Serializable] // This attribute is mandatory for JsonUtility
-    public class MoveData
+    public class PlayerData
     {
-        public int player;
-        public string type;
         public string gesture;
+        public int bpm;
     }
 }

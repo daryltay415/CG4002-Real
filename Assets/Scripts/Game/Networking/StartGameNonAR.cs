@@ -16,7 +16,7 @@ public class StartGameNonAR : NetworkBehaviour
     [SerializeField] private GameObject specialMeter;
     [SerializeField] private UIManager uimanager;
     [SerializeField] private SpawnPrefab spawnpre;
-    public MsgVisualiser_V3 msgVisualiser;
+    public MsgVisualiser msgVisualiser;
     private int topicToSub = 1;
     
     

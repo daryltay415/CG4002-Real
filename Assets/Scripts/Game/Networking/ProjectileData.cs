@@ -9,7 +9,7 @@ using System;
 public class ProjectileData : NetworkBehaviour {
 
     private NetworkVariable<bool> isActiveSelf = new(true);
-    private const int DAMAGE = 3;
+    private const int DAMAGE = 4;
     private const int MAX_FLY_TIME = 3;
 
     public override void OnNetworkSpawn()

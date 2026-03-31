@@ -2,14 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 /// <summary>
 /// This class manages the player health and the health UI
 /// </summary>
 public class PlayerHealthUI : NetworkBehaviour
 {
-    [SerializeField] private TMP_Text HealthText; // The health points UI
-
+    [SerializeField] private Image Healthbar; // The health points UI
+    [SerializeField] private Image HealthLevel;
+    public int maxHealth = 20;
     private Camera _mainCamera;
 
     public override void OnNetworkSpawn()
@@ -34,14 +36,14 @@ public class PlayerHealthUI : NetworkBehaviour
     {
         if (_mainCamera)
         {
-            HealthText.transform.LookAt(_mainCamera.transform);
+            Healthbar.transform.LookAt(_mainCamera.transform);
         }
     }
 
     [ClientRpc]
     void SetHealthTextClientRpc(ulong id)
     {
-        HealthText.text = PlayerDataManager.Instance.GetPlayerHealth(id).ToString();
+        HealthLevel.fillAmount = PlayerDataManager.Instance.GetPlayerHealth(id)/maxHealth;
     }
 
     public override void OnNetworkDespawn()

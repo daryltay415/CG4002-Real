@@ -30,7 +30,7 @@ public class StartGameAR : MonoBehaviour
     [SerializeField] private UIManager uimanager;
     [SerializeField] private SpawnPrefab spawnpre;
     [SerializeField] private SpawnPB spawnBag;
-    public MsgVisualiser_V3 msgVisualiser;
+    public MsgVisualiser msgVisualiser;
 
     //Network variables
     private bool isHost;
@@ -75,7 +75,7 @@ public class StartGameAR : MonoBehaviour
         player1Button.GetComponent<Image>().color = Color.green;
         player2Button.GetComponent<Image>().color = Color.white;
         topicToSub = 1;
-        //msgVisualiser.TopicToSub = topicToSub;
+        msgVisualiser.TopicToSub = topicToSub;
         Debug.Log("Im player 1");
     }
 
@@ -84,7 +84,7 @@ public class StartGameAR : MonoBehaviour
         player1Button.GetComponent<Image>().color = Color.white;
         player2Button.GetComponent<Image>().color = Color.green;
         topicToSub = 2;
-        //msgVisualiser.TopicToSub = topicToSub;
+        msgVisualiser.TopicToSub = topicToSub;
         Debug.Log("Im player 2");
     }
 
