@@ -192,10 +192,10 @@ public class StartGameAR : MonoBehaviour
                 _targetImage, _targetImageSize
                 );
             int noOfClients = MAX_AMOUNT_CLIENTS_ROOM;
-            //if (isTutMode)
-            //{
-            //    noOfClients = 1;
-            //}   
+            if (isTutMode)
+            {
+                noOfClients = 1;
+            }   
             var roomArgs = ISharedSpaceRoomOptions.CreateLightshipRoomOptions(
             roomName,
             noOfClients,

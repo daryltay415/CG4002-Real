@@ -13,7 +13,8 @@ public class PlayerDataManager : NetworkBehaviour
 
     private NetworkList<PlayerData> allPlayerData;
     public NetworkVariable<ulong> winner;
-    private const int LIFEPOINTS = 20;
+    public int LIFEPOINTS = 20;
+    private int clientLifePoints = 20;
     public int LIFEPOINTS_TO_REDUCE = 1;
 
     public event Action<ulong> OnPlayerDead;
@@ -69,10 +70,25 @@ public class PlayerDataManager : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
+        if (UIButtonToggle.Instance.isCheatModeOn)
+        {
+            LIFEPOINTS = 999;
+            if (!IsServer)
+            {
+                notifyGodmodeServerRpc();
+            }
+            
+        }
         if (IsServer)
         {
             AddNewClientToList(NetworkManager.LocalClientId);
         }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    public void notifyGodmodeServerRpc()
+    {
+        clientLifePoints = 999;
     }
     
     // Start is called before the first frame update
@@ -253,11 +269,19 @@ public class PlayerDataManager : NetworkBehaviour
         {
             if(playerData.clientID == clientID) return;
         }
-
+        int newLifePoints;
+        if(clientID != 0)
+        {
+            newLifePoints = clientLifePoints;
+        }
+        else
+        {
+            newLifePoints = LIFEPOINTS;
+        }
         PlayerData newPlayerData = new PlayerData();
         newPlayerData.clientID = clientID;
         newPlayerData.score = 0;
-        newPlayerData.lifePoints = LIFEPOINTS;
+        newPlayerData.lifePoints = newLifePoints;
         newPlayerData.playerPlaced = false;
         newPlayerData.playerGuarding = false;
         

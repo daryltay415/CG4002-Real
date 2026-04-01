@@ -19,6 +19,14 @@ public class PlayerSpecialUI : MonoBehaviour
     {
         uimanager = GameObject.FindWithTag("UIManager").GetComponent<UIManager>();
         specialMeterBar = uimanager.specialMeterBar;
+        if (UIButtonToggle.Instance.isCheatModeOn)
+        {
+            chargeRate = 50f;
+        }
+        else
+        {
+            chargeRate = 20f;
+        }
     }
 
     // Depletes the meter when the player shoots a projectile

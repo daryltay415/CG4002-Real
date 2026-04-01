@@ -6,15 +6,14 @@ public class TutorialUI : MonoBehaviour
 {
     public GameObject[] guides;
     public GameObject exitUI;
+    private GameObject player;
+    private PlayerStateMachineMultiplayer psmmpComponent;
+    public AudioSource audioSource;
     private const float DURATION_OF_DISPLAY = 1f;
     public CanvasGroup canvasGroup;
     private void OnEnable() {
-        //jabGuide.SetActive(false);
-        //walkGuide.SetActive(true);
-        //uppercutGuide.SetActive(false);
-        //hookGuide.SetActive(false);
-        //blockGuide.SetActive(false);
-        //specialGuide.SetActive(false);
+        player = GameObject.FindWithTag("Player");
+        psmmpComponent = player.GetComponent<PlayerStateMachineMultiplayer>();
         canvasGroup.alpha = 0;
         foreach(var guide in guides)
         {
@@ -32,7 +31,29 @@ public class TutorialUI : MonoBehaviour
             yield return StartCoroutine(FadeCanvasGroup(canvasGroup, canvasGroup.alpha, 1, 3f));
             canvasGroup.interactable = true;
             canvasGroup.blocksRaycasts = true;
-            yield return new WaitForSeconds(DURATION_OF_DISPLAY);
+            bool correctGesture = false;
+            while(!correctGesture)
+            {
+                if(guide.tag == "Walk" && psmmpComponent._camIsMoving)
+                {
+                    correctGesture = true;
+                    break;
+                }
+                else if(guide.tag == "Guard" && psmmpComponent._isGuardingPressed)
+                {
+                    correctGesture = true;
+                    break;
+                }
+                else if(guide.tag == psmmpComponent.atktype.ToString() && (psmmpComponent._stillAttacking == 1))
+                {
+                    correctGesture = true;
+                    break;
+                }
+                yield return null;
+            }
+            //Play correct sound
+            audioSource.Play();
+            //yield return new WaitForSeconds(DURATION_OF_DISPLAY);
             yield return StartCoroutine(FadeCanvasGroup(canvasGroup, canvasGroup.alpha, 0, 3f));
             canvasGroup.interactable = false;
             canvasGroup.blocksRaycasts = false;
@@ -61,5 +82,27 @@ public class TutorialUI : MonoBehaviour
         }
 
         cg.alpha = endAlpha; 
+    }
+
+    string ConvertAtkTypeToString(int atktype)
+    {
+        switch (atktype) {
+            case 1: 
+                return "leftJab";
+            case 2: 
+                return "rightJab";
+            case 3:
+                return "shoot";
+            case 4:
+                return "leftHook";
+            case 5:
+                return "rightHook";
+            case 6:
+                return "leftUpper";
+            case 7:
+                return "rightUpper";
+            default:
+                return "Null";
+        }
     }
 }

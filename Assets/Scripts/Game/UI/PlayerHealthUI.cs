@@ -11,12 +11,17 @@ public class PlayerHealthUI : NetworkBehaviour
 {
     [SerializeField] private Image Healthbar; // The health points UI
     [SerializeField] private Image HealthLevel;
-    public int maxHealth = 20;
+    private float maxHealth;
     private Camera _mainCamera;
 
     public override void OnNetworkSpawn()
     {
+        
         NetworkObject rootNetObj = GetComponentInParent<NetworkObject>();
+        if(NetworkManager.Singleton.LocalClientId != rootNetObj.OwnerClientId)
+        {
+            maxHealth = PlayerDataManager.Instance.GetPlayerHealth(rootNetObj.OwnerClientId);
+        }
         if(NetworkManager.Singleton.LocalClientId == rootNetObj.OwnerClientId)
         {
             gameObject.SetActive(false);

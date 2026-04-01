@@ -6,6 +6,15 @@ TagManager:
   tags:
   - Special
   - UIManager
+  - Walk
+  - Guard
+  - leftJab
+  - rightJab
+  - leftUpper
+  - rightUpper
+  - leftHook
+  - rightHook
+  - shoot
   layers:
   - Default
   - TransparentFX

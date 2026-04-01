@@ -58222,6 +58222,13 @@ AnimationClip:
     floatParameter: 0
     intParameter: 1
     messageOptions: 0
+  - time: 0
+    functionName: SetAtkType
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 7
+    messageOptions: 0
   - time: 0.7
     functionName: RaycastPunch
     data: 

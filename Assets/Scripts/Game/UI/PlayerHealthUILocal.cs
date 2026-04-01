@@ -11,10 +11,11 @@ public class PlayerHealthUILocal : NetworkBehaviour
 {
     [SerializeField] private Image Healthbar; // The health points UI
     [SerializeField] private Image HealthLevel;
-    public int maxHealth = 20;
+    private int maxHealth;
 
     public override void OnNetworkSpawn()
     {
+        maxHealth = PlayerDataManager.Instance.LIFEPOINTS;
         PlayerDataManager.Instance.OnPlayerHealthChanged += InstanceOnOnLocalPlayerHealthChanged;
         Debug.Log("Setting networkmanager: " + NetworkManager.Singleton.LocalClientId);
         InstanceOnOnLocalPlayerHealthChanged(NetworkManager.Singleton.LocalClientId);
@@ -33,7 +34,7 @@ public class PlayerHealthUILocal : NetworkBehaviour
 
     void SetHealthTextLocal(ulong id)
     {
-        HealthLevel.fillAmount = PlayerDataManager.Instance.GetPlayerHealth(id)/maxHealth;
+        HealthLevel.fillAmount = (float)PlayerDataManager.Instance.GetPlayerHealth(id)/maxHealth;
     }
 
     public override void OnNetworkDespawn()
