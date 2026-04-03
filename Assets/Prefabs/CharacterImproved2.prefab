@@ -148,7 +148,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Healthbar: {fileID: 6320776481949338955}
   HealthLevel: {fileID: 6102231411961382076}
-  maxHealth: 20
 --- !u!1 &5492220241811860086
 GameObject:
   m_ObjectHideFlags: 0
@@ -519,7 +518,7 @@ PrefabInstance:
     - target: {fileID: 1283930073410377809, guid: 06dbf2bf46720c143b1200f9c11f3ffb, type: 3}
       propertyPath: m_RootBone
       value: 
-      objectReference: {fileID: 8581765749479370390}
+      objectReference: {fileID: 4284773080629064161}
     - target: {fileID: 1283930073410377809, guid: 06dbf2bf46720c143b1200f9c11f3ffb, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
@@ -728,6 +727,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6652165538094920707, guid: 06dbf2bf46720c143b1200f9c11f3ffb, type: 3}
   m_PrefabInstance: {fileID: 8440431490618347086}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &4284773080629064161 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -3578956721518870609, guid: 06dbf2bf46720c143b1200f9c11f3ffb, type: 3}
+  m_PrefabInstance: {fileID: 8440431490618347086}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &5391404527739746227 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4607308187405646333, guid: 06dbf2bf46720c143b1200f9c11f3ffb, type: 3}
@@ -751,11 +755,6 @@ GameObject:
 --- !u!4 &8262089661563709861 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 06dbf2bf46720c143b1200f9c11f3ffb, type: 3}
-  m_PrefabInstance: {fileID: 8440431490618347086}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &8581765749479370390 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: -9062683070111997736, guid: 06dbf2bf46720c143b1200f9c11f3ffb, type: 3}
   m_PrefabInstance: {fileID: 8440431490618347086}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &8782870747574891295 stripped
@@ -800,15 +799,15 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8782870747574891295}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0e1374f313c90844f89c9b79c8cbbda0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   xoffset: -0.05
-  zoffset: 0.03
+  zoffset: 0.05
   yoffset: -0.9
-  yRotationOffset: -10
+  yRotationOffset: 0
 --- !u!114 &1391530109552199316
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -912,7 +911,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8782870747574891295}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f17eaa6a6c9d4084cb6bc3f9f2000b13, type: 3}
   m_Name: 

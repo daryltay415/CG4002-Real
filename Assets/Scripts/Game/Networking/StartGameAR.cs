@@ -106,7 +106,7 @@ public class StartGameAR : MonoBehaviour
     public void StartGame()
     {
         //OnStartGame?.Invoke();
-        
+        //MsgVisualiser.Instance.inGameplay = true;
         if (isHost)
         {
             NetworkManager.Singleton.StartHost();

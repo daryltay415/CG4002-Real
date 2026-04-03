@@ -11,11 +11,13 @@ public class QuitGame : NetworkBehaviour
 {
     [SerializeField] private Button quitButton;
     [SerializeField] private Button tutQuitButton;
+    [SerializeField] private Button gameplayQuitButton;
     // Start is called before the first frame update
     void Start()
     {
         quitButton.onClick.AddListener(RequestServerToQuitGameServerRpc);
         tutQuitButton.onClick.AddListener(RequestServerToQuitGameServerRpc);
+        gameplayQuitButton.onClick.AddListener(RequestServerToQuitGameServerRpc);
     }
 
     // Loads the loading scene

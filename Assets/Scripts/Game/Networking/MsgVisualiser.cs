@@ -12,10 +12,15 @@ public class MsgVisualiser : NetworkBehaviour{
     public static MsgVisualiser Instance;
     public event Action<string> OnInputDetected;
     public event Action<int> OnBPMDetected;
+    public event Action<string> OnNavDetected;
+    public event Action<string> OnExitNavDetected;
+    public bool inGameplay = false;
     private MqttClient client;
     public string brokerIP = "54.66.30.206";
     public string p1_move_topic = "unity/moves/player-1";
     public string p2_move_topic = "unity/moves/player-2";
+    public string p1_nav_topic = "unity/navigate/player-1";
+    public string p2_nav_topic = "unity/navigate/player-2";
     public string p1_feedback_topic = "unity/feedback/player-1";
     public string p2_feedback_topic = "unity/feedback/player-2";
     public int TopicToSub = 1;
@@ -27,11 +32,15 @@ public class MsgVisualiser : NetworkBehaviour{
     public TextMeshProUGUI messageDisplayText;
 
     // --- Main Thread Bridge ---
-    private string p1_Message = "";
+    private string p1_DataMessage = "";
     private bool p1_NewData = false;
+    private string p1_NavMessage = "";
+    private bool p1_NavData = false;
 
-    private string p2_Message = "";
+    private string p2_DataMessage = "";
     private bool p2_NewData = false;
+    private string p2_NavMessage = "";
+    private bool p2_NavData = false;
 
     private void Awake()
     {
@@ -82,12 +91,14 @@ public class MsgVisualiser : NetworkBehaviour{
         if (TopicToSub == 1)
         {
             client.Subscribe(new string[] { p1_move_topic }, new byte[] { MqttMsgBase.QOS_LEVEL_AT_MOST_ONCE });
-            Debug.Log("Successfully subscribed to" + p1_move_topic);
+            client.Subscribe(new string[] { p1_nav_topic }, new byte[] { MqttMsgBase.QOS_LEVEL_AT_MOST_ONCE });
+            Debug.Log("Successfully subscribed to" + p1_move_topic + " and " + p1_nav_topic);
         }
         else
         {
             client.Subscribe(new string[] { p2_move_topic }, new byte[] { MqttMsgBase.QOS_LEVEL_AT_MOST_ONCE });
-            Debug.Log("Successfully subscribed to" + p2_move_topic);
+            client.Subscribe(new string[] { p2_nav_topic }, new byte[] { MqttMsgBase.QOS_LEVEL_AT_MOST_ONCE });
+            Debug.Log("Successfully subscribed to" + p2_move_topic + " and " + p2_nav_topic);
         }
         
     } catch (Exception e) {
@@ -129,20 +140,29 @@ public class MsgVisualiser : NetworkBehaviour{
     //Debug.Log(msg);
     // Identify which topic the message belongs to
     if (e.Topic == p1_move_topic) {
-        p1_Message = msg;
+        p1_DataMessage = msg;
         p1_NewData = true; 
     } 
     else if (e.Topic == p2_move_topic) {
-        p2_Message = msg;
+        p2_DataMessage = msg;
         p2_NewData = true;
     }
+    else if (e.Topic == p1_nav_topic) {
+        p1_NavMessage = msg;
+        p1_NavData = true;
+    }
+    else if (e.Topic == p2_nav_topic) {
+        p2_NavMessage = msg;
+        p2_NavData = true;
+    }
+
 }
 
     // Unity Main Thread (60fps)
     void Update() {
         // Only update if the flag is true
         if (p1_NewData) {
-            var(gesture, bpm) = ParseSensorData(p1_Message);
+            var(gesture, bpm) = ParseSensorData(p1_DataMessage);
             Debug.Log("Player 1 bpm: " + bpm);
             Debug.Log("Player1 gesture: " + gesture);
             OnInputDetected?.Invoke(gesture);
@@ -152,13 +172,49 @@ public class MsgVisualiser : NetworkBehaviour{
         }
         if (p2_NewData)
         {   
-            var(gesture, bpm) = ParseSensorData(p2_Message);
+            var(gesture, bpm) = ParseSensorData(p2_DataMessage);
             Debug.Log("Player 2 bpm: " + bpm);
             Debug.Log("Player2 gesture: " + gesture);
             OnInputDetected?.Invoke(gesture);
             OnBPMDetected?.Invoke(bpm);
             Debug.Log("PLAYER2 got input");
             p2_NewData = false; // Reset flag
+        }
+        if (p1_NavData) {
+            string menu_ctrl = p1_NavMessage;
+            Debug.Log("Player 1 Nav: " + p1_NavMessage);
+            //
+            // Insert P1 navigation control here
+            //
+            if (inGameplay)
+            {
+                //
+                OnExitNavDetected?.Invoke(menu_ctrl);
+            }
+            else
+            {
+                OnNavDetected?.Invoke(menu_ctrl);
+            }
+            p1_NavData = false;
+        }
+        if (p2_NavData) {
+            string menu_ctrl = p2_NavMessage;
+            Debug.Log("Player 2 Nav: " + p2_NavMessage);
+            //
+            // Insert P2 navigation control here
+            //
+            if (inGameplay)
+            {
+                //
+                OnExitNavDetected?.Invoke(menu_ctrl);
+            }
+            else
+            {
+                OnNavDetected?.Invoke(menu_ctrl);
+            }
+            p1_NavData = false;
+            OnNavDetected?.Invoke(menu_ctrl);
+            p2_NavData = false;
         }
     }
 
