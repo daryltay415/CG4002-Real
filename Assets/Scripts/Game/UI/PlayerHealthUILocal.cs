@@ -13,13 +13,23 @@ public class PlayerHealthUILocal : NetworkBehaviour
     [SerializeField] private Image HealthLevel;
     private int maxHealth;
 
+    
+
     public override void OnNetworkSpawn()
     {
         maxHealth = PlayerDataManager.Instance.LIFEPOINTS;
         PlayerDataManager.Instance.OnPlayerHealthChanged += InstanceOnOnLocalPlayerHealthChanged;
         Debug.Log("Setting networkmanager: " + NetworkManager.Singleton.LocalClientId);
         InstanceOnOnLocalPlayerHealthChanged(NetworkManager.Singleton.LocalClientId);
+        Invoke(nameof(ForceInitialSync), 0.5f);
+        //NetworkManager.Singleton.OnClientConnectedCallback += HandleClientConnectedHealthUI;
 
+    }
+
+    void ForceInitialSync()
+    {
+        Debug.Log("Forcing Sync: " + PlayerDataManager.Instance.GetPlayerHealth(NetworkManager.Singleton.LocalClientId));
+        InstanceOnOnLocalPlayerHealthChanged(NetworkManager.Singleton.LocalClientId);
     }
     
     // When the player's health is changed, the health UI will be updated
@@ -32,9 +42,19 @@ public class PlayerHealthUILocal : NetworkBehaviour
         }   
     }
 
+    //void HandleClientConnectedHealthUI(ulong id)
+    //{
+    //    Debug.Log("Handling client connected");
+    //    InstanceOnOnLocalPlayerHealthChanged(id);
+    //    NetworkManager.Singleton.OnClientConnectedCallback -= HandleClientConnectedHealthUI;
+    //}
+
     void SetHealthTextLocal(ulong id)
     {
         HealthLevel.fillAmount = (float)PlayerDataManager.Instance.GetPlayerHealth(id)/maxHealth;
+        Debug.Log("ratio: " + (float)PlayerDataManager.Instance.GetPlayerHealth(id)/maxHealth);
+        Debug.Log("Playerhealth: " + PlayerDataManager.Instance.GetPlayerHealth(id));
+        Debug.Log("maxHealth: " + maxHealth);
     }
 
     public override void OnNetworkDespawn()

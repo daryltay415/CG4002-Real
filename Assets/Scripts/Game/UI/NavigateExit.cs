@@ -8,22 +8,22 @@ public class NavigateExit : MonoBehaviour
     [SerializeField] private Button quitButton;
     private bool buttonSelected = false;
 
-    //private void OnEnable() {
-    //    MsgVisualiser.Instance.OnExitNavDetected += OnExitNavDetectedInstance;
-    //}
-
-    void Update()
-    {
-        
-        if (Input.GetKeyDown(KeyCode.UpArrow))
-        {
-            OnExitNavDetectedInstance("SELECT");
-        }
-        else if (Input.GetKeyDown(KeyCode.Backspace))
-        {
-            OnExitNavDetectedInstance("EXIT");
-        }
+    private void OnEnable() {
+        MsgVisualiser.Instance.OnExitNavDetected += OnExitNavDetectedInstance;
     }
+
+    //void Update()
+    //{
+    //    
+    //    if (Input.GetKeyDown(KeyCode.UpArrow))
+    //    {
+    //        OnExitNavDetectedInstance("SELECT");
+    //    }
+    //    else if (Input.GetKeyDown(KeyCode.Backspace))
+    //    {
+    //        OnExitNavDetectedInstance("EXIT");
+    //    }
+    //}
 
     void OnExitNavDetectedInstance(string nav)
     {
@@ -57,7 +57,7 @@ public class NavigateExit : MonoBehaviour
         }
     }
 
-    //private void OnDisable() {
-    //    MsgVisualiser.Instance.OnExitNavDetected -= OnExitNavDetectedInstance;
-    //}
+    private void OnDisable() {
+        MsgVisualiser.Instance.OnExitNavDetected -= OnExitNavDetectedInstance;
+    }
 }

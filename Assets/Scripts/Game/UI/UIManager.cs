@@ -18,12 +18,14 @@ public class UIManager : NetworkBehaviour
     [SerializeField] private TextMeshProUGUI loserTextDisplay;
     [SerializeField] private Canvas specialMeterDisplay;
     [SerializeField] private Canvas lifePointsDisplay;
+    [SerializeField] private Canvas playerTopicsDisplay;
     public Image specialMeterBar; //The level of the special meter
 
 
     private void Start()
     {
-        ShowCreateGameCanvas();
+        ShowPlayerTopics();
+        //ShowCreateGameCanvas();
         PlayerDataManager.Instance.OnPlayerDead += InstanceOnOnPlayerDead;
         //RestartGame.OnRestartGame += RestartGameOnOnRestartGame;
     }
@@ -41,6 +43,7 @@ public class UIManager : NetworkBehaviour
 
     public void ShowPlayerControls()
     {
+        playerTopicsDisplay.gameObject.SetActive(false);
         CreateGameCanvas.gameObject.SetActive(false);
         ControllerCanvas.gameObject.SetActive(true);
         RestartQuitCanvas.gameObject.SetActive(false);
@@ -52,8 +55,22 @@ public class UIManager : NetworkBehaviour
         Debug.Log("Why u no dispaly?");
     }
 
+    private void ShowPlayerTopics()
+    {
+        playerTopicsDisplay.gameObject.SetActive(true);
+        CreateGameCanvas.gameObject.SetActive(false);
+        ControllerCanvas.gameObject.SetActive(false);
+        RestartQuitCanvas.gameObject.SetActive(false);
+        TutorialCanvas.gameObject.SetActive(false);
+        winnerTextDisplay.gameObject.SetActive(false);
+        loserTextDisplay.gameObject.SetActive(false);
+        specialMeterDisplay.gameObject.SetActive(false);
+        lifePointsDisplay.gameObject.SetActive(false);
+    }
+
     public void ShowTutorialControls()
     {
+        playerTopicsDisplay.gameObject.SetActive(false);
         CreateGameCanvas.gameObject.SetActive(false);
         ControllerCanvas.gameObject.SetActive(true);
         RestartQuitCanvas.gameObject.SetActive(false);
@@ -76,7 +93,7 @@ public class UIManager : NetworkBehaviour
     [ClientRpc]
     void PlayerIsDeadClientRpc(ulong id)
     {
-        
+        playerTopicsDisplay.gameObject.SetActive(false);
         CreateGameCanvas.gameObject.SetActive(false);
         ControllerCanvas.gameObject.SetActive(false);
         RestartQuitCanvas.gameObject.SetActive(true);
@@ -97,8 +114,9 @@ public class UIManager : NetworkBehaviour
     }
 
     //Shows the menu screen
-    void ShowCreateGameCanvas()
+    public void ShowCreateGameCanvas()
     {
+        playerTopicsDisplay.gameObject.SetActive(false);
         CreateGameCanvas.gameObject.SetActive(true);
         ControllerCanvas.gameObject.SetActive(false);
         RestartQuitCanvas.gameObject.SetActive(false);
@@ -111,6 +129,7 @@ public class UIManager : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
+        playerTopicsDisplay.gameObject.SetActive(false);
         CreateGameCanvas.gameObject.SetActive(true);
         ControllerCanvas.gameObject.SetActive(false);
         RestartQuitCanvas.gameObject.SetActive(false);

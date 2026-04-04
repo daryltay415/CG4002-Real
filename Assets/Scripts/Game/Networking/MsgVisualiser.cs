@@ -54,7 +54,7 @@ public class MsgVisualiser : NetworkBehaviour{
         
     }
 
-    public override void OnNetworkSpawn() {
+    public void StartMQQTConnection() {
     Debug.Log("Starting Connection Sequence...");
 
     // Load Certificate
@@ -137,7 +137,7 @@ public class MsgVisualiser : NetworkBehaviour{
     // MQTT Background Thread
     void OnMessageReceived(object sender, MqttMsgPublishEventArgs e) {
     string msg = System.Text.Encoding.UTF8.GetString(e.Message);
-    //Debug.Log(msg);
+    Debug.Log(msg);
     // Identify which topic the message belongs to
     if (e.Topic == p1_move_topic) {
         p1_DataMessage = msg;
@@ -212,8 +212,6 @@ public class MsgVisualiser : NetworkBehaviour{
             {
                 OnNavDetected?.Invoke(menu_ctrl);
             }
-            p1_NavData = false;
-            OnNavDetected?.Invoke(menu_ctrl);
             p2_NavData = false;
         }
     }

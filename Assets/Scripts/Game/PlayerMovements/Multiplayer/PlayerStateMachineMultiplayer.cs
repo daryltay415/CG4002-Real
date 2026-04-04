@@ -109,7 +109,7 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
             playerInput.CharacterControls.Shoot.performed += onShoot;
             playerInput.CharacterControls.Shoot.canceled += onShoot;
             //MsgVisualiser_V3.Instance.OnInputDetected += onInstanceInputDetected;
-            //MsgVisualiser.Instance.OnInputDetected += onInstanceInputDetected;
+            MsgVisualiser.Instance.OnInputDetected += onInstanceInputDetected;
             playerInput.CharacterControls.Jab.performed += onLeftJab;
             playerInput.CharacterControls.Jab.canceled += onLeftJab;
             playerInput.CharacterControls.RightJab.performed += onRightJab;
@@ -154,20 +154,11 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
             case "PUNCH":
                 onAttack(AttackType.rightJab,2);
                 break;
-            case "LEFT_PROTECT":
+            case "PROTECT":
                 onProtect(true);
                 break;
             case "SPECIAL":
                 onSpecial();
-                break;
-            case "LEFT_GUARD":
-                onProtect(true);
-                break;
-            case "RIGHT_GUARD":
-                onProtect(true);
-                break;
-            case "RIGHT_PROTECT":
-                onProtect(true);
                 break;
             default:
                 onProtect(false);
@@ -416,7 +407,7 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
             playerInput.CharacterControls.Shoot.performed -= onShoot;
             playerInput.CharacterControls.Shoot.canceled -= onShoot;
             //MsgVisualiser_V3.Instance.OnInputDetected -= onInstanceInputDetected;
-            //MsgVisualiser.Instance.OnInputDetected -= onInstanceInputDetected;
+            MsgVisualiser.Instance.OnInputDetected -= onInstanceInputDetected;
             playerInput.CharacterControls.Jab.performed -= onLeftJab;
             playerInput.CharacterControls.Jab.canceled -= onLeftJab;
             playerInput.CharacterControls.Guard.performed -= onGuard;
@@ -455,13 +446,43 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
         
         // Visualize the ray in the scene view for debugging
         Debug.DrawRay(hand.transform.position, direction * punchRange, Color.red, 0.5f);
+        //OnDrawGizmos();
 
-        if (Physics.Raycast(hand.transform.position, direction, out hit, punchRange, hitLayer))
+        //if (Physics.Raycast(hand.transform.position, direction, out hit, punchRange, hitLayer))
+        //{
+        //    Debug.Log("Actual hit: " + hit.collider.name);
+        //    CollisionOnObject(hit);
+        //}
+        if (Physics.SphereCast(hand.transform.position,0.07f,direction, out hit, punchRange, hitLayer))
         {
-            Debug.Log("Actual hit: " + hit.collider.name);
             CollisionOnObject(hit);
         }
+        
     }
+
+//private void OnDrawGizmos()
+//    {   
+//        float sphereCastRadius = 0.05f;
+//        float range = 0.18f;
+//        Gizmos.DrawWireSphere(transform.position, range);
+//
+//        RaycastHit hit;
+//        if (Physics.SphereCast(transform.position, sphereCastRadius, transform.forward * range, out hit, range, hitLayer))
+//        {
+//            Gizmos.color = Color.green;
+//            Vector3 sphereCastMidpoint = transform.position + (transform.forward * hit.distance);
+//            Gizmos.DrawWireSphere(sphereCastMidpoint, sphereCastRadius);
+//            Gizmos.DrawSphere(hit.point, 0.1f);
+//            Debug.DrawLine(transform.position, sphereCastMidpoint, Color.green);
+//        }
+//        else
+//        {
+//            Gizmos.color = Color.red;
+//            Vector3 sphereCastMidpoint = transform.position + (transform.forward * (range-sphereCastRadius));
+//            Gizmos.DrawWireSphere(sphereCastMidpoint, sphereCastRadius);
+//            Debug.DrawLine(transform.position, sphereCastMidpoint, Color.red);
+//        }
+//    }
 
 
     // Punch detection based on the distance of the hand from the player
@@ -548,9 +569,9 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
                     Debug.Log("hand has Collision to player");
                     //play feedback here for both players
                     //player
-                    //MsgVisualiser.Instance.sendFeedback("HIT", networkobj.OwnerClientId);
+                    MsgVisualiser.Instance.sendFeedback("HIT", networkobj.OwnerClientId);
                     //opponent
-                    //MsgVisualiser.Instance.sendFeedback("DAMAGE", networkObject.OwnerClientId);
+                    MsgVisualiser.Instance.sendFeedback("DAMAGE", networkObject.OwnerClientId);
                     (ulong, ulong, int) fromPlayerToEnemey = new(networkobj.OwnerClientId, networkObject.OwnerClientId, damage);
                     OnHitPlayer?.Invoke(fromPlayerToEnemey);
                     return;
@@ -569,7 +590,7 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
             Debug.Log("Projectile has Collision to player");
             (ulong, ulong, int) fromPlayerToEnemey = new(from, to, damage);
             //play feedback here for enemy
-            //MsgVisualiser.Instance.sendFeedback("DAMAGE", to);
+            MsgVisualiser.Instance.sendFeedback("DAMAGE", to);
             OnHitPlayer?.Invoke(fromPlayerToEnemey);
             return;
             

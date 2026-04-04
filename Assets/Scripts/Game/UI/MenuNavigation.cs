@@ -17,35 +17,35 @@ public class MenuNavigation : MonoBehaviour
 
     void Start()
     {
-        //MsgVisualiser.Instance.OnNavDetected += OnNavigationDetectedInstance;
+        MsgVisualiser.Instance.OnNavDetected += OnNavigationDetectedInstance;
         currentMenuButton = leftMenuButtons;
         currentMenuImage = leftMenuImages;
         UpdateHighlightButtons();
     }
 
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.DownArrow))
-        {
-            OnNavigationDetectedInstance("DOWN");
-        }
-        else if (Input.GetKeyDown(KeyCode.UpArrow))
-        {
-            OnNavigationDetectedInstance("UP");
-        }
-        else if (Input.GetKeyDown(KeyCode.RightArrow))
-        {
-            OnNavigationDetectedInstance("RIGHT");
-        }
-        else if (Input.GetKeyDown(KeyCode.LeftArrow))
-        {
-            OnNavigationDetectedInstance("LEFT");
-        } 
-        else if (Input.GetKeyDown(KeyCode.Space))
-        {
-            OnNavigationDetectedInstance("SELECT");
-        }
-    }
+    //void Update()
+    //{
+    //    if (Input.GetKeyDown(KeyCode.DownArrow))
+    //    {
+    //        OnNavigationDetectedInstance("DOWN");
+    //    }
+    //    else if (Input.GetKeyDown(KeyCode.UpArrow))
+    //    {
+    //        OnNavigationDetectedInstance("UP");
+    //    }
+    //    else if (Input.GetKeyDown(KeyCode.RightArrow))
+    //    {
+    //        OnNavigationDetectedInstance("RIGHT");
+    //    }
+    //    else if (Input.GetKeyDown(KeyCode.LeftArrow))
+    //    {
+    //        OnNavigationDetectedInstance("LEFT");
+    //    } 
+    //    else if (Input.GetKeyDown(KeyCode.Space))
+    //    {
+    //        OnNavigationDetectedInstance("SELECT");
+    //    }
+    //}
 
     void UpdateHighlightButtons()
     {
@@ -105,6 +105,6 @@ public class MenuNavigation : MonoBehaviour
     }
 
     private void OnDestroy() {
-        //MsgVisualiser.Instance.OnNavDetected -= OnNavigationDetectedInstance;
+        MsgVisualiser.Instance.OnNavDetected -= OnNavigationDetectedInstance;
     }
 }

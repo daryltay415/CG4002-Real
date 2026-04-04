@@ -51,7 +51,9 @@ public class StartGameNonAR : NetworkBehaviour
         player1Button.GetComponent<Image>().color = Color.green;
         player2Button.GetComponent<Image>().color = Color.white;
         topicToSub = 1;
-        //msgVisualiser.TopicToSub = topicToSub;
+        msgVisualiser.TopicToSub = topicToSub;
+        msgVisualiser.StartMQQTConnection();
+        uimanager.ShowCreateGameCanvas();
         Debug.Log("Im player 1");
     }
 
@@ -60,14 +62,16 @@ public class StartGameNonAR : NetworkBehaviour
         player1Button.GetComponent<Image>().color = Color.white;
         player2Button.GetComponent<Image>().color = Color.green;
         topicToSub = 2;
-        //msgVisualiser.TopicToSub = topicToSub;
+        msgVisualiser.TopicToSub = topicToSub;
+        msgVisualiser.StartMQQTConnection();
+        uimanager.ShowCreateGameCanvas();
         Debug.Log("Im player 2");
     }
 
     public void StartGame()
     {
         //OnStartGame?.Invoke();
-        
+        MsgVisualiser.Instance.inGameplay = true;
         if (isHost)
         {
             NetworkManager.Singleton.StartHost();

@@ -11,9 +11,7 @@ public class Hidehead : NetworkBehaviour
     {
         if (IsOwner)
         {
-            head.layer = LayerMask.NameToLayer("PlayerLocal");
-            Debug.Log("Successfully hid my own head locally.");
-            
+            head.SetActive(false);
         }
     }
 }

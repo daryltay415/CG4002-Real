@@ -30,7 +30,7 @@ public class StartGameAR : MonoBehaviour
     [SerializeField] private UIManager uimanager;
     [SerializeField] private SpawnPrefab spawnpre;
     [SerializeField] private SpawnPB spawnBag;
-    public MsgVisualiser msgVisualiser;
+    //public MsgVisualiser msgVisualiser;
 
     //Network variables
     private bool isHost;
@@ -75,7 +75,9 @@ public class StartGameAR : MonoBehaviour
         player1Button.GetComponent<Image>().color = Color.green;
         player2Button.GetComponent<Image>().color = Color.white;
         topicToSub = 1;
-        msgVisualiser.TopicToSub = topicToSub;
+        MsgVisualiser.Instance.TopicToSub = topicToSub;
+        MsgVisualiser.Instance.StartMQQTConnection();
+        uimanager.ShowCreateGameCanvas();
         Debug.Log("Im player 1");
     }
 
@@ -84,7 +86,9 @@ public class StartGameAR : MonoBehaviour
         player1Button.GetComponent<Image>().color = Color.white;
         player2Button.GetComponent<Image>().color = Color.green;
         topicToSub = 2;
-        msgVisualiser.TopicToSub = topicToSub;
+        MsgVisualiser.Instance.TopicToSub = topicToSub;
+        MsgVisualiser.Instance.StartMQQTConnection();
+        uimanager.ShowCreateGameCanvas();
         Debug.Log("Im player 2");
     }
 
@@ -106,7 +110,7 @@ public class StartGameAR : MonoBehaviour
     public void StartGame()
     {
         //OnStartGame?.Invoke();
-        //MsgVisualiser.Instance.inGameplay = true;
+        MsgVisualiser.Instance.inGameplay = true;
         if (isHost)
         {
             NetworkManager.Singleton.StartHost();
