@@ -313,15 +313,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 06dbf2bf46720c143b1200f9c11f3ffb, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.6
+      value: 0.8
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 06dbf2bf46720c143b1200f9c11f3ffb, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.57
+      value: 0.76
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 06dbf2bf46720c143b1200f9c11f3ffb, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.6
+      value: 0.8
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 06dbf2bf46720c143b1200f9c11f3ffb, type: 3}
       propertyPath: m_LocalPosition.x
@@ -809,8 +809,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   xoffset: -0.05
-  zoffset: 0.7
-  yoffset: -0.9
+  zoffset: 0.8
+  yoffset: 0.7
   yRotationOffset: 0
 --- !u!114 &1391530109552199316
 MonoBehaviour:

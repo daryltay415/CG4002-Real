@@ -55,6 +55,7 @@ public class ProjectileData : NetworkBehaviour {
     {
         if (IsServer)
         {
+            //if (collision.transform.TryGetComponent(out NetworkObject networkObject))
             if (collision.transform.TryGetComponent(out NetworkObject networkObject))
             {
                 if (collision.gameObject.layer == LayerMask.NameToLayer("Player") && OwnerClientId != networkObject.OwnerClientId)
