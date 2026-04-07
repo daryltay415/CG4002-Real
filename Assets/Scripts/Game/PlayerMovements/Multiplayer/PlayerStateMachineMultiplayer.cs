@@ -222,6 +222,7 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
 
     void onLeftJab(InputAction.CallbackContext context)
     {
+        Debug.Log("Pressed");
         Debug.Log("Still attacking: "+ stillAttacking);
         isAttackPressed = context.ReadValueAsButton();
         if (isAttackPressed && !(currentState is PlayerAttackStateMultiplayer))
@@ -231,6 +232,7 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
         }
         else
         {
+            Debug.Log("setting to false");
             isAttackPressed = false;
         }
         

@@ -30,7 +30,6 @@ public class StartGameAR : MonoBehaviour
     [SerializeField] private UIManager uimanager;
     [SerializeField] private SpawnPrefab spawnpre;
     [SerializeField] private SpawnPB spawnBag;
-    //public MsgVisualiser msgVisualiser;
 
     //Network variables
     private bool isHost;

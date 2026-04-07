@@ -12,9 +12,9 @@ public class PlayerAttackStateMultiplayer : PlayerBaseStateMultiplayer
     
     public override void EnterState()
     {
-        Debug.Log($"<color=red>[Attack State]</color> Enter. Animator integer set to 1. Frame: {Time.frameCount}");
+        //Debug.Log($"<color=red>[Attack State]</color> Enter. Animator integer set to 1. Frame: {Time.frameCount}");
         Ctx._animator.SetInteger(Ctx._isAttackingHash, (int)Ctx.atktype);
-        //Ctx._isAttackPressed = false;
+        Ctx._stillAttacking = 1;
     }
     public override void UpdateState()
     {
@@ -22,9 +22,10 @@ public class PlayerAttackStateMultiplayer : PlayerBaseStateMultiplayer
     }
     public override void ExitState()
     {
-        Debug.Log($"<color=red>[Attack State]</color> Exit. Animator integer set to 0. Frame: {Time.frameCount}");
+        //Debug.Log($"<color=red>[Attack State]</color> Exit. Animator integer set to 0. Frame: {Time.frameCount}");
         Ctx._animator.SetInteger(Ctx._isAttackingHash, 0);
-        //Ctx._isAttackPressed = false;
+        Ctx._isAttackPressed = false;
+
     }
     public override void CheckSwitchStates()
     {

@@ -16,13 +16,15 @@ public class MsgVisualiser : NetworkBehaviour{
     public event Action<string> OnExitNavDetected;
     public bool inGameplay = false;
     private MqttClient client;
-    public string brokerIP = "54.66.30.206";
+    public string brokerIP = "18.143.222.252";
     public string p1_move_topic = "unity/moves/player-1";
     public string p2_move_topic = "unity/moves/player-2";
     public string p1_nav_topic = "unity/navigate/player-1";
     public string p2_nav_topic = "unity/navigate/player-2";
     public string p1_feedback_topic = "unity/feedback/player-1";
     public string p2_feedback_topic = "unity/feedback/player-2";
+    public string p1_bpm_topic = "unity/bpm/player-1";
+    public string p2_bpm_topic = "unity/bpm/player-2";
     public int TopicToSub = 1;
 
     [Header("UI References")]
@@ -36,11 +38,17 @@ public class MsgVisualiser : NetworkBehaviour{
     private bool p1_NewData = false;
     private string p1_NavMessage = "";
     private bool p1_NavData = false;
+    private string p1_BpmMessage = "";
+    private bool p1_BpmData = false;
 
     private string p2_DataMessage = "";
     private bool p2_NewData = false;
     private string p2_NavMessage = "";
     private bool p2_NavData = false;
+    private string p2_BpmMessage = "";
+    private bool p2_BpmData = false;
+
+    
 
     private void Awake()
     {
@@ -92,13 +100,15 @@ public class MsgVisualiser : NetworkBehaviour{
         {
             client.Subscribe(new string[] { p1_move_topic }, new byte[] { MqttMsgBase.QOS_LEVEL_AT_MOST_ONCE });
             client.Subscribe(new string[] { p1_nav_topic }, new byte[] { MqttMsgBase.QOS_LEVEL_AT_MOST_ONCE });
-            Debug.Log("Successfully subscribed to" + p1_move_topic + " and " + p1_nav_topic);
+            client.Subscribe(new string[] { p1_bpm_topic }, new byte[] { MqttMsgBase.QOS_LEVEL_AT_MOST_ONCE });
+            Debug.Log("Successfully subscribed to" + p1_move_topic + " and " + p1_nav_topic + " and " + p1_bpm_topic);
         }
         else
         {
             client.Subscribe(new string[] { p2_move_topic }, new byte[] { MqttMsgBase.QOS_LEVEL_AT_MOST_ONCE });
             client.Subscribe(new string[] { p2_nav_topic }, new byte[] { MqttMsgBase.QOS_LEVEL_AT_MOST_ONCE });
-            Debug.Log("Successfully subscribed to" + p2_move_topic + " and " + p2_nav_topic);
+            client.Subscribe(new string[] { p2_bpm_topic }, new byte[] { MqttMsgBase.QOS_LEVEL_AT_MOST_ONCE });
+            Debug.Log("Successfully subscribed to" + p2_move_topic + " and " + p2_nav_topic + " and " + p2_bpm_topic);
         }
         
     } catch (Exception e) {
@@ -155,6 +165,14 @@ public class MsgVisualiser : NetworkBehaviour{
         p2_NavMessage = msg;
         p2_NavData = true;
     }
+    else if (e.Topic == p1_bpm_topic) {
+        p1_BpmMessage = msg;
+        p1_BpmData = true;
+    }
+    else if (e.Topic == p2_bpm_topic) {
+        p2_BpmMessage = msg;
+        p2_BpmData = true;
+    }
 
 }
 
@@ -162,27 +180,23 @@ public class MsgVisualiser : NetworkBehaviour{
     void Update() {
         // Only update if the flag is true
         if (p1_NewData) {
-            var(gesture, bpm) = ParseSensorData(p1_DataMessage);
-            Debug.Log("Player 1 bpm: " + bpm);
+            string gesture = p1_DataMessage;
             Debug.Log("Player1 gesture: " + gesture);
             OnInputDetected?.Invoke(gesture);
-            OnBPMDetected?.Invoke(bpm);
             Debug.Log("PLAYER1 got input");
             p1_NewData = false; // Reset flag
         }
         if (p2_NewData)
         {   
-            var(gesture, bpm) = ParseSensorData(p2_DataMessage);
-            Debug.Log("Player 2 bpm: " + bpm);
+            string gesture = p2_DataMessage;
             Debug.Log("Player2 gesture: " + gesture);
             OnInputDetected?.Invoke(gesture);
-            OnBPMDetected?.Invoke(bpm);
             Debug.Log("PLAYER2 got input");
             p2_NewData = false; // Reset flag
         }
         if (p1_NavData) {
-            string menu_ctrl = p1_NavMessage;
-            Debug.Log("Player 1 Nav: " + p1_NavMessage);
+            string menu_ctrl = p1_NavMessage; 
+            Debug.Log("Player 1 Nav: " + menu_ctrl);
             //
             // Insert P1 navigation control here
             //
@@ -199,7 +213,6 @@ public class MsgVisualiser : NetworkBehaviour{
         }
         if (p2_NavData) {
             string menu_ctrl = p2_NavMessage;
-            Debug.Log("Player 2 Nav: " + p2_NavMessage);
             //
             // Insert P2 navigation control here
             //
@@ -214,18 +227,75 @@ public class MsgVisualiser : NetworkBehaviour{
             }
             p2_NavData = false;
         }
+        if (p1_BpmData) {
+            int bpm = (int)float.Parse(p1_BpmMessage);
+            Debug.Log("Player 1 bpm: " + bpm);
+            //
+            // Insert P2 navigation control here
+            //
+            if (inGameplay)
+            {
+                //
+                OnBPMDetected?.Invoke(bpm);
+            }
+            p1_BpmData = false;
+        }
+        if (p2_BpmData) {
+            int bpm = (int)float.Parse(p2_BpmMessage);
+            Debug.Log("Player 2 bpm: " + bpm);
+            //
+            // Insert P2 navigation control here
+            //
+            if (inGameplay)
+            {
+                //
+                OnBPMDetected?.Invoke(bpm);
+            }
+            p2_BpmData = false;
+        }
     }
 
     public void sendFeedback(String msg, ulong clientID) {
         string pub_topic = "";
-        if (clientID == 0) {
-            pub_topic = p1_feedback_topic;
-            Debug.Log("P1 got feedback");
-
-        } else if (clientID == 1) {
-            pub_topic = p2_feedback_topic;
-            Debug.Log("P2 got feedback");
-        } else {
+        //if (clientID == 0) {
+        //    pub_topic = p1_feedback_topic;
+        //    Debug.Log("P1 got feedback");
+//
+        //} else if (clientID == 1) {
+        //    pub_topic = p2_feedback_topic;
+        //    Debug.Log("P2 got feedback");
+        //} else {
+        //    Debug.Log("Wrong client ID");
+        //    return;
+        //}
+        if(clientID == NetworkManager.Singleton.LocalClientId)
+        {
+            if(TopicToSub == 1)
+            {
+                pub_topic = p1_feedback_topic;
+                Debug.Log("P1 got feedback");
+            }
+            else
+            {
+                pub_topic = p2_feedback_topic;
+                Debug.Log("P2 got feedback");
+            }
+        }
+        else if(clientID != NetworkManager.Singleton.LocalClientId && clientID < 2)
+        {
+            if(TopicToSub == 1)
+            {
+                pub_topic = p2_feedback_topic;
+                Debug.Log("P1 got feedback");
+            }
+            else
+            {
+                pub_topic = p1_feedback_topic;
+                Debug.Log("P1 got feedback");
+            }
+        }
+        else
+        {
             Debug.Log("Wrong client ID");
             return;
         }
@@ -243,31 +313,31 @@ public class MsgVisualiser : NetworkBehaviour{
         }
     }
 
-    (string gesture, int bpm) ParseSensorData(string jsonString) {
-        try {
-            PlayerData incomingData = JsonUtility.FromJson<PlayerData>(jsonString);
-            Debug.Log("Incoming data: " + incomingData);
-            if (incomingData != null) 
-            {
-                Debug.Log("Gesture: " + incomingData.gesture + " , Bpm: " + incomingData.bpm);
-                // Return the two values directly
-                return (incomingData.gesture, incomingData.bpm);
-            }
-        }
-        catch (Exception e) 
-        {
-            Debug.LogError($"Parse Error: {e.Message}");
-        }
-
-        // Return default/fallback values if parsing fails
-        return ("UNKNOWN", 0);
-    }
+    //(string gesture, int bpm) ParseSensorData(string jsonString) {
+    //    try {
+    //        TouchData incomingData = JsonUtility.FromJson<TouchData>(jsonString);
+    //        Debug.Log("Incoming data: " + incomingData);
+    //        if (incomingData != null) 
+    //        {
+    //            Debug.Log("Nav: " + incomingData.nav + " , Bpm: " + incomingData.bpm);
+    //            // Return the two values directly
+    //            return (incomingData.nav, incomingData.bpm);
+    //        }
+    //    }
+    //    catch (Exception e) 
+    //    {
+    //        Debug.LogError($"Parse Error: {e.Message}");
+    //    }
+//
+    //    // Return default/fallback values if parsing fails
+    //    return ("UNKNOWN", 0);
+    //}
 
 
     [Serializable] // This attribute is mandatory for JsonUtility
-    public class PlayerData
+    public class TouchData
     {
-        public string gesture;
+        public string nav;
         public int bpm;
     }
 }

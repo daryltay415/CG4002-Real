@@ -153,5 +153,10 @@ public class FollowCamera : NetworkBehaviour
             }
 
         }
+        else
+        {
+            Vector3 zoffsetposition = new Vector3(0,0,6);
+            transform.localPosition = transform.localPosition + zoffsetposition; 
+        }
     }
 }

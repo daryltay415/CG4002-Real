@@ -8,7 +8,7 @@ public class PlayerIdleStateMultiplayer : PlayerBaseStateMultiplayer
     :base(curContext, playerStateFactory){ }
     public override void EnterState()
     {
-        Ctx._isAttackPressed = false;
+        //Ctx._isAttackPressed = false;
     }
     public override void UpdateState()
     {
