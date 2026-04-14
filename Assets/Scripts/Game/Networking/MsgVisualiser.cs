@@ -92,7 +92,7 @@ public class MsgVisualiser : NetworkBehaviour{
         Debug.Log("Attempting to connect to " + brokerIP + "...");
         
         // 4. Connect
-        client.Connect(clientId, "iot", "hello"); 
+        client.Connect(clientId, "iot", "hello",true,60); 
         
         Debug.Log("SUCCESS: Unity Connected!");
 
@@ -333,7 +333,11 @@ public class MsgVisualiser : NetworkBehaviour{
     //    return ("UNKNOWN", 0);
     //}
 
-
+    public void UnsubTopics()
+    {
+        
+        client.Disconnect();
+    }
     [Serializable] // This attribute is mandatory for JsonUtility
     public class TouchData
     {

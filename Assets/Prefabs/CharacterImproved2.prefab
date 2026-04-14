@@ -810,7 +810,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   xoffset: -0.05
   zoffset: 0.8
-  yoffset: 0.7
+  yoffset: 0.65
   yRotationOffset: 0
 --- !u!114 &1391530109552199316
 MonoBehaviour:
@@ -869,7 +869,7 @@ MonoBehaviour:
     m_Bits: 72
   lefthand: {fileID: 7356342023919434255}
   righthand: {fileID: 5391404527739746227}
-  punchRange: 0.18
+  punchRange: 0.3
   stillAttacking: 0
   atktype: 0
 --- !u!65 &2970996701330218632
@@ -940,7 +940,7 @@ MonoBehaviour:
   isCoolDownActive: 0
   maxLevel: 100
   curLevel: 0
-  chargeRate: 20
+  chargeRate: 5
 --- !u!114 &6089012570573205655
 MonoBehaviour:
   m_ObjectHideFlags: 0

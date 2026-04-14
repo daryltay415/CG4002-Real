@@ -25,7 +25,7 @@ public class PlayerSpecialUI : MonoBehaviour
         }
         else
         {
-            chargeRate = 20f;
+            chargeRate = 5f;
         }
     }
 

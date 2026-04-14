@@ -29,7 +29,7 @@ public class StartGameAR : MonoBehaviour
     [SerializeField] private GameObject controls;
     [SerializeField] private UIManager uimanager;
     [SerializeField] private SpawnPrefab spawnpre;
-    [SerializeField] private SpawnPB spawnBag;
+    //[SerializeField] private SpawnPB spawnBag;
 
     //Network variables
     private bool isHost;
@@ -148,7 +148,7 @@ public class StartGameAR : MonoBehaviour
         spawnpre.Spawn(topicToSub);
         if (isTutMode)
         {
-            spawnBag.SpawnPunchingBag();
+            //spawnBag.SpawnPunchingBag();
             uimanager.ShowTutorialControls();
         }
         else
@@ -197,6 +197,14 @@ public class StartGameAR : MonoBehaviour
             int noOfClients = MAX_AMOUNT_CLIENTS_ROOM;
             if (isTutMode)
             {
+                if(topicToSub == 1)
+                {
+                    roomName = "Tutroom1";
+                }
+                else if(topicToSub == 2)
+                {
+                    roomName = "Tutroom2";
+                }
                 noOfClients = 1;
             }   
             var roomArgs = ISharedSpaceRoomOptions.CreateLightshipRoomOptions(
@@ -230,10 +238,10 @@ public class StartGameAR : MonoBehaviour
         StartSharedSpace();
     }
 
-    private void SpawnBag()
-    {
-        spawnBag.SpawnPunchingBag();
-    }
+    //private void SpawnBag()
+    //{
+    //    spawnBag.SpawnPunchingBag();
+    //}
 
     void StartTutorial()
     {

@@ -7,10 +7,8 @@ using UnityEngine.EventSystems;
 public class MenuNavigation : MonoBehaviour
 {
     public Button[] leftMenuButtons;    
-    public Button[] rightMenuButtons;
     private Button[] currentMenuButton;
     public GameObject[] leftMenuImages;
-    public GameObject[] rightMenuImages;
     private GameObject[] currentMenuImage;
     private int index=1;
     
@@ -55,10 +53,6 @@ public class MenuNavigation : MonoBehaviour
             {
                 img.SetActive(false);
             }
-            foreach (var img in rightMenuImages)
-            {
-                img.SetActive(false);
-            }
             currentMenuImage[index].SetActive(true);
         }
         
@@ -85,16 +79,16 @@ public class MenuNavigation : MonoBehaviour
                     index++;
                 }
                 break;
-            case "LEFT":
-                currentMenuButton = leftMenuButtons;
-                currentMenuImage = leftMenuImages;
-                index = 0;
-                break;
-            case "RIGHT":
-                currentMenuButton = rightMenuButtons;
-                currentMenuImage = rightMenuImages;
-                index = 0;
-                break;
+            //case "LEFT":
+            //    currentMenuButton = leftMenuButtons;
+            //    currentMenuImage = leftMenuImages;
+            //    index = 0;
+            //    break;
+            //case "RIGHT":
+            //    currentMenuButton = rightMenuButtons;
+            //    currentMenuImage = rightMenuImages;
+            //    index = 0;
+            //    break;
             case "SELECT":
                 UpdateSelectedButtons();
                 break;

@@ -13,6 +13,10 @@ public class SpawnPrefab : NetworkBehaviour
     private GameObject prefabToSpawn;
 
     public void Spawn(int TopicToSub) {
+        if (PlayerDataManager.Instance.GetHasPlayerPlaced(NetworkManager.Singleton.LocalClientId))
+        {
+            return;
+        }
         SpawnPlayerServerRPC(Vector3.zero, Quaternion.identity, NetworkManager.Singleton.LocalClientId, TopicToSub);
         
     }
