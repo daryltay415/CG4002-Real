@@ -36,6 +36,7 @@ public class StartGameAR : MonoBehaviour
     private int topicToSub =1;
     private bool isTutMode = false;
 
+    // Adds the functions related to the buttons
     private void Awake()
     {
         DontDestroyOnLoad(gameObject);
@@ -48,26 +49,13 @@ public class StartGameAR : MonoBehaviour
         player1Button.onClick.AddListener(onPlayer1ButtonClicked);
         player2Button.onClick.AddListener(onPlayer2ButtonClicked);
         StartGameButton.interactable = false;
-        
-        //ImageForColocalization.OnTextureRendered += BlitImageForColocalizationOnTextureRendered;
     }
 
     private void OnDestroy()
     {
         _sharedSpaceManager.sharedSpaceManagerStateChanged -= SharedSpaceManagerOnsharedSpaceManagerStateChanged;
-        //ImageForColocalization.OnTextureRendered -= BlitImageForColocalizationOnTextureRendered;
     }
 
-    //private void BlitImageForColocalizationOnTextureRendered(Texture2D texture)
-    //{
-    //    SetTargetImage(texture);
-    //    StartSharedSpace();
-    //}
-
-    //void SetTargetImage(Texture2D texture2D)
-    //{
-    //    _targetImage = texture2D;
-    //}
 
     private void onPlayer1ButtonClicked()
     {
@@ -108,30 +96,18 @@ public class StartGameAR : MonoBehaviour
     // Intializes the host and client
     public void StartGame()
     {
-        //OnStartGame?.Invoke();
         MsgVisualiser.Instance.inGameplay = true;
         if (isHost)
         {
             NetworkManager.Singleton.StartHost();
-            Debug.Log("starting host");
             OnNetworkReady();
         }
         else
         {
             NetworkManager.Singleton.StartClient();
-            Debug.Log("starting client");
             NetworkManager.Singleton.OnClientConnectedCallback += HandleClientConnected;
         }
-        //if(isHost==false && NetworkManager.Singleton.LocalClientId == 0){
-        //        Debug.Log("cool");
-        //        return;
-        //}
         bool actuallyHost = NetworkManager.Singleton.IsHost;
-        Debug.Log($"Am I the host? {actuallyHost}");
-        //StartCoroutine(WaitForConnectionAndSpawn());
-        //menu.SetActive(false);
-        //spawnpre.Spawn();
-        //controls.SetActive(true);
     }
 
     // Checks if the player has a sprite placed. If not, it spawns a sprite for the player connected and set the control UI active
@@ -142,27 +118,22 @@ public class StartGameAR : MonoBehaviour
             return;
         }
 
-        //menu.SetActive(false);
-        //spawnpre.Spawn();
-        //controls.SetActive(true);
         spawnpre.Spawn(topicToSub);
         if (isTutMode)
         {
-            //spawnBag.SpawnPunchingBag();
             uimanager.ShowTutorialControls();
         }
         else
         {
             uimanager.ShowPlayerControls();
         }
-        Debug.Log("Tut mode? " + isTutMode);
         
     }
 
     // Checks if the client has joined the game before spawning their sprite
     private void HandleClientConnected(ulong id)
     {
-        // Make sure we only trigger this for own local join
+        // Trigger this for own local join
         if (id == NetworkManager.Singleton.LocalClientId)
         {
             NetworkManager.Singleton.OnClientConnectedCallback -= HandleClientConnected;
@@ -174,7 +145,6 @@ public class StartGameAR : MonoBehaviour
     // The shared AR origin is based on the image in the AR Image tracking manager.
     void StartSharedSpace()
     {
-        //OnStartSharedSpace?.Invoke();
 
         if (_sharedSpaceManager.GetColocalizationType() == SharedSpaceManager.ColocalizationType.MockColocalization)
         {
@@ -223,29 +193,20 @@ public class StartGameAR : MonoBehaviour
     // Creates the host and set this player as the host
     void CreateGameHost()
     {
-        Debug.Log("Creating host");
         isHost = true;
-        //OnStartSharedSpaceHost?.Invoke();
         StartSharedSpace();
     }
 
     // Joins the game as a client and set this player as the client
     void JoinGameClient()
     {
-        Debug.Log("Join button clicked: Setting isHost to false");
         isHost = false;
-        //OnJoinSharedSpaceClient?.Invoke();
         StartSharedSpace();
     }
 
-    //private void SpawnBag()
-    //{
-    //    spawnBag.SpawnPunchingBag();
-    //}
 
     void StartTutorial()
     {
-        Debug.Log("Creating tutorial");
         isHost = true;
         isTutMode = true;
         StartSharedSpace();

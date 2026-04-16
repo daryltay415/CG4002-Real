@@ -34,7 +34,6 @@ public class ProjectileData : NetworkBehaviour {
         {
             GetComponent<NetworkObject>().Spawn();
         }
-        Debug.Log("Check if projectile is active");
     }
 
     // Deactivates the projectile after a period of time
@@ -47,7 +46,6 @@ public class ProjectileData : NetworkBehaviour {
     {
         yield return new WaitForSeconds(MAX_FLY_TIME);
         SetProjectileIsActiveServerRpc(false);
-        Debug.Log("deactivatedddd");
     }
     
     // Checks for collision between the player and the projectile
@@ -69,7 +67,6 @@ public class ProjectileData : NetworkBehaviour {
             }
             else
             {
-                Debug.Log("ITs hitting me");
                 SetProjectileIsActiveServerRpc(false);
             }
         }

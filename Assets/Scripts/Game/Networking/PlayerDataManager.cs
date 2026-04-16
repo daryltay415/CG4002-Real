@@ -85,6 +85,7 @@ public class PlayerDataManager : NetworkBehaviour
         }
     }
 
+    // Sets the player's health to 999
     [ServerRpc(RequireOwnership = false)]
     public void notifyGodmodeServerRpc()
     {

@@ -12,6 +12,7 @@ public class SpawnPrefab : NetworkBehaviour
     public GameObject player2Prefab;
     private GameObject prefabToSpawn;
 
+    // Tells the server to spawn the player
     public void Spawn(int TopicToSub) {
         if (PlayerDataManager.Instance.GetHasPlayerPlaced(NetworkManager.Singleton.LocalClientId))
         {
@@ -25,7 +26,6 @@ public class SpawnPrefab : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     void SpawnPlayerServerRPC(Vector3 position, Quaternion rotation, ulong callerID, int TopicToSub)
     { 
-        Debug.Log("Hello there");
         if(TopicToSub == 1)
         {
             prefabToSpawn = player1Prefab;

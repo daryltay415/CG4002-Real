@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+/// <summary>
+/// This class manages the audio playing for an object
+/// </summary>
 public class AudioManager : MonoBehaviour
 {   
     

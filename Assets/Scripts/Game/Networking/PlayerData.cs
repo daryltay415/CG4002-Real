@@ -36,6 +36,7 @@ public struct PlayerData : IEquatable<PlayerData>, INetworkSerializable
         );
     }
 
+    // Serializes the playerdata across the network
     public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
     {
         serializer.SerializeValue(ref clientID);

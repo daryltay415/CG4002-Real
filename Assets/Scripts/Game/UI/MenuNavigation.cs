@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-
+/// <summary>
+/// This class manages the menu navigation in the menu screen
+/// </summary>
 public class MenuNavigation : MonoBehaviour
 {
     public Button[] leftMenuButtons;    
@@ -21,30 +23,7 @@ public class MenuNavigation : MonoBehaviour
         UpdateHighlightButtons();
     }
 
-    //void Update()
-    //{
-    //    if (Input.GetKeyDown(KeyCode.DownArrow))
-    //    {
-    //        OnNavigationDetectedInstance("DOWN");
-    //    }
-    //    else if (Input.GetKeyDown(KeyCode.UpArrow))
-    //    {
-    //        OnNavigationDetectedInstance("UP");
-    //    }
-    //    else if (Input.GetKeyDown(KeyCode.RightArrow))
-    //    {
-    //        OnNavigationDetectedInstance("RIGHT");
-    //    }
-    //    else if (Input.GetKeyDown(KeyCode.LeftArrow))
-    //    {
-    //        OnNavigationDetectedInstance("LEFT");
-    //    } 
-    //    else if (Input.GetKeyDown(KeyCode.Space))
-    //    {
-    //        OnNavigationDetectedInstance("SELECT");
-    //    }
-    //}
-
+    // Highlights the current button chosen
     void UpdateHighlightButtons()
     {
         if (currentMenuButton[index].gameObject.activeInHierarchy)
@@ -58,11 +37,13 @@ public class MenuNavigation : MonoBehaviour
         
     }
 
+    // Starts the function associated to that button chosen
     void UpdateSelectedButtons()
     {
         currentMenuButton[index].onClick.Invoke();
     }
 
+    // Updates the buttons highlighted when the navigation input is received from the gloves
     void OnNavigationDetectedInstance(string nav)
     {
         switch (nav)
@@ -79,16 +60,6 @@ public class MenuNavigation : MonoBehaviour
                     index++;
                 }
                 break;
-            //case "LEFT":
-            //    currentMenuButton = leftMenuButtons;
-            //    currentMenuImage = leftMenuImages;
-            //    index = 0;
-            //    break;
-            //case "RIGHT":
-            //    currentMenuButton = rightMenuButtons;
-            //    currentMenuImage = rightMenuImages;
-            //    index = 0;
-            //    break;
             case "SELECT":
                 UpdateSelectedButtons();
                 break;

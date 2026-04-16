@@ -1,7 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+/// <summary>
+/// Manages the tutorial guide for the player in tutorial mode
+/// </summary>
 public class TutorialUI : MonoBehaviour
 {
     public GameObject[] guides;
@@ -53,7 +55,6 @@ public class TutorialUI : MonoBehaviour
             }
             //Play correct sound
             audioSource.Play();
-            //yield return new WaitForSeconds(DURATION_OF_DISPLAY);
             yield return StartCoroutine(FadeCanvasGroup(canvasGroup, canvasGroup.alpha, 0, 3f));
             canvasGroup.interactable = false;
             canvasGroup.blocksRaycasts = false;

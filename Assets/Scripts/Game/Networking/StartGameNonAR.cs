@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
-
+/// <summary>
+/// This class manages the initialisation of the game in the non AR setting
+/// </summary>
 public class StartGameNonAR : NetworkBehaviour
 {
     [SerializeField] private Button startHost;
@@ -70,30 +72,18 @@ public class StartGameNonAR : NetworkBehaviour
 
     public void StartGame()
     {
-        //OnStartGame?.Invoke();
         MsgVisualiser.Instance.inGameplay = true;
         if (isHost)
         {
             NetworkManager.Singleton.StartHost();
-            Debug.Log("starting host");
             OnNetworkReady();
         }
         else
         {
             NetworkManager.Singleton.StartClient();
-            Debug.Log("starting client");
             NetworkManager.Singleton.OnClientConnectedCallback += HandleClientConnected;
         }
-        //if(isHost==false && NetworkManager.Singleton.LocalClientId == 0){
-        //        Debug.Log("cool");
-        //        return;
-        //}
         bool actuallyHost = NetworkManager.Singleton.IsHost;
-        Debug.Log($"Am I the host? {actuallyHost}");
-        //StartCoroutine(WaitForConnectionAndSpawn());
-        //menu.SetActive(false);
-        //spawnpre.Spawn();
-        //controls.SetActive(true);
     }
 
     // Checks if the player has a sprite placed. If not, it spawns a sprite for the player connected and set the control UI active
@@ -104,20 +94,15 @@ public class StartGameNonAR : NetworkBehaviour
             return;
         }
 
-        //menu.SetActive(false);
-        //spawnpre.Spawn();
-        //controls.SetActive(true);
         spawnpre.Spawn(topicToSub);
         if (isTutMode)
         {
-            //spawnBag.SpawnPunchingBag();
             uimanager.ShowTutorialControls();
         }
         else
         {
             uimanager.ShowPlayerControls();
         }
-        Debug.Log("Tut mode? " + isTutMode);
         
     }
 
@@ -134,7 +119,6 @@ public class StartGameNonAR : NetworkBehaviour
 
     void StartTutorial()
     {
-        Debug.Log("Creating tutorial");
         isTutMode = true;
         NetworkManager.Singleton.StartHost();
         StartGameButton.interactable = true;

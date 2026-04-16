@@ -7,7 +7,9 @@ using System;
 using System.Security.Cryptography.X509Certificates;
 using System.Net.Security;
 using Unity.Netcode;
-
+/// <summary>
+/// Manages the communication between the gloves, AI and the visualiser via MQTT protocol
+/// </summary>
 public class MsgVisualiser : NetworkBehaviour{
     public static MsgVisualiser Instance;
     public event Action<string> OnInputDetected;
@@ -62,6 +64,7 @@ public class MsgVisualiser : NetworkBehaviour{
         
     }
 
+    // Starts the MQTT connection
     public void StartMQQTConnection() {
     Debug.Log("Starting Connection Sequence...");
 
@@ -124,6 +127,7 @@ public class MsgVisualiser : NetworkBehaviour{
         }
     }
 
+    // Checks if the remote certification is valid
     bool RemoteCertificateValidationCallback(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors) {
         // Allow if there are no errors
         if (sslPolicyErrors == SslPolicyErrors.None) return true;
@@ -257,17 +261,6 @@ public class MsgVisualiser : NetworkBehaviour{
 
     public void sendFeedback(String msg, ulong clientID) {
         string pub_topic = "";
-        //if (clientID == 0) {
-        //    pub_topic = p1_feedback_topic;
-        //    Debug.Log("P1 got feedback");
-//
-        //} else if (clientID == 1) {
-        //    pub_topic = p2_feedback_topic;
-        //    Debug.Log("P2 got feedback");
-        //} else {
-        //    Debug.Log("Wrong client ID");
-        //    return;
-        //}
         if(clientID == NetworkManager.Singleton.LocalClientId)
         {
             if(TopicToSub == 1)
@@ -313,25 +306,6 @@ public class MsgVisualiser : NetworkBehaviour{
         }
     }
 
-    //(string gesture, int bpm) ParseSensorData(string jsonString) {
-    //    try {
-    //        TouchData incomingData = JsonUtility.FromJson<TouchData>(jsonString);
-    //        Debug.Log("Incoming data: " + incomingData);
-    //        if (incomingData != null) 
-    //        {
-    //            Debug.Log("Nav: " + incomingData.nav + " , Bpm: " + incomingData.bpm);
-    //            // Return the two values directly
-    //            return (incomingData.nav, incomingData.bpm);
-    //        }
-    //    }
-    //    catch (Exception e) 
-    //    {
-    //        Debug.LogError($"Parse Error: {e.Message}");
-    //    }
-//
-    //    // Return default/fallback values if parsing fails
-    //    return ("UNKNOWN", 0);
-    //}
 
     public void UnsubTopics()
     {

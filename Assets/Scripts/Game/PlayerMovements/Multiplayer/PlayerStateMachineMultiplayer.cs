@@ -103,9 +103,6 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
             isWalkingHash = Animator.StringToHash("Walk");
             isGuardingHash = Animator.StringToHash("Guard");
             isDamagedHash = Animator.StringToHash("Damage");
-            //playerInput.CharacterControls.Move.started += onMovementInput;
-            //playerInput.CharacterControls.Move.canceled += onMovementInput;
-            //playerInput.CharacterControls.Move.performed += onMovementInput;
             playerInput.CharacterControls.Shoot.performed += onShoot;
             playerInput.CharacterControls.Shoot.canceled += onShoot;
             //MsgVisualiser_V3.Instance.OnInputDetected += onInstanceInputDetected;
@@ -126,12 +123,12 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
             playerInput.CharacterControls.RightUppercut.performed += onRightUpper;
             playerInput.CharacterControls.RightUppercut.canceled += onRightUpper;
         }
-        //PlayerDataManager.Instance.OnPlayerDead += playerDead;
         networkobj = GetComponent<NetworkObject>();
         specialUi = GetComponent<PlayerSpecialUI>();
 
     }
 
+    // Starts the movement of the player depending on the input received from the AI
     void onInstanceInputDetected(string moveData)
     {
         switch (moveData)
@@ -315,6 +312,7 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
         }
     }
 
+    // Changes the atktype to special
     void onSpecial()
     {
         Debug.Log("Still attacking: "+ stillAttacking);
@@ -329,17 +327,6 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
         {
             isAttackPressed = false;
         }
-        //if (isAttackPressed && !(currentState is PlayerAttackStateMultiplayer))
-        //{
-        //    onProtect(false);
-        //    atktype = attackType;
-        //    lifepointsToReduce = dmg;
-        //    Debug.Log("Attacktype= "  + attackType);
-        //}
-        //else
-        //{
-        //    isAttackPressed = false;
-        //}
     }
 
 
@@ -351,7 +338,6 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
 
     void onProtect(bool guarding)
     {
-        //isAttackPressed = false;
         isGuarding = guarding;
         PlayerDataManager.Instance.PlayerGuardStateServerRpc(networkobj.OwnerClientId,isGuarding);
     }
@@ -417,17 +403,7 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
             playerInput.CharacterControls.RightJab.performed -= onRightJab;
             playerInput.CharacterControls.RightJab.canceled -= onRightJab;
         }
-        //PlayerDataManager.Instance.OnPlayerDead -= playerDead;
     }
-
-    //void playerDead(ulong id)
-    //{
-    //    if(networkobj.OwnerClientId == id)
-    //    {
-    //        // set player is dead variable to true;
-    //        Debug.Log("Player" + id + "has died");
-    //    }
-    //}
 
     // Cast a raycast at the chosen hand to detect if the punch hits a player
     public void RaycastPunch(int handChoice)
@@ -448,43 +424,12 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
         
         // Visualize the ray in the scene view for debugging
         Debug.DrawRay(hand.transform.position, direction * punchRange, Color.red, 0.5f);
-        //OnDrawGizmos();
-
-        //if (Physics.Raycast(hand.transform.position, direction, out hit, punchRange, hitLayer))
-        //{
-        //    Debug.Log("Actual hit: " + hit.collider.name);
-        //    CollisionOnObject(hit);
-        //}
         if (Physics.SphereCast(hand.transform.position,0.07f,direction, out hit, punchRange, hitLayer))
         {
             CollisionOnObject(hit);
         }
         
     }
-
-//private void OnDrawGizmos()
-//    {   
-//        float sphereCastRadius = 0.05f;
-//        float range = 0.18f;
-//        Gizmos.DrawWireSphere(transform.position, range);
-//
-//        RaycastHit hit;
-//        if (Physics.SphereCast(transform.position, sphereCastRadius, transform.forward * range, out hit, range, hitLayer))
-//        {
-//            Gizmos.color = Color.green;
-//            Vector3 sphereCastMidpoint = transform.position + (transform.forward * hit.distance);
-//            Gizmos.DrawWireSphere(sphereCastMidpoint, sphereCastRadius);
-//            Gizmos.DrawSphere(hit.point, 0.1f);
-//            Debug.DrawLine(transform.position, sphereCastMidpoint, Color.green);
-//        }
-//        else
-//        {
-//            Gizmos.color = Color.red;
-//            Vector3 sphereCastMidpoint = transform.position + (transform.forward * (range-sphereCastRadius));
-//            Gizmos.DrawWireSphere(sphereCastMidpoint, sphereCastRadius);
-//            Debug.DrawLine(transform.position, sphereCastMidpoint, Color.red);
-//        }
-//    }
 
 
     // Punch detection based on the distance of the hand from the player
@@ -509,27 +454,6 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
 
         foreach (var client in NetworkManager.Singleton.ConnectedClientsList)
         {
-            //if (client.ClientId == networkobj.OwnerClientId) continue;
-//
-            //// Get the enemy's position relative to the SAME Batman image
-            //Vector3 enemyLocalPos = client.PlayerObject.transform.localPosition;
-//
-            //// 1. Calculate Horizontal distance in the shared space
-            //float horizontalDist = Vector2.Distance(
-            //    new Vector2(myHandLocalPos.x, myHandLocalPos.z), 
-            //    new Vector2(enemyLocalPos.x, enemyLocalPos.z)
-            //);
-//
-            //// 2. Vertical check (so you can't hit them if they duck/jump too far)
-            //float verticalDiff = Mathf.Abs(myHandLocalPos.y - enemyLocalPos.y);
-            //Debug.Log("VerticalDiff = " + verticalDiff + " horizontalDist = " + horizontalDist);
-            //if (horizontalDist <= 0.2f && verticalDiff <= 0.6f)
-            //{
-            //    // The hit is mathematically "true" in the shared coordinate system
-            //    (ulong, ulong) fromPlayerToEnemey = new(networkobj.OwnerClientId, client.ClientId);
-            //    OnHitPlayer?.Invoke(fromPlayerToEnemey);
-            //    break;
-            //}
             if (client.ClientId == networkobj.OwnerClientId) continue;
             // Get the enemy's position relative to the SAME Batman image
             Vector3 enemyLocalPos = client.PlayerObject.transform.position;
@@ -563,7 +487,6 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
                 Debug.Log("Detected bag");
                 SpawnHitParticlesForBag(collision.collider.gameObject.transform);
             }
-            // else if()collision.transform.TryGetComponent<NetworkObject>(out NetworkObject networkObject))
             else if (collision.transform.TryGetComponent<NetworkObject>(out NetworkObject networkObject))
             {
                 if (collision.collider.gameObject.layer == LayerMask.NameToLayer("Player") && networkObject.OwnerClientId != networkobj.OwnerClientId)
@@ -607,6 +530,7 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
         Destroy(hitVfx,1f);
     }
 
+    // Spawns the particles when the player hits the bag
     private void SpawnHitParticlesForBag(Transform hitPos)
     {
         GameObject hitVfx = Instantiate(hitEffect,hitPos.position,Quaternion.identity);
@@ -614,16 +538,5 @@ public class PlayerStateMachineMultiplayer : NetworkBehaviour
         Destroy(hitVfx,1f);
     }
         
-    
-    //void OnEnable()
-    //{
-    //    
-    //    playerInput.CharacterControls.Enable();
-    //}
-//
-    //void OnDisable()
-    //{
-    //    playerInput.CharacterControls.Disable();
-    //}
 
 }

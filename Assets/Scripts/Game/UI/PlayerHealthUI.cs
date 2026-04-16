@@ -14,6 +14,7 @@ public class PlayerHealthUI : NetworkBehaviour
     private float maxHealth;
     private Camera _mainCamera;
 
+    // Disables the player's health bar and only set the opponent's health bar active
     public override void OnNetworkSpawn()
     {
         

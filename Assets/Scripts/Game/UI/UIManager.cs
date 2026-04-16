@@ -25,21 +25,9 @@ public class UIManager : NetworkBehaviour
     private void Start()
     {
         ShowPlayerTopics();
-        //ShowCreateGameCanvas();
         PlayerDataManager.Instance.OnPlayerDead += InstanceOnOnPlayerDead;
-        //RestartGame.OnRestartGame += RestartGameOnOnRestartGame;
     }
 
-    //private void RestartGameOnOnRestartGame()
-    //{
-    //    ShowPlayerControlsServerRpc();
-    //}
-//
-    //[ServerRpc(RequireOwnership = false)]
-    //void ShowPlayerControlsServerRpc()
-    //{
-    //    ShowPlayerControlsClientRpc();
-    //}
 
     public void ShowPlayerControls()
     {
@@ -52,7 +40,6 @@ public class UIManager : NetworkBehaviour
         loserTextDisplay.gameObject.SetActive(false);
         specialMeterDisplay.gameObject.SetActive(true);
         lifePointsDisplay.gameObject.SetActive(true);
-        Debug.Log("Why u no dispaly?");
     }
 
     private void ShowPlayerTopics()
@@ -143,6 +130,5 @@ public class UIManager : NetworkBehaviour
     public override void OnNetworkDespawn()
     {
         PlayerDataManager.Instance.OnPlayerDead -= InstanceOnOnPlayerDead;
-        //RestartGame.OnRestartGame -= RestartGameOnOnRestartGame;
     }
 }

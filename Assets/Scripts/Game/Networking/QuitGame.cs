@@ -24,8 +24,6 @@ public class QuitGame : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     void RequestServerToQuitGameServerRpc()
     {
-        //MsgVisualiser.Instance.UnsubTopics();
-        Debug.Log("quiting game");
         NetworkManager.Singleton.SceneManager.LoadScene("LoadingScene", LoadSceneMode.Single);
     }
 }

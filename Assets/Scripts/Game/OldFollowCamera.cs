@@ -1,6 +1,8 @@
 using Unity.Netcode;
 using UnityEngine;
-
+/// <summary>
+/// This class positions the player's sprite infront of the camera during non AR gameplay
+/// </summary>
 public class OldFollowCamera : NetworkBehaviour
 {
     private Camera mainCam;
@@ -14,17 +16,12 @@ public class OldFollowCamera : NetworkBehaviour
         if (IsOwner)
         {
             mainCam = Camera.main;
-            
-            // OPTIONAL: If you want to be tidy, you can disable the 
-            // NetworkTransform component here if it's attached, 
-            // since we are doing local-only tracking now.
-            //if(TryGetComponent<NetworkTransform>(out var nt)) nt.enabled = false;
         }
     }
 
     void Update()
     {
-        // Only move the prefab that belongs to ME on MY screen.
+        // Only move the prefab that belongs to me on MY screen.
         if (IsOwner)
         {
             if (mainCam == null) return;

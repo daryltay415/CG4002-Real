@@ -2,7 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+/// <summary>
+/// This class allows players to navigate the quit button during gameplay, tutorial and endgame
+/// </summary>
 public class NavigateExit : MonoBehaviour
 {
     [SerializeField] private Button quitButton;
@@ -12,19 +14,8 @@ public class NavigateExit : MonoBehaviour
         MsgVisualiser.Instance.OnExitNavDetected += OnExitNavDetectedInstance;
     }
 
-    //void Update()
-    //{
-    //    
-    //    if (Input.GetKeyDown(KeyCode.UpArrow))
-    //    {
-    //        OnExitNavDetectedInstance("SELECT");
-    //    }
-    //    else if (Input.GetKeyDown(KeyCode.Backspace))
-    //    {
-    //        OnExitNavDetectedInstance("EXIT");
-    //    }
-    //}
 
+    // Highlights the quit button depending on the input received from the gloves
     void OnExitNavDetectedInstance(string nav)
     {
         switch (nav)
@@ -43,6 +34,7 @@ public class NavigateExit : MonoBehaviour
         }
     }
     
+    // Toggles the quit button white or green to show it is selected
     private void ToggleButton()
     {
         if (buttonSelected)
